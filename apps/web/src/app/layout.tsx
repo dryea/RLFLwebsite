@@ -30,7 +30,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${rubik.variable} ${roboto.variable}`}>
-      <body>{children}</body>
+      <body className="flex min-h-screen flex-col">{children}</body>
     </html>
   );
 }

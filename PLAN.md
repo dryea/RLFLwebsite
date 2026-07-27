@@ -904,3 +904,347 @@ Contact Form / Loan Enquiry / Job Application
 - Works offline
 - Lighter bundle
 - Sufficient for branch location display
+
+---
+
+## Appendix B: Data Migration Strategy
+
+### B.1 Source Analysis
+The existing site runs on **Laravel (PHP) + MySQL** with content stored across multiple tables. Migration approach depends on access level.
+
+### B.2 Migration Options
+
+| Option | When to Use | Effort |
+|--------|-------------|--------|
+| **A: Direct DB dump** | If you have MySQL database dump or access to phpMyAdmin | Low |
+| **B: Scrape the live site** | If no DB access — crawl all pages and parse HTML content | Medium |
+| **C: Manual re-entry via CMS** | Fallback — CMS will be built early in Phase 2 so content team can re-enter | High |
+
+### B.3 Recommended: Option A — DB Dump Migration
+
+**Step 1**: Export MySQL data
+```bash
+mysqldump -u root -p rfil_db > rfil_migration.sql
+```
+
+**Step 2**: Run migration script (custom Node.js script) that:
+- Reads MySQL dump or connects directly to MySQL
+- Transforms Laravel table structures to D1 schema
+- Maps old slugs → new slugs
+- Handles HTML→JSON content conversion for TipTap
+- Uploads files (images, PDFs) from local storage → R2
+- Generates URL redirect map (old → new)
+
+**Step 3**: Seed D1
+```bash
+npx wrangler d1 execute rfil-db --remote --file=./migration/seed.sql
+```
+
+### B.4 If Option B — Scrape the Site
+
+Create a scraper (`scripts/migrate/scrape.ts`) that:
+
+```
+For each page in sitemap:
+  GET https://reliancenepal.com.np/{path}
+  Extract: title, content (parse HTML body), meta tags, images
+  Store: JSON file with all scraped data
+  Download images → store locally
+
+Then transform all JSON files → D1 seed format
+```
+
+### B.5 Content Mapping
+
+| Old Laravel Route | New Route | Notes |
+|-------------------|-----------|-------|
+| `/introduction` | `/[lang]/about/introduction` | WYSIWYG content |
+| `/deposit/{slug}` | `/[lang]/products/savings/{slug}` | 14 templates |
+| `/fixed-deposit/{slug}` | `/[lang]/products/fixed-deposits/{slug}` | 2 templates |
+| `/loan/{slug}` | `/[lang]/products/loans/{slug}` | 9 templates |
+| `/service/{slug}` | `/[lang]/services/{slug}` | 14 templates |
+| `/news/{slug}` | `/[lang]/publications/news/{slug}` | Blog content |
+| `/teams/{type}` | `/[lang]/team/{type}` | Structured members |
+| `/branch` | `/[lang]/branches` | Structured data |
+| `/gallery` | `/[lang]/gallery` | Albums + images |
+| `/interest-rate` | `/[lang]/rates/interest-rates` | Table data |
+| `/faq` | `/[lang]/faq` | Q&A pairs |
+| `/career` | `/[lang]/careers` | Job listings |
+
+### B.6 Estimated Content Volume
+
+| Content Type | Approx Count | Migration Priority |
+|-------------|-------------|-------------------|
+| Static pages (about, governance) | 20+ | P3 |
+| Product detail pages | 26 | P1 |
+| Service detail pages | 14 | P2 |
+| News articles | ~20-50 | P4 |
+| Events | ~10-30 | P4 |
+| Notices | ~30-50 | P3 |
+| Reports (PDF files) | ~30 (files) | P3 |
+| Gallery images | ~50-200 | P4 |
+| Downloads (PDF forms) | ~10-15 | P4 |
+| FAQ entries | ~20 | P2 |
+| Team members | ~40-60 | P3 |
+| Branches | ~15-25 | P1 |
+| Calendar data (yearly) | ~365 rows/year | P5 |
+
+---
+
+## Appendix C: URL Redirection & SEO Preservation
+
+### C.1 Why This Matters
+The existing site has been indexed by Google with URLs like:
+```
+https://reliancenepal.com.np/deposit/normal-saving-account
+https://reliancenepal.com.np/service/mobile-banking
+https://reliancenepal.com.np/teams/management-team
+```
+
+Our new routes change these paths. Without **301 redirects**, we lose:
+- All existing Google rankings
+- Bookmarked links from users
+- Backlinks from other sites
+- Referral traffic
+
+### C.2 Redirect Strategy
+
+**Approach**: Deploy a Cloudflare Worker that acts as a redirect router during the transition period.
+
+```typescript
+// Redirect Worker (deployed alongside main site)
+// Runs before main Worker — matches old URLs and redirects
+
+const redirects: Record<string, string> = {
+  '/deposit/normal-saving-account':   '/en/products/savings/normal-saving-account',
+  '/deposit/investor-s-saving-account': '/en/products/savings/investor-saving-account',
+  '/loan/home-loan':                  '/en/products/loans/home-loan',
+  '/service/mobile-banking':          '/en/services/mobile-banking',
+  '/teams/management-team':           '/en/team/management-team',
+  '/interest-rate':                   '/en/rates/interest-rates',
+  '/branch':                          '/en/branches',
+  // ... 60+ entries
+};
+
+export default {
+  async fetch(request): Promise<Response> {
+    const url = new URL(request.url);
+    const redirect = redirects[url.pathname];
+    if (redirect) {
+      return Response.redirect(new URL(redirect, url.origin), 301);
+    }
+    // Fall through to main site
+    return env.ASSETS.fetch(request);
+  }
+}
+```
+
+### C.3 Redirect Map Generation
+
+The redirect map is generated **automatically** during migration by the migration script. Every content item gets:
+
+```typescript
+interface RedirectEntry {
+  oldUrl: string;    // e.g. '/deposit/normal-saving-account'
+  newUrl: string;    // e.g. '/en/products/savings/normal-saving-account'
+  status: 301;       // Permanent redirect
+  notes?: string;    // Why it changed
+}
+```
+
+### C.4 SEO Checklist
+
+| Task | Phase | Tool |
+|------|-------|------|
+| Generate redirect map from old site crawl | P1 | Custom script |
+| Deploy redirect Worker | P1 | Cloudflare Workers |
+| Submit new sitemap to Google Search Console | P6 | Manual |
+| Monitor 404s via GA4 / Cloudflare logs | P6+ | Analytics |
+| Request URL change in Search Console | P6 | Google Search Console |
+| Monitor rankings drop (expect temporary dip) | P6+ | Google Search Console |
+| Set up canonical URLs on all pages | P5 | Next.js SEO component |
+| Set up hreflang tags (en/np) | P5 | Next.js SEO component |
+
+### C.5 Change of Address in Google Search Console
+
+Once the new site is live and redirects are confirmed working:
+```
+Settings → Change of Address → https://reliancenepal.com.np
+```
+This tells Google to transfer indexing signals to the new URLs.
+
+---
+
+## Appendix D: Testing Strategy
+
+### D.1 Test Pyramid
+
+```
+         ╱─────╲
+        ╱  E2E   ╲            ← Playwright (critical user journeys)
+       ╱───────────╲
+      ╱ Integration  ╲         ← Vitest + MSW (API + DB layer)
+     ╱─────────────────╲
+    ╱    Unit Tests       ╲    ← Vitest (components, utils, validators)
+   ╱─────────────────────────╲
+  ╱   Static Analysis         ╲  ← TypeScript strict, ESLint, Prettier
+ ╱───────────────────────────────╲
+```
+
+### D.2 Tooling
+
+| Layer | Tool | What It Tests |
+|-------|------|---------------|
+| Type checking | TypeScript `strict` | All `.ts`/`.tsx` files |
+| Linting | ESLint + `@typescript-eslint` | Code quality, consistency |
+| Formatting | Prettier | Code formatting |
+| Unit tests | **Vitest** | Functions, utilities, hooks, validators |
+| Component tests | Vitest + Testing Library | React components (render, interaction) |
+| API tests | Vitest + Hono `app.request()` | All API endpoints (public + CMS) |
+| DB tests | Vitest + D1 local (miniflare) | Drizzle queries, migrations |
+| E2E tests | **Playwright** | Critical user flows in browser |
+| Visual regression | Playwright screenshot diff | UI consistency |
+| Accessibility | Playwright + axe-core | WCAG 2.1 AA automated checks |
+| Performance | Lighthouse CI | Core Web Vitals budgets |
+| Security | `zap` (ZAP) | Basic OWASP scan |
+
+### D.3 What to Test
+
+**Unit Tests (Vitest)** — ~100+ tests
+```typescript
+// Examples:
+describe('EMI Calculator', () => {
+  it('calculates monthly EMI correctly')
+  it('handles zero interest rate')
+  it('validates input ranges')
+})
+describe('Slug generation', () => {
+  it('converts "Home Loan" to "home-loan"')
+  it('handles Nepali characters')
+})
+describe('API validation (Zod)', () => {
+  it('rejects invalid loan enquiry')
+  it('accepts valid contact form')
+})
+```
+
+**API Integration Tests** — ~200+ tests
+```typescript
+// Test every public and CMS endpoint:
+describe('GET /api/products/:slug', () => {
+  it('returns 200 for existing product')
+  it('returns 404 for unknown product')
+  it('includes features, eligibility, documents')
+})
+describe('POST /api/cms/pages', () => {
+  it('creates page with valid data')
+  it('rejects without auth token')
+  it('rejects with insufficient permissions')
+})
+```
+
+**E2E Tests (Playwright)** — ~30+ critical flows
+```
+1. Homepage loads with hero carousel + featured products
+2. Navigate through full menu hierarchy
+3. Browse products → view detail
+4. EMI Calculator — input values → see results + chart
+5. Branch Locator — load map → click marker → see info
+6. Loan Enquiry — fill form → submit → see success
+7. Contact form — fill → submit → see confirmation
+8. Site search — search query → see results
+9. Language switch EN→NP → all text changes
+10. CMS login → dashboard loads with stats
+11. CMS: create page → add content → publish → verify live
+12. CMS: upload image → use in editor → verify on public site
+13. CMS: update rates → verify updated on public site
+14. Accessibility toolbar — toggle each feature
+15. Mobile responsive — test all pages at 375px width
+```
+
+### D.4 Test Configuration
+
+```jsonc
+// vitest.config.ts
+{
+  "test": {
+    "include": ["apps/**/*.test.ts", "apps/**/*.test.tsx"],
+    "environment": "happy-dom",
+    "setupFiles": ["./test/setup.ts"],
+    "coverage": {
+      "provider": "v8",
+      "thresholds": { "branches": 80, "functions": 80, "lines": 80 }
+    }
+  }
+}
+```
+
+```yaml
+# playwright.config.ts
+{
+  "use": {
+    "baseURL": "http://localhost:3000",
+    "viewport": { "width": 1280, "height": 720 },
+    "ignoreHTTPSErrors": true
+  },
+  "projects": [
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
+    { name: 'mobile-iphone', use: { ...devices['iPhone 14'] } }
+  ]
+}
+```
+
+### D.5 CI Integration
+
+```yaml
+# .github/workflows/test.yml
+jobs:
+  unit-and-api:
+    runs-on: ubuntu-latest
+    steps:
+      - run: npx vitest run --coverage
+
+  e2e:
+    runs-on: ubuntu-latest
+    services:
+      # Start Workers + D1 locally via miniflare
+    steps:
+      - run: npx playwright test
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          path: playwright-report/
+
+  lighthouse:
+    runs-on: ubuntu-latest
+    steps:
+      - run: npx lhci autorun
+```
+
+### D.6 Performance Budgets
+
+| Metric | Budget | Tool |
+|--------|--------|------|
+| Lighthouse Performance | ≥ 90 | Lighthouse CI |
+| Lighthouse Accessibility | ≥ 95 | Lighthouse CI |
+| Lighthouse SEO | ≥ 95 | Lighthouse CI |
+| LCP (Largest Contentful Paint) | ≤ 2.5s | Web Vitals |
+| FID (First Input Delay) | ≤ 100ms | Web Vitals |
+| CLS (Cumulative Layout Shift) | ≤ 0.1 | Web Vitals |
+| TBT (Total Blocking Time) | ≤ 300ms | Lighthouse |
+| FCP (First Contentful Paint) | ≤ 1.8s | Lighthouse |
+| Page size (HTML) | ≤ 100KB | Lighthouse |
+| Image optimization | All images WebP/AVIF | Cloudflare Images |
+
+### D.7 Manual Testing Phases
+
+| Phase | Tester | Focus |
+|-------|--------|-------|
+| Dev testing | Developers | Unit, integration, component tests pass |
+| QA (internal) | QA team | E2E flows, cross-browser, mobile |
+| UAT | Client team (5-10 CMS users) | CMS usability, content accuracy |
+| A11y audit | Accessibility expert | WCAG 2.1 AA compliance |
+| Load test | DevOps | 1000 concurrent users, response time |
+| Security scan | DevOps | OWASP Top 10 |
+| SEO audit | SEO specialist | Redirects, structured data, indexing |

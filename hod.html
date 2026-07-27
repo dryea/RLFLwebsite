@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Meet the Heads of Department at Reliance Finance Limited directing corporate operations.">
+    <title>Heads of Department | Reliance Finance Limited</title>
+    <link rel="shortcut icon" type="image/x-icon" href="https://reliancenepal.com.np/assets/images/reliance/favicon.png">
+    
+    <!-- External Icon & Typography Styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css?v=1.0.5">
+</head>
+<body>
+
+    <!-- Global Header Placeholder -->
+    <div id="header"></div>
+
+    <!-- Page Banner -->
+    <section class="section" style="background: linear-gradient(rgba(112, 43, 134, 0.85), rgba(62, 12, 78, 0.95)), url('https://reliancenepal.com.np/uploads/banner_image/1ec6455dca89aa26f3eadbe3f139dd44a7ceb556.png') no-repeat center center/cover; padding: 6rem 0; color: #fff; text-align: center;">
+        <div class="container">
+            <h1 style="color:#fff; margin-bottom: 0.5rem;">Heads of Department</h1>
+            <p style="color:var(--color-secondary); font-size:1.1rem; font-weight:600; text-transform:uppercase; letter-spacing:0.15em;">Managing Specialized Divisions & Banking Frameworks</p>
+        </div>
+    </section>
+
+    <!-- Sub Navigation Pill Bar -->
+    <div class="container">
+        <div class="team-subnav">
+            <a href="bod.html" class="subnav-pill" id="pill-bod">Board of Directors</a>
+            <a href="management-team.html" class="subnav-pill" id="pill-management">Management Team</a>
+            <a href="hod.html" class="subnav-pill active" id="pill-hod">Heads of Department</a>
+            <a href="branch-managers.html" class="subnav-pill" id="pill-branch-managers">Branch Managers</a>
+            <a href="governance.html" class="subnav-pill" id="pill-governance">Corporate Governance</a>
+            <a href="csr.html" class="subnav-pill" id="pill-csr">CSR Activities</a>
+        </div>
+    </div>
+
+    <!-- Search bar -->
+    <div class="container" style="margin-top: 1.5rem;">
+        <div class="search-filter-container">
+            <i class="fas fa-search search-filter-icon"></i>
+            <input type="text" class="search-filter-input" id="hod-search" placeholder="Search by name or department (e.g. IT, Legal, Recovery)..." onkeyup="filterHODs()">
+        </div>
+    </div>
+
+    <!-- HOD Grid -->
+    <section class="section" style="padding-top: 0;">
+        <div class="container">
+            <div class="bod-grid" id="hod-grid-container">
+                <!-- 1. Dikpal Shrestha -->
+                <div class="bod-card hod-member">
+                    <img src="https://reliancenepal.com.np/uploads/team/8076c71994ed5440fc0ce8b4fe2f1f50dfb92be3.png" alt="Dikpal Shrestha" style="object-fit: cover; background-color: var(--color-primary-light); height: 240px; width: 100%;">
+                    <div class="bod-info">
+                        <h4>Dikpal Shrestha</h4>
+                        <p>Recovery</p>
+                    </div>
+                </div>
+
+                <!-- 2. Nabindra K.C -->
+                <div class="bod-card hod-member">
+                    <img src="https://reliancenepal.com.np/uploads/team/82bbcfce82f2e96b6fd511cadb829967a2f9f682.png" alt="Nabindra K.C" style="object-fit: cover; background-color: var(--color-primary-light); height: 240px; width: 100%;">
+                    <div class="bod-info">
+                        <h4>Nabindra K.C</h4>
+                        <p>Retail &amp; SME/Other Credit</p>
+                    </div>
+                </div>
+
+                <!-- 3. Rabin Shakya -->
+                <div class="bod-card hod-member">
+                    <img src="https://reliancenepal.com.np/uploads/team/2bb185863b33f1d33b5362fb5615fe936242b749.jpg" alt="Rabin Shakya" style="object-fit: cover; background-color: var(--color-primary-light); height: 240px; width: 100%;">
+                    <div class="bod-info">
+                        <h4>Rabin Shakya</h4>
+                        <p>Credit Monitoring And Control</p>
+                    </div>
+                </div>
+
+                <!-- 4. Pradeep Guragain -->
+                <div class="bod-card hod-member">
+                    <img src="https://reliancenepal.com.np/uploads/team/b24c0fe2eb056abe90fdc644991979a75438af4e.png" alt="Pradeep Guragain" style="object-fit: cover; background-color: var(--color-primary-light); height: 240px; width: 100%;">
+                    <div class="bod-info">
+                        <h4>Pradeep Guragain</h4>
+                        <p>Compliance</p>
+                    </div>
+                </div>
+
+                <!-- 5. Yuj Kumar Bhaila -->
+                <div class="bod-card hod-member">
+                    <img src="https://reliancenepal.com.np/uploads/team/99a1467e5dada7231f8362b87d87d6a33fc0bbc7.jpg" alt="Yuj Kumar Bhaila" style="object-fit: cover; background-color: var(--color-primary-light); height: 240px; width: 100%;">
+                    <div class="bod-info">
+                        <h4>Yuj Kumar Bhaila</h4>
+                        <p>Legal, Share &amp; General Service</p>
+                    </div>
+                </div>
+
+                <!-- 6. AML/CFT Compliance Officer -->
+                <div class="bod-card hod-member">
+                    <img src="https://reliancenepal.com.np/uploads/team/a5b1f39f7ff42f539be4695b2beabea58c9e77f1.png" alt="Akhanda Shrestha" style="object-fit: cover; background-color: var(--color-primary-light); height: 240px; width: 100%;">
+                    <div class="bod-info">
+                        <h4>Akhanda Shrestha</h4>
+                        <p>AML/CFT Compliance Officer</p>
+                    </div>
+                </div>
+
+                <!-- 7. Mani Manandhar -->
+                <div class="bod-card hod-member">
+                    <img src="https://reliancenepal.com.np/uploads/team/2e4ec880e165b7c18be6237e92f44ffef880ee2d.jpg" alt="Mani Manandhar" style="object-fit: cover; background-color: var(--color-primary-light); height: 240px; width: 100%;">
+                    <div class="bod-info">
+                        <h4>Mani Manandhar</h4>
+                        <p>Information Technology</p>
+                    </div>
+                </div>
+
+                <!-- 8. Sandeep Khatry -->
+                <div class="bod-card hod-member">
+                    <img src="https://reliancenepal.com.np/uploads/team/0eca5beb67b7bde72df6f8bcde8e9b5e9ae6c56d.jpg" alt="Sandeep Khatry" style="object-fit: cover; background-color: var(--color-primary-light); height: 240px; width: 100%;">
+                    <div class="bod-info">
+                        <h4>Sandeep Khatry</h4>
+                        <p>Marketing &amp; Branding</p>
+                    </div>
+                </div>
+
+                <!-- 9. Pranjal Timsina -->
+                <div class="bod-card hod-member">
+                    <img src="https://reliancenepal.com.np/uploads/team/1e7f46d6eaa4c59b0de510a3876b18547b9b6434.jpg" alt="Pranjal Timsina" style="object-fit: cover; background-color: var(--color-primary-light); height: 240px; width: 100%;">
+                    <div class="bod-info">
+                        <h4>Pranjal Timsina</h4>
+                        <p>Human Resource</p>
+                    </div>
+                </div>
+
+                <!-- 10. Juna Shrestha -->
+                <div class="bod-card hod-member">
+                    <img src="https://reliancenepal.com.np/uploads/team/b612c3505a8eeed9744c56e05ae9dd486dab716c.jpg" alt="Juna Shrestha" style="object-fit: cover; background-color: var(--color-primary-light); height: 240px; width: 100%;">
+                    <div class="bod-info">
+                        <h4>Juna Shrestha</h4>
+                        <p>Credit Administration</p>
+                    </div>
+                </div>
+
+                <!-- 11. Narayan Poudel -->
+                <div class="bod-card hod-member">
+                    <img src="https://reliancenepal.com.np/uploads/team/6788aaefc4aabea262bb22e65e3a36033d96132b.png" alt="Narayan Poudel" style="object-fit: cover; background-color: var(--color-primary-light); height: 240px; width: 100%;">
+                    <div class="bod-info">
+                        <h4>Narayan Poudel</h4>
+                        <p>Credit Risk / Operation Risk</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Global Footer Placeholder -->
+    <div id="footer"></div>
+
+    <!-- Page Scripts -->
+    <script src="components.js?v=1.0.5"></script>
+    <script>
+        function filterHODs() {
+            const searchVal = document.getElementById('hod-search').value.toLowerCase();
+            const members = document.querySelectorAll('.hod-member');
+            
+            members.forEach(member => {
+                const name = member.querySelector('h4').innerText.toLowerCase();
+                const dept = member.querySelector('p').innerText.toLowerCase();
+                
+                if (name.includes(searchVal) || dept.includes(searchVal)) {
+                    member.style.display = 'flex';
+                } else {
+                    member.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

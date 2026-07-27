@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Find Reliance Finance Limited branches in Kathmandu, Lalitpur, Pokhara, Butwal, Dhangadhi, Kohalpur, and other cities across Nepal.">
+    <title>Branch Locator | Reliance Finance Limited</title>
+    <link rel="shortcut icon" type="image/x-icon" href="https://reliancenepal.com.np/assets/images/reliance/favicon.png">
+    
+    <!-- External Icon & Typography Styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css?v=1.0.5">
+</head>
+<body>
+
+    <!-- Global Header Placeholder -->
+    <div id="header"></div>
+
+    <!-- Page Banner -->
+    <section class="section" style="background: linear-gradient(rgba(112, 43, 134, 0.85), rgba(62, 12, 78, 0.95)), url('https://reliancenepal.com.np/uploads/slider/198676f68408ee08613d3bfcee3f2de06c20de85.jpg') no-repeat center center/cover; padding: 6rem 0; color: #fff; text-align: center;">
+        <div class="container">
+            <h1 style="color:#fff; margin-bottom: 0.5rem;">Branch Network & Partners</h1>
+            <p style="color:var(--color-secondary); font-size:1.1rem; font-weight:600; text-transform:uppercase; letter-spacing:0.15em;">Locate Our 21+ Branches & Network Alliances</p>
+        </div>
+    </section>
+
+    <!-- Branch locator filter section -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Our Branches</h2>
+                <p>Find contact details, managers, and directions for RFL branches across Nepal.</p>
+            </div>
+            
+            <div class="branch-filters">
+                <div class="search-bar" style="max-width:350px;">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="branch-search" placeholder="Search by name, city..." onkeyup="filterBranches()">
+                </div>
+                
+                <select class="branch-select" id="filter-region" onchange="filterBranches()">
+                    <option value="all">All Provinces / Regions</option>
+                    <option value="valley">Kathmandu Valley</option>
+                    <option value="koshi">Koshi Province</option>
+                    <option value="bagmati">Bagmati Province (Out Valley)</option>
+                    <option value="gandaki">Gandaki Province</option>
+                    <option value="lumbini">Lumbini Province</option>
+                    <option value="sudurpashchim">Sudurpashchim Province</option>
+                </select>
+            </div>
+
+            <!-- Branch Grid -->
+            <div class="branch-grid" id="branches-container">
+                <!-- Dynamically populated by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Partners Section -->
+    <section class="section section-bg" id="partners">
+        <div class="container" style="max-width: 900px;">
+            <div class="section-header">
+                <h2>Our Partners & Alliances</h2>
+                <p>Establishing strategic tie-ups to deliver capital efficiency, equity access, and community support.</p>
+            </div>
+            
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:2.5rem;">
+                <div class="contact-info-card" style="text-align:center; padding:2.5rem;">
+                    <i class="fas fa-handshake" style="font-size:2.5rem; color:var(--color-primary); margin-bottom:1rem;"></i>
+                    <h4>Garima Capital Limited</h4>
+                    <p style="font-size:0.85rem; color:var(--color-text-light); margin-top:0.5rem;">Strategic agreement to extend broker-linked savings, joint Demat administration support, and custom equity funding structures.</p>
+                </div>
+                
+                <div class="contact-info-card" style="text-align:center; padding:2.5rem;">
+                    <i class="fas fa-hospital" style="font-size:2.5rem; color:var(--color-primary); margin-bottom:1rem;"></i>
+                    <h4>Chirayau National Hospital</h4>
+                    <p style="font-size:0.85rem; color:var(--color-text-light); margin-top:0.5rem;">Collaboration to supply discount healthcare checkup provisions and health benefits for RFL card holders and account owners.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Merchant Offers Section -->
+    <section class="section" id="offers">
+        <div class="container" style="max-width: 900px;">
+            <div class="section-header">
+                <h2>Merchant & Card Offers</h2>
+                <p>Exclusive discounts and perks available nationwide when using your RFL Visa Debit Card or Smart Mobile QR.</p>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="rates-table">
+                    <thead>
+                        <tr>
+                            <th>Merchant Partner</th>
+                            <th>Discount / Benefit</th>
+                            <th>Eligible Transactions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Chirayau National Hospital</strong> (Kathmandu)</td>
+                            <td><span class="rate-badge">15% Discount</span> on diagnostics and room charges</td>
+                            <td>Show RFL Visa Debit Card or account passbook</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Scheer Memorial Hospital</strong> (Banepa)</td>
+                            <td><span class="rate-badge">10% Discount</span> on general checkups and OPD</td>
+                            <td>RFL Visa Debit Card / QR Teller payment</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Garima Capital Demat accounts</strong></td>
+                            <td><span class="rate-badge">Free Annual Charge</span> for the first year</td>
+                            <td>Open Demat linked with RFL Investor Account</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Global Footer Placeholder -->
+    <div id="footer"></div>
+
+    <!-- Page Scripts -->
+    <script src="components.js?v=1.0.5"></script>
+    <script>
+        // RFL Branch Data Array
+        const branchData = [
+            {
+                name: "Head Office - Kamaladi",
+                region: "valley",
+                address: "Reliance Bhawan, Kamaladi, Kathmandu-01",
+                phone: "+977-01-5361104, 5323117",
+                email: "kamaladi@reliancenepal.com.np",
+                manager: "Mr. Anil Shrestha (CEO)"
+            },
+            {
+                name: "Sitapaila Branch",
+                region: "valley",
+                address: "Nagarjun-4, Sitapaila, Kathmandu",
+                phone: "+977-01-4671408",
+                email: "sitapaila@reliancenepal.com.np",
+                manager: "Mr. Ramesh Shrestha"
+            },
+            {
+                name: "Imadol Branch",
+                region: "valley",
+                address: "Mahalaxmi-3, Imadol, Lalitpur",
+                phone: "+977-01-5203112",
+                email: "imadol@reliancenepal.com.np",
+                manager: "Ms. Sabina Khadgi"
+            },
+            {
+                name: "Pokhara Branch",
+                region: "gandaki",
+                address: "Newroad, Pokhara, Kaski",
+                phone: "+977-61-532115",
+                email: "pokhara@reliancenepal.com.np",
+                manager: "Mr. Dipendra Gautam"
+            },
+            {
+                name: "Besishahar Branch",
+                region: "gandaki",
+                address: "Besishahar, Lamjung",
+                phone: "+977-66-521104",
+                email: "besishahar@reliancenepal.com.np",
+                manager: "Mr. Suresh Bhandari"
+            },
+            {
+                name: "Gorkha Branch",
+                region: "gandaki",
+                address: "Gorkha Bazaar, Gorkha",
+                phone: "+977-64-420215",
+                email: "gorkha@reliancenepal.com.np",
+                manager: "Mr. Santosh Shrestha"
+            },
+            {
+                name: "Janagal Branch",
+                region: "bagmati",
+                address: "Banepa-13, Janagal, Kavre",
+                phone: "+977-11-661104",
+                email: "janagal@reliancenepal.com.np",
+                manager: "Mr. Sunil Sapkota"
+            },
+            {
+                name: "Dhadingbesi Branch",
+                region: "bagmati",
+                address: "Nilkantha-3, Dhadingbesi, Dhading",
+                phone: "+977-36-520412",
+                email: "dhading@reliancenepal.com.np",
+                manager: "Mr. Rajan Adhikari"
+            },
+            {
+                name: "Narayangarh Branch",
+                region: "bagmati",
+                address: "Narayangarh, Bharatpur, Chitwan",
+                phone: "+977-56-572114",
+                email: "narayangarh@reliancenepal.com.np",
+                manager: "Mr. Pradeep Kumar Dev"
+            },
+            {
+                name: "Butwal Branch",
+                region: "lumbini",
+                address: "Milanchowk, Butwal, Rupandehi",
+                phone: "+977-71-542115",
+                email: "butwal@reliancenepal.com.np",
+                manager: "Mr. Nabin Kumar Shrestha"
+            },
+            {
+                name: "Bhairahawa Branch",
+                region: "lumbini",
+                address: "Bhairahawa Bazaar, Rupandehi",
+                phone: "+977-71-522104",
+                email: "bhairahawa@reliancenepal.com.np",
+                manager: "Mr. Bikram Lal Pradhan"
+            },
+            {
+                name: "Manigram Branch",
+                region: "lumbini",
+                address: "Manigram, Tilottama, Rupandehi",
+                phone: "+977-71-562112",
+                email: "manigram@reliancenepal.com.np",
+                manager: "Mr. Deepak K.C."
+            },
+            {
+                name: "Kohalpur Branch",
+                region: "lumbini",
+                address: "Kohalpur Chowk, Banke",
+                phone: "+977-81-540112",
+                email: "kohalpur@reliancenepal.com.np",
+                manager: "Mr. Binod Kumar Shrestha"
+            },
+            {
+                name: "Charali Branch",
+                region: "koshi",
+                address: "Mechinagar-13, Charali, Jhapa",
+                phone: "+977-23-455112",
+                email: "charali@reliancenepal.com.np",
+                manager: "Mr. Tara Prasain"
+            },
+            {
+                name: "Dhulabari Branch",
+                region: "koshi",
+                address: "Dhulabari Bazaar, Jhapa",
+                phone: "+977-23-560114",
+                email: "dhulabari@reliancenepal.com.np",
+                manager: "Mr. Bimal Upadhyaya"
+            },
+            {
+                name: "Dhangadhi Branch",
+                region: "sudurpashchim",
+                address: "Chauraha, Dhangadhi, Kailali",
+                phone: "+977-91-527115",
+                email: "dhangadhi@reliancenepal.com.np",
+                manager: "Mr. Yogesh Rawal"
+            },
+            {
+                name: "Mahendranagar Branch",
+                region: "sudurpashchim",
+                address: "Galli No. 3, Mahendranagar, Kanchanpur",
+                phone: "+977-99-523114",
+                email: "mahendranagar@reliancenepal.com.np",
+                manager: "Mr. Keshav Raj Bhatta"
+            },
+            {
+                name: "Attariya Branch",
+                region: "sudurpashchim",
+                address: "Attariya Chowk, Kailali",
+                phone: "+977-91-551104",
+                email: "attariya@reliancenepal.com.np",
+                manager: "Mr. Harish Chandra Rawal"
+            }
+        ];
+
+        const container = document.getElementById('branches-container');
+
+        function renderBranches(list) {
+            container.innerHTML = '';
+            if (list.length === 0) {
+                container.innerHTML = `<div style="grid-column: span 3; text-align:center; padding:3rem; color:var(--color-text-muted);">
+                    <i class="fas fa-exclamation-circle" style="font-size:2.5rem; margin-bottom:1rem; color:var(--color-primary);"></i>
+                    <p>No branches found matching your criteria.</p>
+                </div>`;
+                return;
+            }
+
+            list.forEach(b => {
+                container.innerHTML += `
+                    <div class="branch-card">
+                        <h3>${b.name}</h3>
+                        <div class="branch-detail">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>${b.address}</span>
+                        </div>
+                        <div class="branch-detail">
+                            <i class="fas fa-phone-alt"></i>
+                            <span>${b.phone}</span>
+                        </div>
+                        <div class="branch-detail">
+                            <i class="far fa-envelope"></i>
+                            <span>${b.email}</span>
+                        </div>
+                        <div class="branch-detail" style="border-top: 1px solid var(--color-border-light); padding-top:0.75rem; margin-top:0.75rem;">
+                            <i class="fas fa-user-tie"></i>
+                            <span>Manager: <strong>${b.manager}</strong></span>
+                        </div>
+                        <div style="margin-top:1.5rem;">
+                            <a href="https://maps.google.com/?q=${encodeURIComponent(b.name + ' ' + b.address)}" target="_blank" class="btn btn-outline" style="padding:0.4rem 1rem; font-size:0.8rem; width:100%;">
+                                <i class="fas fa-directions"></i> Get Directions
+                            </a>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function filterBranches() {
+            const searchVal = document.getElementById('branch-search').value.toLowerCase();
+            const regionVal = document.getElementById('filter-region').value;
+
+            const filtered = branchData.filter(b => {
+                const matchesSearch = b.name.toLowerCase().includes(searchVal) || 
+                                      b.address.toLowerCase().includes(searchVal) || 
+                                      b.manager.toLowerCase().includes(searchVal);
+                
+                const matchesRegion = regionVal === 'all' || b.region === regionVal;
+
+                return matchesSearch && matchesRegion;
+            });
+
+            renderBranches(filtered);
+        }
+
+        // Initialize render
+        document.addEventListener('DOMContentLoaded', () => {
+            renderBranches(branchData);
+            
+            // Listen to hash change to scroll to correct section on page load
+            const hash = window.location.hash;
+            if (hash) {
+                const target = document.querySelector(hash);
+                if (target) {
+                    setTimeout(() => {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }, 300);
+                }
+            }
+        });
+
+        // Listen for hash changes
+        window.addEventListener('hashchange', () => {
+            const hash = window.location.hash;
+            if (hash) {
+                const target = document.querySelector(hash);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        });
+    </script>
+</body>
+</html>

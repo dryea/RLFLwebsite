@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Learn more about Reliance Finance Limited's introduction, strategic framework, board of directors, management team, and corporate governance.">
+    <title>About Us | Reliance Finance Limited</title>
+    <link rel="shortcut icon" type="image/x-icon" href="https://reliancenepal.com.np/assets/images/reliance/favicon.png">
+    
+    <!-- External Icon & Typography Styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css?v=1.0.5">
+    <style>
+        /* --- Interactive Timeline Custom Styles --- */
+        .interactive-timeline-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            padding: 1rem 0;
+        }
+
+        .timeline-track-wrapper {
+            overflow-x: auto;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+            scrollbar-width: none;
+        }
+        .timeline-track-wrapper::-webkit-scrollbar {
+            display: none;
+        }
+
+        .timeline-track {
+            min-width: 800px;
+            position: relative;
+            height: 4px;
+            margin: 0 40px;
+        }
+
+        .timeline-line-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--color-border);
+            border-radius: var(--radius-full);
+            z-index: 1;
+        }
+
+        .timeline-line-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background-color: var(--color-secondary);
+            border-radius: var(--radius-full);
+            z-index: 2;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .timeline-nodes-container {
+            position: absolute;
+            top: -8px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            z-index: 3;
+        }
+
+        .timeline-node {
+            background: none;
+            border: none;
+            cursor: pointer;
+            outline: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+        }
+
+        .node-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: var(--color-surface);
+            border: 4px solid var(--color-border);
+            transition: var(--transition-fast);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .timeline-node:hover .node-dot {
+            border-color: var(--color-primary);
+            transform: scale(1.2);
+        }
+
+        .timeline-node.active .node-dot {
+            background-color: var(--color-secondary);
+            border-color: var(--color-primary);
+            transform: scale(1.3);
+            box-shadow: none;
+        }
+
+        .node-label {
+            position: absolute;
+            top: 30px;
+            font-family: var(--font-heading);
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--color-text-light);
+            white-space: nowrap;
+            transition: var(--transition-fast);
+        }
+
+        .timeline-node.active .node-label {
+            color: var(--color-primary);
+            font-size: 0.95rem;
+        }
+
+        /* Detail Display Card */
+        .timeline-display-card {
+            background-color: var(--color-surface);
+            border-radius: var(--radius-lg);
+            padding: 3rem;
+            box-shadow: var(--shadow-premium);
+            border: 1px solid rgba(112, 43, 134, 0.08);
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+            min-height: 220px;
+            transition: all 0.4s ease;
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .timeline-display-card.fade-out {
+            opacity: 0;
+            transform: translateY(15px);
+        }
+
+        .timeline-card-icon-wrapper {
+            background-color: var(--color-primary-light);
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            border: 1px solid rgba(112, 43, 134, 0.15);
+        }
+
+        .timeline-card-icon-wrapper i {
+            font-size: 2.5rem;
+            color: var(--color-primary);
+        }
+
+        .timeline-card-info {
+            flex-grow: 1;
+        }
+
+        .timeline-card-year {
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--color-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+        }
+
+        .timeline-card-title {
+            color: var(--color-primary);
+            font-size: 1.6rem;
+            margin-bottom: 0.75rem;
+            font-weight: 800;
+        }
+
+        .timeline-card-text {
+            color: var(--color-text-light);
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+
+        /* Nav Arrows */
+        .timeline-nav-arrow {
+            position: absolute;
+            top: 60%;
+            transform: translateY(-50%);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: var(--color-surface);
+            border: 1px solid var(--color-border);
+            color: var(--color-text-light);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-sm);
+            z-index: 10;
+            transition: var(--transition-fast);
+        }
+
+        .timeline-nav-arrow:hover {
+            background-color: var(--color-primary);
+            border-color: var(--color-primary);
+            color: var(--color-surface);
+            box-shadow: none;
+        }
+
+        .timeline-nav-arrow.prev {
+            left: -60px;
+        }
+
+        .timeline-nav-arrow.next {
+            right: -60px;
+        }
+
+        .timeline-nav-buttons {
+            display: none;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        @media (max-width: 1120px) {
+            .timeline-nav-arrow {
+                display: none;
+            }
+            .timeline-nav-buttons {
+                display: flex;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .timeline-display-card {
+                flex-direction: column;
+                text-align: center;
+                padding: 2rem;
+            }
+            .timeline-card-icon-wrapper {
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Global Header Placeholder -->
+    <div id="header"></div>
+
+    <!-- Page Banner -->
+    <section class="section" style="background: linear-gradient(rgba(112, 43, 134, 0.8), rgba(62, 12, 78, 0.9)), url('https://reliancenepal.com.np/uploads/slider/198676f68408ee08613d3bfcee3f2de06c20de85.jpg') no-repeat center center/cover; padding: 6rem 0; color: #fff; text-align: center;">
+        <div class="container">
+            <h1 style="color:#fff; margin-bottom: 0.5rem;">Corporate Profile & Structure</h1>
+            <p style="color:var(--color-secondary); font-size:1.1rem; font-weight:600; text-transform:uppercase; letter-spacing:0.15em;">Strategic Framework, Milestones & Governance</p>
+        </div>
+    </section>
+
+    <!-- Company Profile Intro -->
+    <section class="section section-bg" id="intro">
+        <div class="container about-section-grid">
+            <div>
+                <h4 style="color:var(--color-secondary); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.5rem;">Company Profile</h4>
+                <h2 style="color:var(--color-primary); margin-bottom:1.5rem;">Reliance Finance Limited</h2>
+                <p>Reliance Finance Limited is a national-level "C" class financial institution, licensed by Nepal Rastra Bank. Since our establishment in 2066 B.S., we have positioned ourselves as a key driver of retail banking, agricultural credit, and MSME growth inside and outside the Kathmandu Valley.</p>
+                <p>We pride ourselves on sound corporate governance, risk management, and capital safety. Our promotions represent pioneers across various commercial ventures, trading, and infrastructure domains, ensuring that we act not just as a financial lender, but as a long-term strategic growth partner.</p>
+                <p>With our registered head office in Kamaladi, Kathmandu, we manage 21 branches spread in key commercial hubs of Nepal, delivering customized savings, remittance, digital wallets, and loan services.</p>
+                <div style="margin-top: 2rem;">
+                    <a href="about/introduction.html" class="btn btn-primary">Read Full Introduction</a>
+                </div>
+            </div>
+            <div>
+                <img src="https://reliancenepal.com.np/uploads/page/48141a0a9b0736d944baf8fb179564c1b770f3f9.jpg" alt="RFL office board" style="border-radius:var(--radius-lg); box-shadow:var(--shadow-premium); width:100%;">
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission & Goals -->
+    <section class="section" id="mission">
+        <div class="container" style="max-width:800px; text-align:center;">
+            <div class="section-header">
+                <h2>Mission & Goals</h2>
+                <p>Our guiding values driving economic progress, commercial trust, and digital transformation.</p>
+            </div>
+            <div class="contact-info-card" style="margin-bottom:2rem;">
+                <h4 style="color:var(--color-primary);"><i class="fas fa-bullseye" style="margin-right:0.5rem;"></i> Our Mission</h4>
+                <p style="color:var(--color-text-light);">To deliver modern, accessible, and digital financial solutions to all segments of society, enhancing stakeholder value through compliance, ethical practices, and digital leadership.</p>
+            </div>
+            <div class="contact-info-card">
+                <h4 style="color:var(--color-primary);"><i class="fas fa-flag" style="margin-right:0.5rem;"></i> Our Goals</h4>
+                <p style="color:var(--color-text-light);">To achieve absolute financial solidity, maximize client reach in underserved rural hubs via mobile teller networks, and foster sustainable credit portfolios in environmental operations.</p>
+            </div>
+            <div style="margin-top: 2.5rem;">
+                <a href="about/mission-vision.html" class="btn btn-primary">View Mission & Vision Page</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Strategic Framework -->
+    <section class="section section-bg" id="framework">
+        <div class="container" style="max-width:800px; text-align:center;">
+            <div class="section-header">
+                <h2>Strategic Framework</h2>
+                <p>Four pillars supporting our customer operations, digital products, and risk control mechanisms.</p>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem; text-align:left;">
+                <div class="contact-info-card">
+                    <h5 style="color:var(--color-primary); margin-bottom:0.5rem;"><i class="fas fa-fingerprint" style="color:var(--color-secondary); margin-right:0.4rem;"></i> Customer Centricity</h5>
+                    <p style="font-size:0.85rem; color:var(--color-text-light);">We prioritize customized services with flexible account variations matching the specific profiles of our diverse clients.</p>
+                </div>
+                <div class="contact-info-card">
+                    <h5 style="color:var(--color-primary); margin-bottom:0.5rem;"><i class="fas fa-shield-virus" style="color:var(--color-secondary); margin-right:0.4rem;"></i> Compliance & Safety</h5>
+                    <p style="font-size:0.85rem; color:var(--color-text-light);">Rigorous implementation of NRB capital directives and robust risk monitoring to secure stakeholder investments.</p>
+                </div>
+                <div class="contact-info-card">
+                    <h5 style="color:var(--color-primary); margin-bottom:0.5rem;"><i class="fas fa-laptop-code" style="color:var(--color-secondary); margin-right:0.4rem;"></i> Digital Banking</h5>
+                    <p style="font-size:0.85rem; color:var(--color-text-light);">Providing state-of-the-art Fonepay mobile applications, QR codes, ABBS check clearing, and digital remittance.</p>
+                </div>
+                <div class="contact-info-card">
+                    <h5 style="color:var(--color-primary); margin-bottom:0.5rem;"><i class="fas fa-leaf" style="color:var(--color-secondary); margin-right:0.4rem;"></i> Sustainable Growth</h5>
+                    <p style="font-size:0.85rem; color:var(--color-text-light);">Focusing credit flows on agricultural projects, renewable energy setups, and local micro-businesses.</p>
+                </div>
+            </div>
+            <div style="margin-top: 2.5rem;">
+                <a href="about/framework.html" class="btn btn-primary">View Detailed Strategic Framework</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Milestones -->
+    <section class="section" id="milestones">
+        <div class="container">
+            <div class="section-header">
+                <h2>Milestones & History</h2>
+                <p>Explore our journey of trust, financial stability, and digital innovation since 2066 B.S.</p>
+            </div>
+            
+            <div class="interactive-timeline-container">
+                <!-- Navigation Arrows (Desktop) -->
+                <button class="timeline-nav-arrow prev" id="timeline-prev" aria-label="Previous Milestone">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="timeline-nav-arrow next" id="timeline-next" aria-label="Next Milestone">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+
+                <!-- Horizontal Timeline Track -->
+                <div class="timeline-track-wrapper">
+                    <div class="timeline-track">
+                        <div class="timeline-line-bg"></div>
+                        <div class="timeline-line-progress" id="timeline-progress"></div>
+                        
+                        <div class="timeline-nodes-container">
+                            <button class="timeline-node active" data-index="0">
+                                <span class="node-dot"></span>
+                                <span class="node-label">2066 B.S.</span>
+                            </button>
+                            <button class="timeline-node" data-index="1">
+                                <span class="node-dot"></span>
+                                <span class="node-label">2009 A.D.</span>
+                            </button>
+                            <button class="timeline-node" data-index="2">
+                                <span class="node-dot"></span>
+                                <span class="node-label">2013 A.D.</span>
+                            </button>
+                            <button class="timeline-node" data-index="3">
+                                <span class="node-dot"></span>
+                                <span class="node-label">2017 A.D.</span>
+                            </button>
+                            <button class="timeline-node" data-index="4">
+                                <span class="node-dot"></span>
+                                <span class="node-label">2018 A.D.</span>
+                            </button>
+                            <button class="timeline-node" data-index="5">
+                                <span class="node-dot"></span>
+                                <span class="node-label">2019 A.D.</span>
+                            </button>
+                            <button class="timeline-node" data-index="6">
+                                <span class="node-dot"></span>
+                                <span class="node-label">2021 A.D.</span>
+                            </button>
+                            <button class="timeline-node" data-index="7">
+                                <span class="node-dot"></span>
+                                <span class="node-label">2022 A.D.</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Milestone Detail Card -->
+                <div class="timeline-display-card" id="timeline-card">
+                    <div class="timeline-card-icon-wrapper">
+                        <i class="fas fa-building-columns" id="card-icon"></i>
+                    </div>
+                    <div class="timeline-card-info">
+                        <div class="timeline-card-year" id="card-year">2066 B.S.</div>
+                        <h3 class="timeline-card-title" id="card-title">Incorporation & Operations</h3>
+                        <p class="timeline-card-text" id="card-text">Reliance Finance Limited officially commenced operations on 18th Mangshir 2066 B.S. as the 84th licensed finance company established under the Bank and Financial Institutions Act (BAFIA) 2063, aiming to drive local commercial trust and capital growth.</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Arrows (Mobile) -->
+                <div class="timeline-nav-buttons">
+                    <button class="btn btn-outline" id="timeline-mobile-prev" aria-label="Previous Milestone" style="padding: 0.5rem 1.25rem;"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" id="timeline-mobile-next" aria-label="Next Milestone" style="padding: 0.5rem 1.25rem;">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+            <div style="margin-top: 2.5rem; text-align: center;">
+                <a href="about/timeline.html" class="btn btn-primary">Launch Interactive Timeline Page</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Capital Structure -->
+    <section class="section section-bg" id="capital">
+        <div class="container">
+            <div class="section-header">
+                <h2>Capital Structure</h2>
+                <p>Detailed official corporate equity shares and capital parameters as listed on the Nepal Stock Exchange (NEPSE).</p>
+            </div>
+            
+            <div class="table-responsive" style="max-width:700px; margin: 0 auto;">
+                <table class="rates-table" style="text-align:left;">
+                    <thead>
+                        <tr>
+                            <th>Capital Parameter</th>
+                            <th>Amount (NPR)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Authorized Capital</strong></td>
+                            <td>NPR 1,20,00,00,000.00 (1.20 Billion)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Issued and Paid-up Capital</strong></td>
+                            <td>NPR 1,12,14,51,730.00</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Promoter Shareholding (51%)</strong></td>
+                            <td>NPR 57,19,40,382.30</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Public Shareholding (49%)</strong></td>
+                            <td>NPR 54,95,11,347.70</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div style="margin-top: 2.5rem; text-align: center;">
+                <a href="about/capital.html" class="btn btn-primary">View Capital Structure Page</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- (Sections for Board of Directors and Corporate Governance have been moved to dedicated leadership pages) -->
+
+    <!-- Privacy Policy Section -->
+    <section class="section" id="privacy">
+        <div class="container" style="max-width:800px;">
+            <div class="section-header">
+                <h2>Privacy Policy</h2>
+                <p>Understand how we manage your personal details and account transaction safety protocols.</p>
+            </div>
+            <p>Reliance Finance Limited is committed to protecting the privacy and safety of information shared by depositors, loan applicants, and mobile banking users. Customer accounts information, transaction records, and contact details are stored under high-grade network firewalls and are never disclosed to third-parties except under legal warrants from regulating authorities.</p>
+            <div style="margin-top: 2rem; text-align: center;">
+                <a href="about/privacy.html" class="btn btn-primary">View Complete Privacy Policy</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="section section-bg" id="faq">
+        <div class="container" style="max-width:800px;">
+            <div class="section-header">
+                <h2>Frequently Asked Questions (FAQ)</h2>
+                <p>Quick guides regarding account operations and loan enquiries.</p>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:1.5rem;">
+                <div>
+                    <h5 style="color:var(--color-primary); margin-bottom:0.5rem;">Q: How can I register for mobile banking?</h5>
+                    <p style="font-size:0.9rem; color:var(--color-text-light);">A: You can apply online using the RFL Smart App or visit your local branch to fill out a registration form. A temporary activation pin will be sent to your mobile.</p>
+                </div>
+                <div>
+                    <h5 style="color:var(--color-primary); margin-bottom:0.5rem;">Q: What is the maximum tenure for a Home Loan?</h5>
+                    <p style="font-size:0.9rem; color:var(--color-text-light);">A: RFL provides flexible repayment tenures for Home Loans up to 20 years, depending on valuation structures and loan compliance.</p>
+                </div>
+                <div>
+                    <h5 style="color:var(--color-primary); margin-bottom:0.5rem;">Q: Can I take a loan against my Fixed Deposit?</h5>
+                    <p style="font-size:0.9rem; color:var(--color-text-light);">A: Yes, you can borrow up to 90% of your Fixed Deposit amount. Interest charged is typically +2.0% above your FD rate, and processing is done within a few hours.</p>
+                </div>
+            </div>
+            <div style="margin-top: 2.5rem; text-align: center;">
+                <a href="about/faq.html" class="btn btn-primary">Open Dedicated FAQ Hub</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Global Footer Placeholder -->
+    <div id="footer"></div>
+
+    <!-- Page Scripts -->
+    <script src="components.js?v=1.0.5"></script>
+    <script>
+        // Interactive Timeline Script
+        const timelineData = [
+            {
+                year: "2066 B.S.",
+                title: "Incorporation & Operations",
+                icon: "fa-building-columns",
+                text: "Reliance Finance Limited officially commenced operations on 18th Mangshir 2066 B.S. as the 84th licensed finance company established under the Bank and Financial Institutions Act (BAFIA) 2063, aiming to drive local commercial trust and capital growth."
+            },
+            {
+                year: "2009 A.D.",
+                title: "ATM Debit Card Launch",
+                icon: "fa-credit-card",
+                text: "Launched our ATM (Debit) Card services to provide round-the-clock banking convenience, enabling easy cash withdrawals and direct account accessibility for depositors."
+            },
+            {
+                year: "2013 A.D.",
+                title: "Lotus Finance Merger",
+                icon: "fa-handshake",
+                text: "Merged with Lotus Investment Finance Ltd. to strengthen capital reserves, expand operational scale, and enhance solvency ratios. Rebranded briefly as Reliance Lotus Finance Ltd."
+            },
+            {
+                year: "2017 A.D.",
+                title: "Name Reversion",
+                icon: "fa-signature",
+                text: "Officially reverted the corporate name back to Reliance Finance Limited during the 6th Annual General Meeting, aligning with our original brand identity."
+            },
+            {
+                year: "2018 A.D.",
+                title: "EMV Chip Secure Cards",
+                icon: "fa-shield-halved",
+                text: "Upgraded all debit card lines to secure EMV chip-based technology, incorporating global standard encryption to block cloning fraud and protect client transactions."
+            },
+            {
+                year: "2019 A.D.",
+                title: "Decade Anniversary",
+                icon: "fa-trophy",
+                text: "Celebrated 10 years of trusted operations in Nepal's financial market. Expanded the retail branch network to 10 active locations, including the launch of the Tilottama branch in Manigram."
+            },
+            {
+                year: "2021 A.D.",
+                title: "Digital Banking Shift",
+                icon: "fa-mobile-screen",
+                text: "Launched state-of-the-art mobile banking applications on the Fonepay platform. Expanded network footprint to 20 branches nationwide to scale retail banking access."
+            },
+            {
+                year: "2022 A.D.",
+                title: "Butwal Branch Launch",
+                icon: "fa-map-location-dot",
+                text: "Expanded network coverage to 21 active branches with the launching of our Butwal branch in Milanchowk, targeting small industries and commercial traders in the Lumbini province."
+            }
+        ];
+
+        let activeTimelineIndex = 0;
+        let timelineAutoplay = null;
+
+        function updateTimeline(index) {
+            if (index < 0 || index >= timelineData.length) return;
+            activeTimelineIndex = index;
+            
+            // Update Active Node
+            const nodes = document.querySelectorAll('.timeline-node');
+            nodes.forEach((node, i) => {
+                if (i === index) {
+                    node.classList.add('active');
+                } else {
+                    node.classList.remove('active');
+                }
+            });
+
+            // Update Progress Line width
+            const progressLine = document.getElementById('timeline-progress');
+            const percentage = (index / (timelineData.length - 1)) * 100;
+            progressLine.style.width = percentage + '%';
+
+            // Transition Card Content
+            const card = document.getElementById('timeline-card');
+            card.classList.add('fade-out');
+            
+            setTimeout(() => {
+                const data = timelineData[index];
+                document.getElementById('card-icon').className = `fas ${data.icon}`;
+                document.getElementById('card-year').innerText = data.year;
+                document.getElementById('card-title').innerText = data.title;
+                document.getElementById('card-text').innerText = data.text;
+                card.classList.remove('fade-out');
+            }, 300);
+        }
+
+        function nextMilestone() {
+            let nextIndex = activeTimelineIndex + 1;
+            if (nextIndex >= timelineData.length) nextIndex = 0;
+            updateTimeline(nextIndex);
+        }
+
+        function prevMilestone() {
+            let prevIndex = activeTimelineIndex - 1;
+            if (prevIndex < 0) prevIndex = timelineData.length - 1;
+            updateTimeline(prevIndex);
+        }
+
+        function startTimelineAutoplay() {
+            stopTimelineAutoplay();
+            timelineAutoplay = setInterval(nextMilestone, 6000);
+        }
+
+        function stopTimelineAutoplay() {
+            if (timelineAutoplay) {
+                clearInterval(timelineAutoplay);
+                timelineAutoplay = null;
+            }
+        }
+
+        // Event listeners for nodes
+        document.addEventListener('DOMContentLoaded', () => {
+            const nodes = document.querySelectorAll('.timeline-node');
+            nodes.forEach((node, idx) => {
+                node.addEventListener('click', () => {
+                    updateTimeline(idx);
+                    startTimelineAutoplay(); // Reset timer
+                });
+            });
+
+            const nextBtn = document.getElementById('timeline-next');
+            const prevBtn = document.getElementById('timeline-prev');
+            const mobileNextBtn = document.getElementById('timeline-mobile-next');
+            const mobilePrevBtn = document.getElementById('timeline-mobile-prev');
+
+            if (nextBtn) nextBtn.addEventListener('click', () => { nextMilestone(); startTimelineAutoplay(); });
+            if (prevBtn) prevBtn.addEventListener('click', () => { prevMilestone(); startTimelineAutoplay(); });
+            if (mobileNextBtn) mobileNextBtn.addEventListener('click', () => { nextMilestone(); startTimelineAutoplay(); });
+            if (mobilePrevBtn) mobilePrevBtn.addEventListener('click', () => { prevMilestone(); startTimelineAutoplay(); });
+
+            // Pause on hover
+            const container = document.querySelector('.interactive-timeline-container');
+            if (container) {
+                container.addEventListener('mouseenter', stopTimelineAutoplay);
+                container.addEventListener('mouseleave', startTimelineAutoplay);
+            }
+
+            // Start initial autoplay
+            startTimelineAutoplay();
+            updateTimeline(0);
+        });
+    </script>
+</body>
+</html>

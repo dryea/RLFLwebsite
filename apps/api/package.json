@@ -1,0 +1,28 @@
+{
+  "name": "api",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "lint": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "wrangler d1 migrations apply rfil-db",
+    "db:migrate:local": "wrangler d1 migrations apply rfil-db --local",
+    "db:seed": "wrangler d1 execute rfil-db --file=./seed.sql"
+  },
+  "dependencies": {
+    "hono": "^4.7.0",
+    "drizzle-orm": "^0.38.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250201.0",
+    "wrangler": "^3.107.0",
+    "drizzle-kit": "^0.30.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  }
+}

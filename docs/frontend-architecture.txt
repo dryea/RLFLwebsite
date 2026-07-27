@@ -1,0 +1,472 @@
+================================================================
+ RFIL - Next.js Frontend Architecture
+================================================================
+
+1. PROJECT STRUCTURE
+================================================================
+
+rfil-website/
+├── apps/
+│   ├── web/                          # Next.js public site
+│   │   ├── src/
+│   │   │   ├── app/
+│   │   │   │   ├── [lang]/           # Internationalized routes
+│   │   │   │   │   ├── page.tsx              # Homepage
+│   │   │   │   │   ├── about/
+│   │   │   │   │   │   ├── page.tsx          # About landing
+│   │   │   │   │   │   ├── introduction/
+│   │   │   │   │   │   ├── mission-goals/
+│   │   │   │   │   │   ├── strategic-framework/
+│   │   │   │   │   │   ├── milestones/
+│   │   │   │   │   │   ├── capital-structure/
+│   │   │   │   │   │   └── privacy-policy/
+│   │   │   │   │   ├── products/
+│   │   │   │   │   │   ├── page.tsx          # Products landing
+│   │   │   │   │   │   ├── savings/
+│   │   │   │   │   │   ├── fixed-deposits/
+│   │   │   │   │   │   └── loans/
+│   │   │   │   │   ├── services/
+│   │   │   │   │   │   ├── page.tsx
+│   │   │   │   │   │   └── [slug]/
+│   │   │   │   │   ├── rates/
+│   │   │   │   │   │   ├── interest-rates/
+│   │   │   │   │   │   ├── base-rate-spread-rate/
+│   │   │   │   │   │   ├── standard-tariff-charges/
+│   │   │   │   │   │   └── forex-rates/
+│   │   │   │   │   ├── publications/
+│   │   │   │   │   │   ├── news/
+│   │   │   │   │   │   ├── events/
+│   │   │   │   │   │   ├── notices/[category]/
+│   │   │   │   │   │   └── reports/[category]/
+│   │   │   │   │   ├── branches/
+│   │   │   │   │   ├── gallery/
+│   │   │   │   │   ├── downloads/
+│   │   │   │   │   ├── faq/
+│   │   │   │   │   ├── careers/
+│   │   │   │   │   ├── contact/
+│   │   │   │   │   ├── emi-calculator/
+│   │   │   │   │   ├── loan-enquiry/
+│   │   │   │   │   ├── calendar/
+│   │   │   │   │   ├── auction-notice/
+│   │   │   │   │   ├── merchant-offers/
+│   │   │   │   │   ├── banking-hours/
+│   │   │   │   │   ├── team/[category]/
+│   │   │   │   │   └── search/
+│   │   │   │   └── cms/              # Admin routes (client-only)
+│   │   │   │       ├── login/
+│   │   │   │       ├── dashboard/
+│   │   │   │       ├── pages/
+│   │   │   │       ├── products/
+│   │   │   │       ├── services/
+│   │   │   │       ├── branches/
+│   │   │   │       ├── rates/
+│   │   │   │       ├── news/
+│   │   │   │       ├── events/
+│   │   │   │       ├── notices/
+│   │   │   │       ├── reports/
+│   │   │   │       ├── gallery/
+│   │   │   │       ├── downloads/
+│   │   │   │       ├── faq/
+│   │   │   │       ├── careers/
+│   │   │   │       ├── team/
+│   │   │   │       ├── calendar/
+│   │   │   │       ├── auctions/
+│   │   │   │       ├── merchants/
+│   │   │   │       ├── media/
+│   │   │   │       ├── enquiries/
+│   │   │   │       ├── users/
+│   │   │   │       └── settings/
+│   │   │   ├── components/
+│   │   │   │   ├── layout/
+│   │   │   │   │   ├── Header.tsx
+│   │   │   │   │   ├── TopBar.tsx
+│   │   │   │   │   ├── MainNav.tsx
+│   │   │   │   │   ├── MobileMenu.tsx
+│   │   │   │   │   ├── Footer.tsx
+│   │   │   │   │   ├── Breadcrumb.tsx
+│   │   │   │   │   └── PageLayout.tsx
+│   │   │   │   ├── ui/               # Reusable UI primitives
+│   │   │   │   │   ├── Button.tsx
+│   │   │   │   │   ├── Card.tsx
+│   │   │   │   │   ├── Badge.tsx
+│   │   │   │   │   ├── Input.tsx
+│   │   │   │   │   ├── Select.tsx
+│   │   │   │   │   ├── Modal.tsx
+│   │   │   │   │   ├── Accordion.tsx
+│   │   │   │   │   ├── Tabs.tsx
+│   │   │   │   │   ├── Table.tsx
+│   │   │   │   │   ├── Pagination.tsx
+│   │   │   │   │   ├── Skeleton.tsx
+│   │   │   │   │   ├── Toast.tsx
+│   │   │   │   │   └── LoadingSpinner.tsx
+│   │   │   │   ├── sections/         # Page-specific sections
+│   │   │   │   │   ├── HeroCarousel.tsx
+│   │   │   │   │   ├── ProductGrid.tsx
+│   │   │   │   │   ├── ServiceGrid.tsx
+│   │   │   │   │   ├── TeamGrid.tsx
+│   │   │   │   │   ├── BranchList.tsx
+│   │   │   │   │   ├── BranchMap.tsx
+│   │   │   │   │   ├── RateTable.tsx
+│   │   │   │   │   ├── NewsGrid.tsx
+│   │   │   │   │   ├── EventList.tsx
+│   │   │   │   │   ├── NoticeList.tsx
+│   │   │   │   │   ├── ReportList.tsx
+│   │   │   │   │   ├── GalleryGrid.tsx
+│   │   │   │   │   ├── DownloadList.tsx
+│   │   │   │   │   ├── FAQAccordion.tsx
+│   │   │   │   │   ├── CareerList.tsx
+│   │   │   │   │   ├── ContactForm.tsx
+│   │   │   │   │   ├── LoanEnquiryForm.tsx
+│   │   │   │   │   ├── EMICalculator.tsx
+│   │   │   │   │   ├── NepaliCalendar.tsx
+│   │   │   │   │   ├── SearchResults.tsx
+│   │   │   │   │   └── MerchantOffers.tsx
+│   │   │   │   ├── cms/              # CMS components
+│   │   │   │   │   ├── CMSSidebar.tsx
+│   │   │   │   │   ├── CMSHeader.tsx
+│   │   │   │   │   ├── CMSLayout.tsx
+│   │   │   │   │   ├── DataTable.tsx
+│   │   │   │   │   ├── TipTapEditor.tsx
+│   │   │   │   │   ├── MediaPicker.tsx
+│   │   │   │   │   ├── ImageUploader.tsx
+│   │   │   │   │   ├── SlugInput.tsx
+│   │   │   │   │   ├── StatusBadge.tsx
+│   │   │   │   │   ├── VersionHistory.tsx
+│   │   │   │   │   ├── SchedulePicker.tsx
+│   │   │   │   │   └── RoleGuard.tsx
+│   │   │   │   └── shared/
+│   │   │   │       ├── AccessibilityToolbar.tsx
+│   │   │   │       ├── LanguageSwitcher.tsx
+│   │   │   │       ├── SearchOverlay.tsx
+│   │   │   │       ├── Breadcrumb.tsx
+│   │   │   │       ├── SEOHead.tsx
+│   │   │   │       ├── StructuredData.tsx
+│   │   │   │       ├── CookieConsent.tsx
+│   │   │   │       └── Preloader.tsx
+│   │   │   ├── lib/
+│   │   │   │   ├── api-client.ts     # Fetch wrapper for Hono API
+│   │   │   │   ├── auth.ts           # Auth.js config
+│   │   │   │   ├── db.ts             # D1 + Drizzle client (for server)
+│   │   │   │   ├── i18n.ts           # i18n utilities
+│   │   │   │   ├── seo.ts            # SEO helpers
+│   │   │   │   ├── utils.ts          # General utilities
+│   │   │   │   ├── constants.ts      # Site constants
+│   │   │   │   └── types.ts          # Shared TypeScript types
+│   │   │   ├── hooks/
+│   │   │   │   ├── useAccessibility.ts
+│   │   │   │   ├── useLanguage.ts
+│   │   │   │   ├── useMediaQuery.ts
+│   │   │   │   └── useDebounce.ts
+│   │   │   └── styles/
+│   │   │       ├── globals.css       # Tailwind imports + base styles
+│   │   │       └── accessibility.css # Accessibility override styles
+│   │   ├── public/
+│   │   │   ├── images/
+│   │   │   ├── fonts/
+│   │   │   └── manifest.json         # PWA manifest
+│   │   ├── next.config.ts
+│   │   ├── tailwind.config.ts
+│   │   ├── tsconfig.json
+│   │   └── package.json
+│   │
+│   └── api/                          # Hono Workers API
+│       ├── src/
+│       │   ├── index.ts              # Worker entry
+│       │   ├── db/
+│       │   │   ├── schema.ts         # Drizzle schema (mirrored)
+│       │   │   └── index.ts          # D1 client init
+│       │   ├── routes/
+│       │   │   ├── public/           # Public API routes
+│       │   │   │   ├── pages.ts
+│       │   │   │   ├── products.ts
+│       │   │   │   ├── services.ts
+│       │   │   │   ├── rates.ts
+│       │   │   │   ├── branches.ts
+│       │   │   │   ├── team.ts
+│       │   │   │   ├── news.ts
+│       │   │   │   ├── events.ts
+│       │   │   │   ├── notices.ts
+│       │   │   │   ├── reports.ts
+│       │   │   │   ├── gallery.ts
+│       │   │   │   ├── downloads.ts
+│       │   │   │   ├── faq.ts
+│       │   │   │   ├── careers.ts
+│       │   │   │   ├── calendar.ts
+│       │   │   │   ├── auctions.ts
+│       │   │   │   ├── merchants.ts
+│       │   │   │   ├── forms.ts      # Contact, loan enquiry, newsletter
+│       │   │   │   ├── search.ts
+│       │   │   │   └── sitemap.ts
+│       │   │   └── cms/              # CMS API routes
+│       │   │       ├── auth.ts
+│       │   │       ├── users.ts
+│       │   │       ├── pages.ts
+│       │   │       ├── products.ts
+│       │   │       ├── services.ts
+│       │   │       ├── rates.ts
+│       │   │       ├── branches.ts
+│       │   │       ├── team.ts
+│       │   │       ├── news.ts
+│       │   │       ├── notices.ts
+│       │   │       ├── reports.ts
+│       │   │       ├── gallery.ts
+│       │   │       ├── downloads.ts
+│       │   │       ├── faq.ts
+│       │   │       ├── careers.ts
+│       │   │       ├── calendar.ts
+│       │   │       ├── auctions.ts
+│       │   │       ├── merchants.ts
+│       │   │       ├── media.ts
+│       │   │       ├── enquiries.ts
+│       │   │       ├── settings.ts
+│       │   │       └── dashboard.ts
+│       │   ├── middleware/
+│       │   │   ├── auth.ts           # JWT verification
+│       │   │   ├── rbac.ts           # Role-based access
+│       │   │   ├── validate.ts       # Zod validation
+│       │   │   └── cors.ts           # CORS headers
+│       │   └── utils/
+│       │       ├── r2.ts             # R2 file helpers
+│       │       ├── email.ts          # Cloudflare Email Workers
+│       │       ├── cache.ts          # Cache helpers
+│       │       └── slug.ts           # URL slug generation
+│       ├── wrangler.jsonc
+│       └── package.json
+│
+├── packages/
+│   └── shared/                       # Shared types & validation
+│       ├── src/
+│       │   ├── types.ts              # All TypeScript interfaces
+│       │   ├── validators.ts         # Zod schemas for all entities
+│       │   └── constants.ts          # Shared constants
+│       └── package.json
+│
+├── drizzle.config.ts
+├── turbo.json
+└── package.json                       # Monorepo root
+
+
+2. RENDERING STRATEGY
+================================================================
+
+Route Type          | Rendering  | Why
+--------------------|------------|-----
+Homepage            | ISR (60s)  | Content changes infrequently, needs speed
+About pages         | ISR (300s)  | Static content, rarely changes
+Product pages       | ISR (300s)  | Product info stable
+Service pages       | ISR (300s)  | Service info stable
+Rate pages          | SSR         | Rates change monthly, need fresh data
+News articles       | ISR (60s)   | New articles frequently added
+Events              | ISR (60s)   | Event updates
+Notices             | SSR         | Time-sensitive
+Reports             | ISR (3600s) | Annual/quarterly, rarely changes
+Gallery             | ISR (300s)  | Album additions infrequent
+Downloads           | ISR (3600s) | Static files
+FAQ                 | ISR (3600s) | Rarely changes
+Careers             | SSR         | Job openings update frequently
+EMI Calculator      | Client      | Interactive JS app
+Loan Enquiry        | Client      | Form submission
+Branch Map          | Client      | Interactive map
+Calendar            | Client+SSR  | Calendar nav is interactive
+Search              | SSR         | Query-dependent
+Contact Form        | Client      | Form submission
+CMS /admin/*        | Client      | Dashboard SPA (client-only)
+
+3. COMPONENT TREE (LAYOUT)
+================================================================
+
+<html>
+  <body>
+    <AccessibilityToolbar />          {/* Floating a11y widget */}
+    <Preloader />                     {/* Page load spinner */}
+    
+    <Layout>
+      <Header>
+        <TopBar>
+          <ContactInfo />             {/* Phone + Email */}
+          <QuickLinks />              {/* Grievance dropdown, Quick Links */}
+          <TopNavLinks />             {/* Career, Vacancy, Branches, etc. */}
+          <LanguageSwitcher />        {/* EN/NP toggle */}
+          <SearchTrigger />           {/* Opens SearchOverlay */}
+        </TopBar>
+        
+        <MainNav>
+          <Logo />
+          <NavItems>
+            <NavDropdown label="About">
+              <DropdownItem />*       {/* Introduction, Mission, etc. */}
+              <DropdownSubmenu label="Governance">
+                <DropdownItem />*     {/* Committee of Directors, Mgmt, etc. */}
+              </DropdownSubmenu>
+            </NavDropdown>
+            <NavDropdown label="Products">
+              <DropdownSubmenu label="Saving">
+                <DropdownItem />*14   {/* 14 savings products */}
+              </DropdownSubmenu>
+              <DropdownSubmenu label="Fixed">
+                <DropdownItem />*3    {/* 3 FDs */}
+              </DropdownSubmenu>
+              <DropdownSubmenu label="Loan">
+                <DropdownItem />*9    {/* 9 loans */}
+              </DropdownSubmenu>
+            </NavDropdown>
+            <NavDropdown label="Rates">
+              <DropdownItem />*4
+            </NavDropdown>
+            <NavDropdown label="Publications">
+              <DropdownSubmenu label="Notice">
+                <DropdownItem />*7
+              </DropdownSubmenu>
+              <DropdownItem label="News" />
+              <DropdownItem label="Events" />
+              <DropdownSubmenu label="Report">
+                <DropdownItem />*6
+              </DropdownSubmenu>
+              <DropdownItem label="Training List" />
+            </NavDropdown>
+            <NavItem label="Auction Notice" />
+            <NavDropdown label="Services">
+              <DropdownItem />*14
+            </NavDropdown>
+            <NavDropdown label="Our Network">
+              <DropdownItem />*5
+            </NavDropdown>
+          </NavItems>
+        </MainNav>
+        
+        <MobileMenu />                {/* Off-canvas for mobile */}
+      </Header>
+
+      <main>
+        <Breadcrumb />                {/* On interior pages */}
+        {children}                    {/* Page content */}
+      </main>
+
+      <Footer>
+        <FooterColumns>
+          <FooterColumn label="Report"> {/* Annual, Quarterly, etc. */}
+          <FooterColumn label="Media">  {/* Notice, News, Events */}
+          <FooterColumn label="Rates">  {/* Interest, Base, Tariff, Forex */}
+          <FooterColumn label="EMI Calculator" />
+        </FooterColumns>
+        <FooterColumnAbout />
+        <FooterColumnServices />
+        <FooterColumnContact />
+        <FooterSocial />              {/* FB, Twitter, YouTube, LinkedIn, Insta */}
+        <MobileAppPromo />            {/* Google Play link */}
+        <Copyright />
+      </Footer>
+      
+      <SearchOverlay />               {/* Full-screen search */}
+      <CookieConsent />               {/* GDPR/cookie banner */}
+      <FloatingCalendar />            {/* Fixed-position calendar button */}
+      <BackToTop />                   {/* Scroll-to-top button */}
+    </Layout>
+  </body>
+</html>
+
+
+4. CMS ADMIN UI STRUCTURE
+================================================================
+
+The CMS is built as a client-side SPA under /cms/* with:
+
+Layout: CMSLayout
+├── CMSSidebar                       {/* Collapsible nav */}
+│   ├── Dashboard
+│   ├── Content
+│   │   ├── Pages
+│   │   ├── Products
+│   │   ├── Services
+│   │   ├── Branches
+│   │   ├── Team
+│   │   ├── Rates
+│   │   ├── FAQ
+│   │   ├── Downloads
+│   │   └── Calendar
+│   ├── Publications
+│   │   ├── News
+│   │   ├── Events
+│   │   ├── Notices
+│   │   └── Reports
+│   ├── Media Library
+│   ├── Appearances
+│   │   ├── Menus
+│   │   ├── Homepage
+│   │   └── Settings
+│   ├── Enquiries
+│   │   ├── Contact Submissions
+│   │   ├── Loan Enquiries
+│   │   └── Newsletter
+│   ├── Jobs
+│   │   ├── Job Listings
+│   │   └── Applications
+│   └── System
+│       ├── Users
+│       ├── Roles
+│       └── Activity Log
+│
+├── CMSHeader                        {/* User menu, notifications */}
+└── Main Content Area
+    ├── List View: DataTable         {/* Sortable, filterable, paginated */}
+    │   ├── Search bar
+    │   ├── Filter chips
+    │   ├── Bulk actions
+    │   └── Row actions (Edit, Delete, Duplicate)
+    │
+    └── Edit View: Form              {/* Dynamic form per entity type */}
+        ├── Slug input (auto-generate)
+        ├── Language tabs (EN/NP)
+        ├── TipTapEditor (WYSIWYG)
+        ├── Sidebar panels
+        │   ├── Status: Draft/Publish/Schedule
+        │   ├── Schedule picker
+        │   ├── SEO meta fields
+        │   ├── Featured image
+        │   └── Version history
+        └── Save / Save & Publish buttons
+
+
+5. DATA FLOW PATTERN
+================================================================
+
+Request Flow:
+  Browser → Next.js (Edge/Server)
+    → ISR/SSR fetches from Hono Worker API
+    → Hono Worker queries D1 via Drizzle
+    → Returns JSON → Next.js renders HTML
+    → Served via Cloudflare Pages
+
+Form Submission Flow:
+  Browser → Next.js (Client)
+    → POST to Hono Worker API
+    → Hono validates with Zod
+    → Writes to D1 + optionally R2 (file upload)
+    → Sends email via Cloudflare Email Workers
+    → Returns success response
+
+CMS Edit Flow:
+  Browser → Next.js (Client)
+    → Auth.js session check
+    → CMS page loads via Hono Worker CMS API
+    → Editor makes changes → Autosave to local state
+    → Manual Save → PATCH to Hono Worker
+    → Creates version snapshot in page_versions
+    → Updates page in D1
+    → Returns updated page
+
+Media Upload Flow:
+  Browser → Next.js (Client)
+    → Upload file → Hono Worker receives multipart
+    → Uploads to R2 with unique filename
+    → Triggers Cloudflare Images for optimization
+    → Creates thumbnails + responsive variants
+    → Stores metadata in media table
+    → Returns URLs
+
+Search Flow:
+  Browser → Next.js (Server)
+    → GET /api/search?q=term
+    → Hono Worker searches FTS5 index
+    → Returns ranked results grouped by type
+    → Next.js renders SearchResults component

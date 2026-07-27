@@ -1,0 +1,32 @@
+{
+  "name": "rfil-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-07-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "rfil-db",
+      "database_id": ""
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "R2",
+      "bucket_name": "rfil-media"
+    },
+    {
+      "binding": "R2_DOCUMENTS",
+      "bucket_name": "rfil-documents"
+    }
+  ],
+  "vars": {
+    "SITE_URL": "http://localhost:3000",
+    "ADMIN_EMAIL": "info@reliancenepal.com.np",
+    "FROM_EMAIL": "noreply@reliancenepal.com.np"
+  },
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS"
+  }
+}

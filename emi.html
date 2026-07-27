@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Use Reliance Finance Limited's advanced Loan EMI Calculator to check monthly payments, principal vs interest splits, and detailed monthly amortization schedule.">
+    <title>EMI Calculator | Reliance Finance Limited</title>
+    <link rel="shortcut icon" type="image/x-icon" href="https://reliancenepal.com.np/assets/images/reliance/favicon.png">
+    
+    <!-- External Icon & Typography Styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css?v=1.0.5">
+    
+    <style>
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #print-area, #print-area * {
+                visibility: visible;
+            }
+            #print-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Global Header Placeholder -->
+    <div id="header" class="no-print"></div>
+
+    <!-- Page Banner -->
+    <section class="section no-print" style="background: linear-gradient(rgba(112, 43, 134, 0.85), rgba(62, 12, 78, 0.95)), url('https://reliancenepal.com.np/uploads/slider/e7604c3646b8538bdd850c785e6d5ee361f8c821.jpg') no-repeat center center/cover; padding: 6rem 0; color: #fff; text-align: center;">
+        <div class="container">
+            <h1 style="color:#fff; margin-bottom: 0.5rem;">Loan EMI Calculator</h1>
+            <p style="color:var(--color-secondary); font-size:1.1rem; font-weight:600; text-transform:uppercase; letter-spacing:0.15em;">Interactive Loan Amortization & Planning Tool</p>
+        </div>
+    </section>
+
+    <!-- Calculator Grid Section -->
+    <section class="section" id="print-area">
+        <div class="container">
+            <div class="emi-full-grid">
+                <!-- Inputs Column -->
+                <div class="contact-form-container no-print" style="padding:2.5rem;">
+                    <h3 style="color:var(--color-primary); margin-bottom:2rem;"><i class="fas fa-sliders-h" style="margin-right:0.5rem;"></i> Adjust Loan Details</h3>
+                    
+                    <div style="display:flex; flex-direction:column; gap:2rem;">
+                        <!-- Amount -->
+                        <div class="slider-group">
+                            <div class="slider-header">
+                                <label for="input-amount">Loan Amount (NPR)</label>
+                                <input type="number" id="input-amount" value="2000000" style="padding:0.4rem 0.8rem; border:1px solid var(--color-border); border-radius:var(--radius-sm); font-weight:700; width:150px; text-align:right;">
+                            </div>
+                            <input type="range" class="range-slider" id="slider-amount" min="100000" max="20000000" step="100000" value="2000000">
+                        </div>
+                        
+                        <!-- Rate -->
+                        <div class="slider-group">
+                            <div class="slider-header">
+                                <label for="input-rate">Interest Rate (% p.a.)</label>
+                                <input type="number" id="input-rate" value="11.5" step="0.1" style="padding:0.4rem 0.8rem; border:1px solid var(--color-border); border-radius:var(--radius-sm); font-weight:700; width:100px; text-align:right;">
+                            </div>
+                            <input type="range" class="range-slider" id="slider-rate" min="5" max="22" step="0.1" value="11.5">
+                        </div>
+                        
+                        <!-- Tenure -->
+                        <div class="slider-group">
+                            <div class="slider-header">
+                                <label for="input-tenure">Loan Tenure (Years)</label>
+                                <input type="number" id="input-tenure" value="10" style="padding:0.4rem 0.8rem; border:1px solid var(--color-border); border-radius:var(--radius-sm); font-weight:700; width:80px; text-align:right;">
+                            </div>
+                            <input type="range" class="range-slider" id="slider-tenure" min="1" max="25" step="1" value="10">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results & Donut Chart Column -->
+                <div class="emi-widget-results" style="background-color: var(--color-surface); border:1px solid var(--color-border); box-shadow:var(--shadow-md);">
+                    <span class="emi-result-title" style="color:var(--color-text-light);">Monthly Instalment (EMI)</span>
+                    <div class="emi-result-value" id="res-emi" style="color:var(--color-primary); font-size:3rem;">NPR 28,143</div>
+                    
+                    <!-- SVG Donut Chart -->
+                    <div class="chart-container">
+                        <svg class="svg-donut" width="100%" height="100%" viewBox="0 0 42 42">
+                            <circle class="donut-ring" cx="21" cy="21" r="15.915" fill="transparent" stroke="var(--color-primary-light)" stroke-width="4.5"></circle>
+                            <circle class="donut-segment" id="donut-interest-seg" cx="21" cy="21" r="15.915" fill="transparent" stroke="var(--color-primary)" stroke-width="4.5" stroke-dasharray="60 40" stroke-dashoffset="25"></circle>
+                            <circle class="donut-segment" id="donut-principal-seg" cx="21" cy="21" r="15.915" fill="transparent" stroke="var(--color-secondary)" stroke-width="4.5" stroke-dasharray="40 60" stroke-dashoffset="85"></circle>
+                        </svg>
+                        <div class="donut-center-text">
+                            <span>EMI Details</span>
+                            <h4 id="donut-percent">100%</h4>
+                        </div>
+                    </div>
+
+                    <div class="legend-group">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: var(--color-secondary);"></div>
+                            <span>Principal</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: var(--color-primary);"></div>
+                            <span>Interest</span>
+                        </div>
+                    </div>
+
+                    <div class="emi-breakdown-mini" style="width:100%; border-top:1px solid var(--color-border); padding-top:1.5rem; margin-bottom:1.5rem;">
+                        <div class="emi-breakdown-row" style="margin-bottom:0.5rem;">
+                            <span>Principal Amount</span>
+                            <span id="res-principal" style="font-weight:700;">NPR 2,000,000</span>
+                        </div>
+                        <div class="emi-breakdown-row" style="margin-bottom:0.5rem;">
+                            <span>Total Interest Payable</span>
+                            <span id="res-interest" style="font-weight:700; color:var(--color-primary);">NPR 1,377,211</span>
+                        </div>
+                        <div class="emi-breakdown-row" style="font-weight:800; color:var(--color-text); font-size:1.05rem;">
+                            <span>Total Amount Payable</span>
+                            <span id="res-total">NPR 3,377,211</span>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-secondary no-print" style="width:100%;" onclick="window.print()"><i class="fas fa-print"></i> Print Payment Schedule</button>
+                </div>
+            </div>
+
+            <!-- Amortization Schedule Section -->
+            <div style="margin-top:3rem;">
+                <h3 style="color:var(--color-primary); margin-bottom:1.5rem;"><i class="fas fa-calendar-alt" style="margin-right:0.5rem;"></i> Monthly Amortization Schedule</h3>
+                
+                <div class="table-responsive">
+                    <table class="rates-table" id="schedule-table">
+                        <thead>
+                            <tr>
+                                <th>Month</th>
+                                <th>Opening Balance</th>
+                                <th>EMI</th>
+                                <th>Principal Paid</th>
+                                <th>Interest Paid</th>
+                                <th>Closing Balance</th>
+                            </tr>
+                        </thead>
+                        <tbody id="schedule-body">
+                            <!-- Injected by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="text-align:center; margin-top:2rem;" class="no-print">
+                    <button class="btn btn-outline" id="toggle-schedule-btn" onclick="toggleFullSchedule()">Show Complete Schedule</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Global Footer Placeholder -->
+    <div id="footer" class="no-print"></div>
+
+    <!-- Page Scripts -->
+    <script src="components.js?v=1.0.5"></script>
+    <script>
+        const sliderAmount = document.getElementById('slider-amount');
+        const inputAmount = document.getElementById('input-amount');
+        const sliderRate = document.getElementById('slider-rate');
+        const inputRate = document.getElementById('input-rate');
+        const sliderTenure = document.getElementById('slider-tenure');
+        const inputTenure = document.getElementById('input-tenure');
+
+        const displayEmi = document.getElementById('res-emi');
+        const displayPrincipal = document.getElementById('res-principal');
+        const displayInterest = document.getElementById('res-interest');
+        const displayTotal = document.getElementById('res-total');
+
+        const donutPrincipalSeg = document.getElementById('donut-principal-seg');
+        const donutInterestSeg = document.getElementById('donut-interest-seg');
+        const donutPercentDisplay = document.getElementById('donut-percent');
+        const scheduleBody = document.getElementById('schedule-body');
+
+        let showFullSchedule = false;
+        let amortizationRows = [];
+
+        // Synchronize inputs & sliders
+        function syncInputs(val, type) {
+            if (type === 'amount') {
+                sliderAmount.value = val;
+                inputAmount.value = val;
+            } else if (type === 'rate') {
+                sliderRate.value = val;
+                inputRate.value = val;
+            } else if (type === 'tenure') {
+                sliderTenure.value = val;
+                inputTenure.value = val;
+            }
+            calculateFullEMI();
+        }
+
+        // Add event listeners
+        sliderAmount.addEventListener('input', (e) => syncInputs(e.target.value, 'amount'));
+        inputAmount.addEventListener('change', (e) => syncInputs(e.target.value, 'amount'));
+        sliderRate.addEventListener('input', (e) => syncInputs(e.target.value, 'rate'));
+        inputRate.addEventListener('change', (e) => syncInputs(e.target.value, 'rate'));
+        sliderTenure.addEventListener('input', (e) => syncInputs(e.target.value, 'tenure'));
+        inputTenure.addEventListener('change', (e) => syncInputs(e.target.value, 'tenure'));
+
+        function calculateFullEMI() {
+            const principal = parseFloat(inputAmount.value) || 0;
+            const annualRate = parseFloat(inputRate.value) || 0;
+            const tenureYears = parseInt(inputTenure.value) || 0;
+
+            const monthlyRate = (annualRate / 12) / 100;
+            const totalMonths = tenureYears * 12;
+
+            let emi = 0;
+            if (monthlyRate > 0 && totalMonths > 0) {
+                const x = Math.pow(1 + monthlyRate, totalMonths);
+                emi = (principal * monthlyRate * x) / (x - 1);
+            } else if (totalMonths > 0) {
+                emi = principal / totalMonths;
+            }
+
+            const totalPayable = emi * totalMonths;
+            const totalInterest = totalPayable - principal;
+
+            // Update Text Displays
+            displayEmi.innerText = "NPR " + Math.round(emi).toLocaleString();
+            displayPrincipal.innerText = "NPR " + Math.round(principal).toLocaleString();
+            displayInterest.innerText = "NPR " + Math.round(totalInterest).toLocaleString();
+            displayTotal.innerText = "NPR " + Math.round(totalPayable).toLocaleString();
+
+            // Update Donut Chart
+            const principalPercent = (principal / totalPayable) * 100;
+            const interestPercent = (totalInterest / totalPayable) * 100;
+
+            donutPercentDisplay.innerText = Math.round(principalPercent) + "%";
+
+            // Circ = 2 * PI * r = 2 * 3.14159 * 15.915 = ~100
+            // Dasharray form: [strokeDash] [gap]
+            donutPrincipalSeg.style.strokeDasharray = `${principalPercent} ${100 - principalPercent}`;
+            donutPrincipalSeg.style.strokeDashoffset = `25`; // Starts at top center
+
+            donutInterestSeg.style.strokeDasharray = `${interestPercent} ${100 - interestPercent}`;
+            donutInterestSeg.style.strokeDashoffset = `${25 + principalPercent}`; // Shift by principal segment
+
+            // Generate Amortization Rows
+            amortizationRows = [];
+            let balance = principal;
+            for (let m = 1; m <= totalMonths; m++) {
+                const mInterest = balance * monthlyRate;
+                const mPrincipal = emi - mInterest;
+                const closingBalance = balance - mPrincipal;
+
+                amortizationRows.push({
+                    month: m,
+                    opening: Math.max(0, balance),
+                    emi: emi,
+                    principalPaid: mPrincipal,
+                    interestPaid: mInterest,
+                    closing: Math.max(0, closingBalance)
+                });
+
+                balance = closingBalance;
+            }
+
+            renderSchedule();
+        }
+
+        function renderSchedule() {
+            scheduleBody.innerHTML = '';
+            const limit = showFullSchedule ? amortizationRows.length : Math.min(12, amortizationRows.length);
+
+            for (let i = 0; i < limit; i++) {
+                const row = amortizationRows[i];
+                scheduleBody.innerHTML += `
+                    <tr>
+                        <td>Month ${row.month}</td>
+                        <td>NPR ${Math.round(row.opening).toLocaleString()}</td>
+                        <td>NPR ${Math.round(row.emi).toLocaleString()}</td>
+                        <td style="color:var(--color-success); font-weight:500;">NPR ${Math.round(row.principalPaid).toLocaleString()}</td>
+                        <td style="color:var(--color-primary); font-weight:500;">NPR ${Math.round(row.interestPaid).toLocaleString()}</td>
+                        <td>NPR ${Math.round(row.closing).toLocaleString()}</td>
+                    </tr>
+                `;
+            }
+
+            const toggleBtn = document.getElementById('toggle-schedule-btn');
+            if (toggleBtn) {
+                if (showFullSchedule) {
+                    toggleBtn.innerText = "Show Less";
+                } else {
+                    toggleBtn.innerText = `Show Complete Schedule (${amortizationRows.length} Months)`;
+                }
+            }
+        }
+
+        function toggleFullSchedule() {
+            showFullSchedule = !showFullSchedule;
+            renderSchedule();
+        }
+
+        // Initialize calculations with query parameter support
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const amountParam = urlParams.get('amount');
+            const rateParam = urlParams.get('rate');
+            const tenureParam = urlParams.get('tenure');
+
+            if (amountParam) {
+                syncInputs(amountParam, 'amount');
+            }
+            if (rateParam) {
+                syncInputs(rateParam, 'rate');
+            }
+            if (tenureParam) {
+                syncInputs(tenureParam, 'tenure');
+            }
+            calculateFullEMI();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="View Reliance Finance Limited's Fixed Deposit schemes for individuals, corporates, and remittance depositors. Calculate your interest returns instantly.">
+    <title>Fixed Deposit Schemes | Reliance Finance Limited</title>
+    <link rel="shortcut icon" type="image/x-icon" href="https://reliancenepal.com.np/assets/images/reliance/favicon.png">
+    
+    <!-- External Icon & Typography Styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css?v=1.0.5">
+    
+    <style>
+        .product-card.highlight {
+            border: 2px solid var(--color-secondary);
+            box-shadow: var(--shadow-premium);
+            transform: scale(1.02);
+            background-color: var(--color-secondary-light);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Global Header Placeholder -->
+    <div id="header"></div>
+
+    <!-- Page Banner -->
+    <section class="section" style="background: linear-gradient(rgba(112, 43, 134, 0.85), rgba(62, 12, 78, 0.95)), url('https://reliancenepal.com.np/uploads/slider/214dd0a0bdac9c93312f3f57d3e0f9f3de0504b2.jpg') no-repeat center center/cover; padding: 6rem 0; color: #fff; text-align: center;">
+        <div class="container">
+            <h1 style="color:#fff; margin-bottom: 0.5rem;">Fixed Deposit Schemes</h1>
+            <p style="color:var(--color-secondary); font-size:1.1rem; font-weight:600; text-transform:uppercase; letter-spacing:0.15em;">High Yield Fund Placements with Flexible Tenures</p>
+        </div>
+    </section>
+
+    <!-- FD Cards Section -->
+    <section class="section">
+        <div class="container product-grid">
+            <!-- Individual FD -->
+            <div class="product-card" id="prod-individual">
+                <i class="fas fa-user-shield"></i>
+                <h3>Individual Fixed Deposit</h3>
+                <p>Maximize interest gains on your savings. Secure a fixed yield over flexible tenures starting from 3 months to over 5 years. Pay interest monthly or quarterly directly into your savings account.</p>
+                <ul class="product-features">
+                    <li><i class="fas fa-check-circle"></i> Interest Rate: Up to 6.25% p.a.</li>
+                    <li><i class="fas fa-check-circle"></i> Loan facility against FD (up to 90%)</li>
+                    <li><i class="fas fa-check-circle"></i> Compounding interest posting options</li>
+                </ul>
+                <a href="#calculator" class="btn btn-primary" onclick="selectCustomerType('individual')">Calculate Returns</a>
+            </div>
+
+            <!-- Corporate FD -->
+            <div class="product-card" id="prod-corporate">
+                <i class="fas fa-building"></i>
+                <h3>Corporate Fixed Deposit</h3>
+                <p>Tailored capital placement for trusts, corporations, cooperatives, and institutional funds. Offers high-yield returns with customized liquidity withdrawals protocols.</p>
+                <ul class="product-features">
+                    <li><i class="fas fa-check-circle"></i> Interest Rate: Up to 5.75% p.a.</li>
+                    <li><i class="fas fa-check-circle"></i> Institutional relationship manager</li>
+                    <li><i class="fas fa-check-circle"></i> Specialized audit balance disclosures</li>
+                </ul>
+                <a href="#calculator" class="btn btn-primary" onclick="selectCustomerType('corporate')">Calculate Returns</a>
+            </div>
+
+            <!-- Remittance FD -->
+            <div class="product-card" id="prod-remittance">
+                <i class="fas fa-envelope-open-text"></i>
+                <h3>Remittance Fixed Deposit</h3>
+                <p>Exclusive deposit scheme for non-resident Nepalis (NRN) sending hard-earned money back home. RFL rewards NRNs with a premium additional interest rate.</p>
+                <ul class="product-features">
+                    <li><i class="fas fa-check-circle"></i> Interest Rate: Up to 7.25% p.a. (+1.0% Premium)</li>
+                    <li><i class="fas fa-check-circle"></i> Direct account setup from overseas</li>
+                    <li><i class="fas fa-check-circle"></i> Priority customer support access</li>
+                </ul>
+                <a href="#calculator" class="btn btn-primary" onclick="selectCustomerType('remittance')">Calculate Returns</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Maturity Calculator Section -->
+    <section class="section section-bg" id="calculator">
+        <div class="container">
+            <div class="section-header">
+                <h2>Fixed Deposit Maturity Calculator</h2>
+                <p>Calculate your maturity amount and total interest earnings instantly based on RFL's exact current interest rates.</p>
+            </div>
+
+            <div class="emi-widget" style="max-width:900px; margin:0 auto; background-color:#fff;">
+                <!-- Calculator inputs -->
+                <div class="emi-widget-inputs" style="gap:1.25rem;">
+                    <!-- Principal -->
+                    <div class="slider-group">
+                        <div class="slider-header">
+                            <span>Principal Deposit (NPR)</span>
+                            <span id="fd-amount-val">NPR 500,000</span>
+                        </div>
+                        <input type="range" class="range-slider" id="fd-amount" min="10000" max="10000000" step="10000" value="500000">
+                    </div>
+
+                    <!-- Customer Type -->
+                    <div class="form-group">
+                        <label for="fd-cust-type">Customer Category</label>
+                        <select id="fd-cust-type" style="padding:0.75rem 1rem; border:1px solid var(--color-border); border-radius:var(--radius-md);" onchange="calculateMaturity()">
+                            <option value="individual" selected>Individual Depositor</option>
+                            <option value="corporate">Corporate / Institutional</option>
+                            <option value="remittance">Remittance (NRN Accounts)</option>
+                        </select>
+                    </div>
+
+                    <!-- Tenure -->
+                    <div class="form-group">
+                        <label for="fd-tenure">Deposit Tenure</label>
+                        <select id="fd-tenure" style="padding:0.75rem 1rem; border:1px solid var(--color-border); border-radius:var(--radius-md);" onchange="calculateMaturity()">
+                            <option value="3">3 Months to 6 Months</option>
+                            <option value="6">Above 6 Months to 12 Months</option>
+                            <option value="12" selected>Above 12 Months to 36 Months</option>
+                            <option value="36">Above 36 Months to 60 Months</option>
+                            <option value="60">Above 60 Months</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Calculator outputs -->
+                <div class="emi-widget-results" style="background-color: var(--color-primary-light);">
+                    <span class="emi-result-title" style="color:var(--color-primary);">Interest Yield (p.a.)</span>
+                    <div class="emi-result-value" id="fd-rate-display" style="font-size:2.8rem; margin-bottom:1rem; color:var(--color-primary);">4.25%</div>
+
+                    <div class="emi-breakdown-mini" style="border-top:1px solid rgba(112, 43, 134, 0.1); padding-top:1.5rem; margin-bottom:1.5rem;">
+                        <div class="emi-breakdown-row" style="margin-bottom:0.4rem;">
+                            <span>Principal Investment</span>
+                            <span id="fd-res-principal">NPR 500,000</span>
+                        </div>
+                        <div class="emi-breakdown-row" style="margin-bottom:0.4rem;">
+                            <span>Interest Earned</span>
+                            <span id="fd-res-interest" style="color:var(--color-success); font-weight:700;">NPR 21,250</span>
+                        </div>
+                        <div class="emi-breakdown-row" style="font-weight:800; color:var(--color-text); font-size:1.05rem;">
+                            <span>Maturity Value</span>
+                            <span id="fd-res-total">NPR 521,250</span>
+                        </div>
+                    </div>
+
+                    <a href="contact.html?form=general" class="btn btn-primary" style="width:100%;">Open Fixed Deposit Account</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Detail Modal -->
+    <div class="product-modal" id="details-modal">
+        <div class="product-modal-content">
+            <span class="product-modal-close" onclick="closeDetailsModal()">&times;</span>
+            <div id="modal-body-content">
+                <!-- Content injected dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Global Footer Placeholder -->
+    <div id="footer"></div>
+
+    <!-- Page Scripts -->
+    <script src="components.js?v=1.0.5"></script>
+    <script>
+        // Detailed Metadata for Fixed Deposits
+        const fdData = {
+            individual: {
+                title: "Individual Fixed Deposit",
+                icon: "fa-user-shield",
+                minAmount: "NPR 10,000.00",
+                rates: "3.50% to 6.25% p.a.",
+                desc: "Maximize interest gains on your personal savings. Secure a fixed yield over flexible tenures starting from 3 months to over 5 years. Payouts can be credited quarterly, monthly, or at maturity.",
+                features: [
+                    "High interest rates guaranteed for the entire term",
+                    "Loan facility against FD certificate (up to 90% of principal)",
+                    "Compounding interest posting options",
+                    "Automatic renewal facility available",
+                    "Complimentary savings account linkage"
+                ],
+                docs: [
+                    "Citizenship Certificate or Passport copy",
+                    "Two copies of recent passport-size photos",
+                    "Utility bill copy as proof of address",
+                    "PAN Card copy (mandatory for deposits above NPR 1,000,000)",
+                    "Income source disclosure verification details"
+                ]
+            },
+            corporate: {
+                title: "Corporate Fixed Deposit",
+                icon: "fa-building",
+                minAmount: "NPR 100,000.00",
+                rates: "3.00% to 5.75% p.a.",
+                desc: "Designed for corporate houses, cooperative funds, trusts, and institutional managers. Secure high-yield liquid protection with custom withdrawal facilities.",
+                features: [
+                    "Premium institutional interest yields",
+                    "Dedicated Corporate Relationship Executive",
+                    "Specialized balance auditing confirmation letters",
+                    "Interest credited quarterly directly to corporate current/saving accounts",
+                    "Easy overdraft facilities setup against corporate FD"
+                ],
+                docs: [
+                    "Company/Firm Registration Certificate copy",
+                    "Memorandum & Articles of Association copy (MOA/AOA)",
+                    "Board Resolution copy authorizing the opening and operation of FD",
+                    "PAN/VAT registration certificate copy",
+                    "Citizenship copies and PP photos of all authorized operators/signatories"
+                ]
+            },
+            remittance: {
+                title: "Remittance Fixed Deposit (NRN)",
+                icon: "fa-envelope-open-text",
+                minAmount: "NPR 50,000.00",
+                rates: "4.50% to 7.25% p.a. (includes +1.0% Remittance Premium)",
+                desc: "Dedicated investment scheme for Non-Resident Nepalese (NRN) and migrant workers abroad. RFL rewards foreign savings with an additional interest premium.",
+                features: [
+                    "Guaranteed +1.0% interest premium above standard individual FD rates",
+                    "Remote account opening and paperless document collection",
+                    "Interest payout directly credited to savings or repatriated",
+                    "Priority online banking and support desk coordination"
+                ],
+                docs: [
+                    "Citizenship Certificate copy",
+                    "Valid Passport copy with foreign work permit / student visa copy",
+                    "Non-Resident Nepalese (NRN) Card copy (if applicable)",
+                    "Two copies of passport-size photos",
+                    "Proof of inward remittance (Swift copy / Remittance receipt)"
+                ]
+            }
+        };
+
+        // Open Product Details Modal
+        window.openDetailsModal = (type) => {
+            const data = fdData[type];
+            if (!data) return;
+
+            const modalBody = document.getElementById('modal-body-content');
+            
+            let featuresHtml = '';
+            data.features.forEach(feat => {
+                featuresHtml += `<div class="modal-feature-item"><i class="fas fa-check-circle"></i><span>${feat}</span></div>`;
+            });
+
+            let docsHtml = '';
+            data.docs.forEach(doc => {
+                docsHtml += `<div class="modal-doc-item"><i class="fas fa-file-alt"></i><span>${doc}</span></div>`;
+            });
+
+            modalBody.innerHTML = `
+                <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem;">
+                    <i class="fas ${data.icon}" style="font-size:2.5rem; color:var(--color-primary);"></i>
+                    <div>
+                        <h2 style="color:var(--color-primary); margin:0;">${data.title}</h2>
+                        <span style="color:var(--color-secondary); font-weight:700;">Rate Range: ${data.rates}</span>
+                    </div>
+                </div>
+                <p style="color:var(--color-text-light); font-size:1.05rem; margin-bottom:1.5rem;">${data.desc}</p>
+                
+                <h4 style="color:var(--color-primary); margin-bottom:0.75rem;">Key Benefits &amp; Conditions</h4>
+                <div class="modal-feature-list">
+                    <div class="modal-feature-item">
+                        <i class="fas fa-money-bill-wave" style="color:var(--color-secondary);"></i>
+                        <strong>Minimum Deposit: ${data.minAmount}</strong>
+                    </div>
+                    ${featuresHtml}
+                </div>
+
+                <div class="modal-doc-section">
+                    <div class="modal-doc-title"><i class="fas fa-folder-open"></i> Required Documents to Invest</div>
+                    <div class="modal-doc-list">
+                        ${docsHtml}
+                    </div>
+                </div>
+
+                <div style="display:flex; justify-content:flex-end; gap:1rem; margin-top:2rem;">
+                    <button class="btn btn-outline" onclick="closeDetailsModal()">Close</button>
+                    <a href="#calculator" class="btn btn-primary" onclick="closeDetailsModal(); selectCustomerType('${type}')">Estimate Maturity Returns</a>
+                </div>
+            `;
+
+            document.getElementById('details-modal').classList.add('active');
+        };
+
+        window.closeDetailsModal = () => {
+            document.getElementById('details-modal').classList.remove('active');
+        };
+
+        // Close modal on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeDetailsModal();
+        });
+
+        // Close modal when clicking backdrop
+        document.getElementById('details-modal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('details-modal')) closeDetailsModal();
+        });
+
+        // Synchronized highlight and button render on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.product-grid .product-card');
+            cards.forEach(card => {
+                const id = card.id.replace('prod-', '');
+                
+                // Remove old calculate returns button
+                const oldLink = card.querySelector('a.btn');
+                if (oldLink) oldLink.remove();
+                
+                // Create button group
+                const btnGroup = document.createElement('div');
+                btnGroup.style.display = 'flex';
+                btnGroup.style.gap = '0.5rem';
+                btnGroup.style.marginTop = 'auto'; // Align buttons
+                btnGroup.style.width = '100%';
+                btnGroup.style.paddingTop = '1.5rem';
+                
+                btnGroup.innerHTML = `
+                    <a href="fixed-deposits/${id}.html" class="btn btn-outline" style="flex:1; padding:0.5rem 0.5rem; font-size:0.8rem; text-align:center; display:inline-flex; align-items:center; justify-content:center;">View Details</a>
+                    <a href="#calculator" class="btn btn-primary" style="flex:1; padding:0.5rem 0.5rem; font-size:0.8rem; text-align:center; display:inline-flex; align-items:center; justify-content:center;" onclick="selectCustomerType('${id}')">Calculate</a>
+                `;
+                card.appendChild(btnGroup);
+            });
+
+            // Check URL parameters to launch modal
+            const urlParams = new URLSearchParams(window.location.search);
+            const typeParam = urlParams.get('type');
+            
+            if (typeParam && fdData[typeParam]) {
+                setTimeout(() => {
+                    openDetailsModal(typeParam);
+                }, 500);
+            }
+            calculateMaturity();
+        });
+
+        // Set customer dropdown value from card buttons
+        function selectCustomerType(type) {
+            const selectEl = document.getElementById('fd-cust-type');
+            if (selectEl) {
+                selectEl.value = type;
+                calculateMaturity();
+            }
+        }
+
+        // FD rates data structure matching rates.html
+        const fdRates = {
+            individual: { "3": 3.50, "6": 4.00, "12": 4.25, "36": 5.75, "60": 6.25 },
+            corporate: { "3": 3.00, "6": 3.50, "12": 3.75, "36": 5.25, "60": 5.75 },
+            remittance: { "3": 4.50, "6": 5.00, "12": 5.25, "36": 6.75, "60": 7.25 }
+        };
+
+        const fdAmountSlider = document.getElementById('fd-amount');
+        const fdAmountVal = document.getElementById('fd-amount-val');
+
+        const fdRateDisplay = document.getElementById('fd-rate-display');
+        const fdResPrincipal = document.getElementById('fd-res-principal');
+        const fdResInterest = document.getElementById('fd-res-interest');
+        const fdResTotal = document.getElementById('fd-res-total');
+
+        function calculateMaturity() {
+            const principal = parseFloat(fdAmountSlider.value);
+            const category = document.getElementById('fd-cust-type').value;
+            const tenureMonths = parseInt(document.getElementById('fd-tenure').value);
+
+            fdAmountVal.innerText = "NPR " + principal.toLocaleString();
+
+            // Fetch exact rate
+            const rate = fdRates[category][tenureMonths];
+            fdRateDisplay.innerText = rate.toFixed(2) + "%";
+
+            // Simple quarterly compounding payout estimation: P * (1 + r/100 * t/12)
+            const interest = principal * (rate / 100) * (tenureMonths / 12);
+            const total = principal + interest;
+
+            fdResPrincipal.innerText = "NPR " + Math.round(principal).toLocaleString();
+            fdResInterest.innerText = "NPR " + Math.round(interest).toLocaleString();
+            fdResTotal.innerText = "NPR " + Math.round(total).toLocaleString();
+        }
+
+        if (fdAmountSlider) {
+            fdAmountSlider.addEventListener('input', calculateMaturity);
+        }
+    </script>
+</body>
+</html>

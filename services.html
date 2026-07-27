@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Access Reliance Finance Limited's modern services: Fonepay Mobile Banking, Debit Card SCT ATMs, connectRTGS, CORPORATEPAY, C-ASBA, and ABBS check clearing.">
+    <title>Digital Services | Reliance Finance Limited</title>
+    <link rel="shortcut icon" type="image/x-icon" href="https://reliancenepal.com.np/assets/images/reliance/favicon.png">
+    
+    <!-- External Icon & Typography Styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css?v=1.0.5">
+    
+    <style>
+        .product-card.highlight {
+            border: 2px solid var(--color-secondary);
+            box-shadow: var(--shadow-premium);
+            transform: scale(1.02);
+            background-color: var(--color-secondary-light);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Global Header Placeholder -->
+    <div id="header"></div>
+
+    <!-- Page Banner -->
+    <section class="section" style="background: linear-gradient(rgba(112, 43, 134, 0.85), rgba(62, 12, 78, 0.95)), url('https://reliancenepal.com.np/uploads/slider/9660de7d8b7eccc277f0c7bd258283fc1a1c6c09.png') no-repeat center center/cover; padding: 6rem 0; color: #fff; text-align: center;">
+        <div class="container">
+            <h1 style="color:#fff; margin-bottom: 0.5rem;">Digital & Retail Services</h1>
+            <p style="color:var(--color-secondary); font-size:1.1rem; font-weight:600; text-transform:uppercase; letter-spacing:0.15em;">Safe, Secure & Fast Corporate Banking Solutions</p>
+        </div>
+    </section>
+
+    <!-- Services Grid -->
+    <section class="section">
+        <div class="container">
+            <div class="product-grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));">
+                <!-- Mobile Banking -->
+                <div class="product-card" id="mobile-banking">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h3>Mobile Banking</h3>
+                    <p>Experience seamless mobile transactions using our secure Fonepay-integrated application. Make payments, pay utility bills, and transfer funds instantly.</p>
+                </div>
+
+                <!-- QR Teller -->
+                <div class="product-card" id="qr-teller">
+                    <i class="fas fa-qrcode"></i>
+                    <h3>QR Teller</h3>
+                    <p>Withdraw cash directly from your savings accounts at RFL teller desks by scanning QR codes. Fast cash out without writing check leaves.</p>
+                </div>
+
+                <!-- RTGS -->
+                <div class="product-card" id="rtgs">
+                    <i class="fas fa-exchange-alt"></i>
+                    <h3>connectRTGS</h3>
+                    <p>Real-Time Gross Settlement service for high-value interbank payments. Payout transfers are settled instantly under NRB regulations.</p>
+                </div>
+
+                <!-- CorporatePay -->
+                <div class="product-card" id="corporatepay">
+                    <i class="fas fa-building"></i>
+                    <h3>CORPORATEPAY</h3>
+                    <p>Secure digital portal for business houses to run bulk fund transfers, government taxes payments, and salary credits directly from their offices.</p>
+                </div>
+
+                <!-- C-ASBA -->
+                <div class="product-card" id="c-asba">
+                    <i class="fas fa-file-signature"></i>
+                    <h3>C-ASBA</h3>
+                    <p>Apply online for initial public offerings (IPO) and right shares. Block funds securely in your savings account until share allotment.</p>
+                </div>
+
+                <!-- Debit Card -->
+                <div class="product-card" id="debit-card">
+                    <i class="fas fa-credit-card"></i>
+                    <h3>Debit Card</h3>
+                    <p>Secure EMV chip-based Visa debit cards linked with the SCT network for POS merchant shopping and ATM cash withdrawals nationwide.</p>
+                </div>
+
+                <!-- ABBS -->
+                <div class="product-card" id="abbs">
+                    <i class="fas fa-network-wired"></i>
+                    <h3>ABBS</h3>
+                    <p>Any Branch Banking Service. Withdraw or deposit funds, clear checks, and review balances from any of our 21 branches nationwide.</p>
+                </div>
+
+                <!-- Remittance -->
+                <div class="product-card" id="remittance">
+                    <i class="fas fa-paper-plane"></i>
+                    <h3>Remittance Service</h3>
+                    <p>Inward and outward money transfers. Receive remittances from global corridors safely through our licensed money-transfer partners.</p>
+                </div>
+
+                <!-- SMS Banking -->
+                <div class="product-card" id="sms-banking">
+                    <i class="fas fa-sms"></i>
+                    <h3>SMS Banking</h3>
+                    <p>Instant SMS text alert alerts for deposits, cash withdrawals, check clearings, and monthly interest postings.</p>
+                </div>
+
+                <!-- Connect IPS -->
+                <div class="product-card" id="connect-ips">
+                    <i class="fas fa-wallet"></i>
+                    <h3>Connect IPS E-payment</h3>
+                    <p>Link your RFL savings account with NCHL ConnectIPS to make online payments, broker settlements, and instant card loads.</p>
+                </div>
+
+                <!-- IPS -->
+                <div class="product-card" id="ips">
+                    <i class="fas fa-university"></i>
+                    <h3>Interbank Payment System (IPS)</h3>
+                    <p>Direct electronic clearing for customer utility accounts, standard salary sheets, and dividend payments.</p>
+                </div>
+
+                <!-- ECC -->
+                <div class="product-card" id="ecc">
+                    <i class="fas fa-money-check"></i>
+                    <h3>Electronic Cheque Clearing (ECC)</h3>
+                    <p>Fast check clearing service that clears physical paper checks electronically in a few hours without physical transit.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Global Footer Placeholder -->
+    <div id="footer"></div>
+
+    <!-- Page Scripts -->
+    <script src="components.js?v=1.0.5"></script>
+    <script>
+        // Listen to hash change to scroll to correct section on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const hash = window.location.hash;
+            if (hash) {
+                const target = document.querySelector(hash);
+                if (target) {
+                    setTimeout(() => {
+                        target.classList.add('highlight');
+                        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 400);
+                }
+            }
+        });
+
+        // Listen for hash changes
+        window.addEventListener('hashchange', () => {
+            const hash = window.location.hash;
+            if (hash) {
+                const target = document.querySelector(hash);
+                if (target) {
+                    document.querySelectorAll('.product-card').forEach(c => c.classList.remove('highlight'));
+                    target.classList.add('highlight');
+                    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        });
+    </script>
+</body>
+</html>

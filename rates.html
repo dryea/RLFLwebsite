@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="View Reliance Finance Limited's current interest rates, base rates, spread rates, and live-simulated foreign exchange (Forex) rates.">
+    <title>Interest Rates & Forex | Reliance Finance Limited</title>
+    <link rel="shortcut icon" type="image/x-icon" href="https://reliancenepal.com.np/assets/images/reliance/favicon.png">
+    
+    <!-- External Icon & Typography Styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css?v=1.0.5">
+</head>
+<body>
+
+    <!-- Global Header Placeholder -->
+    <div id="header"></div>
+
+    <!-- Page Banner -->
+    <section class="section" style="background: linear-gradient(rgba(112, 43, 134, 0.85), rgba(62, 12, 78, 0.95)), url('https://reliancenepal.com.np/uploads/slider/d6515bd5f4c1b099740dde56a7faa2ec3c852757.jpg') no-repeat center center/cover; padding: 6rem 0; color: #fff; text-align: center;">
+        <div class="container">
+            <h1 style="color:#fff; margin-bottom: 0.5rem;">Rates & Disclosures</h1>
+            <p style="color:var(--color-secondary); font-size:1.1rem; font-weight:600; text-transform:uppercase; letter-spacing:0.15em;">Interest Rates, Base Rates & Forex Conversions</p>
+        </div>
+    </section>
+
+    <!-- Interest Rates Section -->
+    <section class="section" id="interest">
+        <div class="container rates-wrapper">
+            <div class="section-header" style="margin-bottom:2rem;">
+                <h2>Interest Rate Structure</h2>
+                <p>Effective from: <strong>2083-03-01</strong>. Approved by Board Management under NRB Guidelines.</p>
+            </div>
+
+            <!-- Savings accounts rates -->
+            <div>
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1.5rem;">
+                    <h3 style="color:var(--color-primary);"><i class="fas fa-wallet" style="margin-right:0.5rem;"></i> Savings Deposit Accounts</h3>
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="savings-search" placeholder="Search accounts..." onkeyup="filterSavings()">
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="rates-table" id="savings-table">
+                        <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Min. Balance (NPR)</th>
+                                <th>Interest Rate (p.a.)</th>
+                                <th>Payment Frequency</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Normal Saving Account</td>
+                                <td>NPR 100.00</td>
+                                <td><span class="rate-badge">3.25%</span></td>
+                                <td>Quarterly</td>
+                            </tr>
+                            <tr>
+                                <td>Investor’s Saving Account</td>
+                                <td>NPR 100.00</td>
+                                <td><span class="rate-badge">3.25%</span></td>
+                                <td>Quarterly</td>
+                            </tr>
+                            <tr>
+                                <td>Student Saving Account</td>
+                                <td>NPR 500.00</td>
+                                <td><span class="rate-badge">3.50%</span></td>
+                                <td>Quarterly</td>
+                            </tr>
+                            <tr>
+                                <td>Khutruke Saving Account</td>
+                                <td>NPR 500.00</td>
+                                <td><span class="rate-badge">3.50%</span></td>
+                                <td>Quarterly</td>
+                            </tr>
+                            <tr>
+                                <td>Shareholder’s Saving Account</td>
+                                <td>NPR 1,000.00</td>
+                                <td><span class="rate-badge">3.25%</span></td>
+                                <td>Quarterly</td>
+                            </tr>
+                            <tr>
+                                <td>Special Saving Account</td>
+                                <td>NPR 1,000.00</td>
+                                <td><span class="rate-badge">3.50%</span></td>
+                                <td>Quarterly</td>
+                            </tr>
+                            <tr>
+                                <td>Dhaulagiri Saving Account</td>
+                                <td>NPR 5,000.00</td>
+                                <td><span class="rate-badge">3.75%</span></td>
+                                <td>Quarterly</td>
+                            </tr>
+                            <tr>
+                                <td>Kanchanjunga Saving Account</td>
+                                <td>NPR 10,000.00</td>
+                                <td><span class="rate-badge">4.00%</span></td>
+                                <td>Quarterly</td>
+                            </tr>
+                            <tr>
+                                <td>Everest Saving Account</td>
+                                <td>NPR 20,000.00</td>
+                                <td><span class="rate-badge">4.25%</span></td>
+                                <td>Quarterly</td>
+                            </tr>
+                            <tr>
+                                <td>Super Saving Account</td>
+                                <td>NPR 25,000.00</td>
+                                <td><span class="rate-badge">4.25%</span></td>
+                                <td>Quarterly</td>
+                            </tr>
+                            <tr>
+                                <td>Gold Saving Account</td>
+                                <td>NPR 50,000.00</td>
+                                <td><span class="rate-badge">4.50%</span></td>
+                                <td>Quarterly</td>
+                            </tr>
+                            <tr>
+                                <td>Diamond Saving Account</td>
+                                <td>NPR 100,000.00</td>
+                                <td><span class="rate-badge">4.50%</span></td>
+                                <td>Quarterly</td>
+                            </tr>
+                            <tr>
+                                <td>Platinum Saving Account</td>
+                                <td>NPR 150,000.00</td>
+                                <td><span class="rate-badge">4.75%</span></td>
+                                <td>Quarterly</td>
+                            </tr>
+                            <tr>
+                                <td>Sarathi Saving Account</td>
+                                <td>NPR 200,000.00</td>
+                                <td><span class="rate-badge">4.75%</span></td>
+                                <td>Quarterly</td>
+                            </tr>
+                            <tr>
+                                <td>PWD Saving Account</td>
+                                <td>NPR 0.00</td>
+                                <td><span class="rate-badge">3.50%</span></td>
+                                <td>Quarterly</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Fixed Deposit rates -->
+            <div style="margin-top:2rem;">
+                <h3 style="color:var(--color-primary); margin-bottom:1.5rem;"><i class="fas fa-lock" style="margin-right:0.5rem;"></i> Fixed Deposit Schemes</h3>
+                
+                <div class="table-responsive">
+                    <table class="rates-table">
+                        <thead>
+                            <tr>
+                                <th>Tenure</th>
+                                <th>Individual FD (p.a.)</th>
+                                <th>Corporate FD (p.a.)</th>
+                                <th>Remittance FD (p.a.)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>3 Months to 6 Months</td>
+                                <td>3.50%</td>
+                                <td>3.00%</td>
+                                <td>4.50%</td>
+                            </tr>
+                            <tr>
+                                <td>Above 6 Months to 12 Months</td>
+                                <td>4.00%</td>
+                                <td>3.50%</td>
+                                <td>5.00%</td>
+                            </tr>
+                            <tr>
+                                <td>Above 12 Months to 36 Months</td>
+                                <td>4.25%</td>
+                                <td>3.75%</td>
+                                <td>5.25%</td>
+                            </tr>
+                            <tr>
+                                <td>Above 36 Months to 60 Months</td>
+                                <td>5.75%</td>
+                                <td>5.25%</td>
+                                <td>6.75%</td>
+                            </tr>
+                            <tr>
+                                <td>Above 60 Months</td>
+                                <td>6.25%</td>
+                                <td>5.75%</td>
+                                <td>7.25%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p style="font-size:0.8rem; color:var(--color-text-light); margin-top:1rem; font-style:italic;">* Note: Remittance FD accounts enjoy +1.0% additional interest over individual fixed deposit rates.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Base Rate & Spread Rate Section -->
+    <section class="section section-bg" id="spread">
+        <div class="container">
+            <div class="section-header">
+                <h2>Base Rate & Spread Rate History</h2>
+                <p>Quarterly regulatory reports showing capital efficiency and spread margins as mandated by the central bank.</p>
+            </div>
+
+            <div class="table-responsive" style="max-width:800px; margin:0 auto;">
+                <table class="rates-table" style="text-align:center;">
+                    <thead>
+                        <tr>
+                            <th>Fiscal Year / Quarter</th>
+                            <th>Base Rate (p.a.)</th>
+                            <th>Spread Rate (p.a.)</th>
+                            <th>Cost of Funds (p.a.)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>FY 2082/83 - Q3</td>
+                            <td>8.45%</td>
+                            <td>4.12%</td>
+                            <td>5.32%</td>
+                        </tr>
+                        <tr>
+                            <td>FY 2082/83 - Q2</td>
+                            <td>8.60%</td>
+                            <td>4.20%</td>
+                            <td>5.50%</td>
+                        </tr>
+                        <tr>
+                            <td>FY 2082/83 - Q1</td>
+                            <td>8.85%</td>
+                            <td>4.22%</td>
+                            <td>5.72%</td>
+                        </tr>
+                        <tr>
+                            <td>FY 2081/82 - Q4</td>
+                            <td>9.10%</td>
+                            <td>4.35%</td>
+                            <td>5.95%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Standard Tariff Charges Section -->
+    <section class="section" id="charges">
+        <div class="container" style="max-width:800px;">
+            <div class="section-header">
+                <h2>Standard Tariff Charges</h2>
+                <p>Service tariffs and transaction fee thresholds applied across accounts and digital transfers.</p>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="rates-table">
+                    <thead>
+                        <tr>
+                            <th>Service Category</th>
+                            <th>Charge Rate / Annual Fee</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Visa Debit Card Issue Fee</strong></td>
+                            <td>NPR 350.00 (Free for 1st Year)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Visa Debit Card Annual Renewal</strong></td>
+                            <td>NPR 300.00</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Mobile Banking Annual Charge</strong></td>
+                            <td>NPR 250.00 (Free for 1st Year)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>C-ASBA Registration Charge</strong></td>
+                            <td>NPR 10.00 per application block</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Any Branch Banking Service (ABBS)</strong></td>
+                            <td>Free of Charge</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Connect IPS Transfers</strong></td>
+                            <td>As per Standard IPS fee schedules (NPR 2 - NPR 15 based on amount)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Forex Rates Section -->
+    <section class="section section-bg" id="forex">
+        <div class="container">
+            <div class="section-header">
+                <h2>Foreign Exchange (Forex) Rates</h2>
+                <p>Simulated Live Rates. Value of Foreign Currency against Nepalese Rupees (NPR).</p>
+            </div>
+
+            <div class="forex-grid">
+                <!-- USD -->
+                <div class="forex-card">
+                    <div class="forex-info">
+                        <div class="currency-flag" style="background-image: url('https://flagcdn.com/us.svg');"></div>
+                        <div class="currency-name">
+                            <h4>USD</h4>
+                            <p>US Dollar</p>
+                        </div>
+                    </div>
+                    <div class="forex-rates">
+                        <div class="forex-buy">Buy: <strong>133.50</strong></div>
+                        <div class="forex-sell">Sell: <strong>134.10</strong></div>
+                    </div>
+                </div>
+
+                <!-- EUR -->
+                <div class="forex-card">
+                    <div class="forex-info">
+                        <div class="currency-flag" style="background-image: url('https://flagcdn.com/eu.svg');"></div>
+                        <div class="currency-name">
+                            <h4>EUR</h4>
+                            <p>Euro</p>
+                        </div>
+                    </div>
+                    <div class="forex-rates">
+                        <div class="forex-buy">Buy: <strong>143.20</strong></div>
+                        <div class="forex-sell">Sell: <strong>143.90</strong></div>
+                    </div>
+                </div>
+
+                <!-- GBP -->
+                <div class="forex-card">
+                    <div class="forex-info">
+                        <div class="currency-flag" style="background-image: url('https://flagcdn.com/gb.svg');"></div>
+                        <div class="currency-name">
+                            <h4>GBP</h4>
+                            <p>Great British Pound</p>
+                        </div>
+                    </div>
+                    <div class="forex-rates">
+                        <div class="forex-buy">Buy: <strong>170.10</strong></div>
+                        <div class="forex-sell">Sell: <strong>171.00</strong></div>
+                    </div>
+                </div>
+
+                <!-- AUD -->
+                <div class="forex-card">
+                    <div class="forex-info">
+                        <div class="currency-flag" style="background-image: url('https://flagcdn.com/au.svg');"></div>
+                        <div class="currency-name">
+                            <h4>AUD</h4>
+                            <p>Australian Dollar</p>
+                        </div>
+                    </div>
+                    <div class="forex-rates">
+                        <div class="forex-buy">Buy: <strong>88.40</strong></div>
+                        <div class="forex-sell">Sell: <strong>89.10</strong></div>
+                    </div>
+                </div>
+                
+                <!-- JPY -->
+                <div class="forex-card">
+                    <div class="forex-info">
+                        <div class="currency-flag" style="background-image: url('https://flagcdn.com/jp.svg');"></div>
+                        <div class="currency-name">
+                            <h4>JPY</h4>
+                            <p>Japanese Yen (10)</p>
+                        </div>
+                    </div>
+                    <div class="forex-rates">
+                        <div class="forex-buy">Buy: <strong>8.45</strong></div>
+                        <div class="forex-sell">Sell: <strong>8.51</strong></div>
+                    </div>
+                </div>
+
+                <!-- CAD -->
+                <div class="forex-card">
+                    <div class="forex-info">
+                        <div class="currency-flag" style="background-image: url('https://flagcdn.com/ca.svg');"></div>
+                        <div class="currency-name">
+                            <h4>CAD</h4>
+                            <p>Canadian Dollar</p>
+                        </div>
+                    </div>
+                    <div class="forex-rates">
+                        <div class="forex-buy">Buy: <strong>97.20</strong></div>
+                        <div class="forex-sell">Sell: <strong>97.80</strong></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Currency converter calculator -->
+            <div class="contact-form-container" style="max-width: 600px; margin: 3rem auto 0 auto; padding: 2rem; background-color:#fff;">
+                <h4 style="color:var(--color-primary); text-align:center; margin-bottom:1.5rem;"><i class="fas fa-calculator" style="margin-right:0.5rem;"></i> Quick Exchange Calculator</h4>
+                <div style="display:flex; flex-direction:column; gap:1.25rem;">
+                    <div style="display:flex; gap:1rem;">
+                        <input type="number" id="forex-amount" value="100" style="flex:1; padding:0.75rem 1rem; border:1px solid var(--color-border); border-radius:var(--radius-md); outline:none;" oninput="convertCurrency()">
+                        <select id="forex-currency" style="padding:0.75rem 1rem; border:1px solid var(--color-border); border-radius:var(--radius-md); background:#fff;" onchange="convertCurrency()">
+                            <option value="133.50">USD - US Dollar</option>
+                            <option value="143.20">EUR - Euro</option>
+                            <option value="170.10">GBP - British Pound</option>
+                            <option value="88.40">AUD - Australian Dollar</option>
+                            <option value="0.845">JPY - Japanese Yen (1)</option>
+                            <option value="97.20">CAD - Canadian Dollar</option>
+                        </select>
+                    </div>
+                    <div style="text-align:center; font-size:1.3rem; font-weight:700; color:var(--color-primary);">
+                        <i class="fas fa-equals" style="font-size:0.9rem; color:var(--color-text-muted); margin-right:0.5rem;"></i> 
+                        <span id="converted-val">NPR 13,350.00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Global Footer Placeholder -->
+    <div id="footer"></div>
+
+    <!-- Page Scripts -->
+    <script src="components.js?v=1.0.5"></script>
+    <script>
+        // Search filter for savings table
+        function filterSavings() {
+            const input = document.getElementById('savings-search');
+            const filter = input.value.toLowerCase();
+            const table = document.getElementById('savings-table');
+            const trs = table.getElementsByTagName('tr');
+
+            for (let i = 1; i < trs.length; i++) {
+                const td = trs[i].getElementsByTagName('td')[0];
+                if (td) {
+                    const textValue = td.textContent || td.innerText;
+                    if (textValue.toLowerCase().indexOf(filter) > -1) {
+                        trs[i].style.display = "";
+                    } else {
+                        trs[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        // Forex converter logic
+        function convertCurrency() {
+            const amountInput = document.getElementById('forex-amount');
+            const selectEl = document.getElementById('forex-currency');
+            const convertedDisplay = document.getElementById('converted-val');
+
+            const amount = parseFloat(amountInput.value) || 0;
+            const rate = parseFloat(selectEl.value);
+
+            const npr = amount * rate;
+            convertedDisplay.innerText = "NPR " + npr.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        // Run conversion on load
+        document.addEventListener('DOMContentLoaded', convertCurrency);
+        
+        // Listen to hash change to scroll to correct section on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const hash = window.location.hash;
+            if (hash) {
+                const target = document.querySelector(hash);
+                if (target) {
+                    setTimeout(() => {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }, 300);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

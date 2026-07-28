@@ -3,16 +3,25 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { FileText, Package, Newspaper, Image, Users, Settings, LogOut, LayoutDashboard } from "lucide-react";
+import { FileText, Package, Newspaper, Image, Users, Settings, LogOut, LayoutDashboard, MapPin, HelpCircle, Briefcase, Download, ImageIcon } from "lucide-react";
 import { getCmsUser, cmsLogout, type CmsUser } from "@/lib/cms-auth";
 
 const navItems = [
   { label: "Dashboard", icon: LayoutDashboard, href: "/cms/dashboard" },
   { label: "Pages", icon: FileText, href: "/cms/pages" },
   { label: "Products", icon: Package, href: "/cms/products" },
+  { label: "Services", icon: Package, href: "/cms/services" },
+  { label: "Team", icon: Users, href: "/cms/team" },
+  { label: "Branches", icon: Users, href: "/cms/branches" },
+  { label: "Rates", icon: FileText, href: "/cms/rates" },
   { label: "News", icon: Newspaper, href: "/cms/news" },
+  { label: "Notices", icon: FileText, href: "/cms/notices" },
+  { label: "Reports", icon: FileText, href: "/cms/reports" },
+  { label: "Gallery", icon: Image, href: "/cms/gallery" },
+  { label: "Downloads", icon: FileText, href: "/cms/downloads" },
+  { label: "FAQ", icon: FileText, href: "/cms/faq" },
+  { label: "Careers", icon: FileText, href: "/cms/careers" },
   { label: "Media", icon: Image, href: "/cms/media" },
-  { label: "Users", icon: Users, href: "/cms/users" },
   { label: "Settings", icon: Settings, href: "/cms/settings" },
 ];
 

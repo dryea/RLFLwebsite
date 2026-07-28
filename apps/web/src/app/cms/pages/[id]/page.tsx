@@ -26,7 +26,7 @@ export default function CmsPageEditorPage() {
 
   useEffect(() => {
     if (pageId) {
-      api.getPage(pageId).then((p) => {
+      api.getPage(pageId).then((p: any) => {
         setTitle(p.title);
         setSlug(p.slug);
         setContent(p.content || "");

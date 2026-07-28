@@ -27,7 +27,7 @@ export default function CmsDashboardPage() {
           const Icon = m.icon;
           return (
             <Link key={m.href} href={m.href} className="rounded-xl border bg-white p-6 transition-shadow hover:shadow-md">
-              <div className={`mb-3 inline-flex rounded-lg p-3 ${m.color}`}>
+              <div className={m.color}>
                 <Icon className="h-6 w-6" />
               </div>
               <h2 className="font-semibold text-gray-900">{m.label}</h2>
@@ -39,3 +39,4 @@ export default function CmsDashboardPage() {
     </CMSLayout>
   );
 }
+

@@ -1,16 +1,19 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import { eq, and, desc, like, or } from "drizzle-orm";
+import { eq, and, desc, like } from "drizzle-orm";
 import { createDb } from "./db";
 import {
-  pages,
-  products,
-  services,
-  news,
-  users,
-  pageVersions,
-  media,
-  mediaFolders,
+  pages, products, news, users,
+  pageVersions, media, mediaFolders,
+  productCategories, services as servicesTable,
+  teamCategories, teamMembers, branches,
+  rateCategories, rates, newsCategories,
+  events, noticeCategories, notices,
+  reportCategories, reports, albums, galleryImages,
+  downloadCategories, downloads, faqCategories, faqs,
+  jobListings, jobApplications,
+  contactSubmissions, loanEnquiries, newsletterSubscribers,
+  auctionNotices, merchantOffers, siteSettings,
 } from "./db/schema";
 
 type Bindings = {
@@ -67,7 +70,7 @@ app.get("/api/homepage", async (c) => {
   const db = createDb(c.env.DB);
   const [productsResult, servicesResult, featuredNews] = await Promise.all([
     db.select().from(products).where(eq(products.status, "published")).limit(6).all(),
-    db.select().from(services).where(eq(services.status, "published")).all(),
+    db.select().from(servicesTable).where(eq(servicesTable.status, "published")).all(),
     db.select().from(news).where(eq(news.isFeatured, true)).orderBy(desc(news.publishedAt)).limit(4).all(),
   ]);
   return c.json({ products: productsResult, services: servicesResult, featuredNews });
@@ -246,22 +249,102 @@ app.delete("/api/cms/media/:id", async (c) => {
   return c.json({ success: true });
 });
 
+// ── CMS: CRUD Generator ──
+function crud(table: any, basePath: string, tableName?: string) {
+  const name = tableName || basePath.split("/").pop()!;
+  // List
+  app.get(`/api/cms/${basePath}`, async (c) => {
+    const db = createDb(c.env.DB);
+    try {
+      const result = await db.select().from(table).orderBy(desc(table.id)).all();
+      return c.json(result);
+    } catch {
+      const result = await db.select().from(table).all();
+      return c.json(result);
+    }
+  });
+  // Get one
+  app.get(`/api/cms/${basePath}/:id`, async (c) => {
+    const db = createDb(c.env.DB);
+    const id = parseInt(c.req.param("id"));
+    const result = await db.select().from(table).where(eq(table.id, id)).get();
+    if (!result) return c.json({ error: "Not found" }, 404);
+    return c.json(result);
+  });
+  // Create
+  app.post(`/api/cms/${basePath}`, async (c) => {
+    const db = createDb(c.env.DB);
+    const data = await c.req.json();
+    const result = await db.insert(table).values({ ...data, createdBy: 1 }).returning().get();
+    return c.json(result, 201);
+  });
+  // Update
+  app.put(`/api/cms/${basePath}/:id`, async (c) => {
+    const db = createDb(c.env.DB);
+    const id = parseInt(c.req.param("id"));
+    const data = await c.req.json();
+    await db.update(table).set({ ...data, updatedAt: new Date().toISOString() }).where(eq(table.id, id)).run();
+    const updated = await db.select().from(table).where(eq(table.id, id)).get();
+    return c.json(updated);
+  });
+  // Delete
+  app.delete(`/api/cms/${basePath}/:id`, async (c) => {
+    const db = createDb(c.env.DB);
+    const id = parseInt(c.req.param("id"));
+    await db.delete(table).where(eq(table.id, id)).run();
+    return c.json({ success: true });
+  });
+}
+
 // ── CMS: Dashboard Stats ──
 app.get("/api/cms/dashboard/stats", async (c) => {
   const db = createDb(c.env.DB);
-  const [pageCount, productCount, newsCount, mediaCount] = await Promise.all([
+  const [pageCount, productCount, svcCount, newsCount, mediaCount, teamCount, branchCount] = await Promise.all([
     db.select({ count: pages.id }).from(pages).all(),
     db.select({ count: products.id }).from(products).all(),
+    db.select({ count: servicesTable.id }).from(servicesTable).all(),
     db.select({ count: news.id }).from(news).all(),
     db.select({ count: media.id }).from(media).all(),
+    db.select({ count: teamMembers.id }).from(teamMembers).all(),
+    db.select({ count: branches.id }).from(branches).all(),
   ]);
   return c.json({
-    pages: pageCount.length,
-    products: productCount.length,
-    news: newsCount.length,
-    media: mediaCount.length,
+    pages: pageCount.length, products: productCount.length, services: svcCount.length,
+    news: newsCount.length, media: mediaCount.length, team: teamCount.length, branches: branchCount.length,
   });
 });
+
+// ── CMS: All Resource Routes ──
+// Format: crud(table, "url-path")
+crud(productCategories, "product-categories");
+crud(products, "products");
+crud(servicesTable, "services");
+crud(teamCategories, "team-categories");
+crud(teamMembers, "team-members");
+crud(branches, "branches");
+crud(rateCategories, "rate-categories");
+crud(rates, "rates");
+crud(newsCategories, "news-categories");
+crud(news, "news");
+crud(events, "events");
+crud(noticeCategories, "notice-categories");
+crud(notices, "notices");
+crud(reportCategories, "report-categories");
+crud(reports, "reports");
+crud(albums, "albums");
+crud(galleryImages, "gallery-images");
+crud(downloadCategories, "download-categories");
+crud(downloads, "downloads");
+crud(faqCategories, "faq-categories");
+crud(faqs, "faq");
+crud(jobListings, "careers");
+crud(jobApplications, "job-applications");
+crud(contactSubmissions, "contact-submissions");
+crud(loanEnquiries, "loan-enquiries");
+crud(newsletterSubscribers, "newsletter");
+crud(auctionNotices, "auctions");
+crud(merchantOffers, "merchants");
+crud(siteSettings, "settings");
 
 // ── Search ──
 app.get("/api/search", async (c) => {

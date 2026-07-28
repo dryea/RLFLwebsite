@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
+import dynamic from "next/dynamic";
+
+const EMIPieChart = dynamic(() => import("@/components/sections/EMIPieChart"), { ssr: false });
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
@@ -16,11 +18,6 @@ export default function EMISection() {
   const [tenure, setTenure] = useState(60);
 
   const result = calculateEMI(principal, rate, tenure);
-  const pieData = [
-    { name: "Principal", value: principal },
-    { name: "Interest", value: result.totalInterest },
-  ];
-  const COLORS = ["#702B86", "#F2A900"];
 
   return (
     <div className="grid gap-8 lg:grid-cols-2">
@@ -102,16 +99,7 @@ export default function EMISection() {
           </div>
         </div>
 
-        <div className="h-44">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie data={pieData} cx="50%" cy="50%" innerRadius={45} outerRadius={70} dataKey="value" label={({ name, percent }: any) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}>
-                {pieData.map((_, i) => <Cell key={i} fill={COLORS[i]} />)}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
+        <EMIPieChart principal={principal} interest={result.totalInterest} />
 
         <Link
           href="/emi-calculator"

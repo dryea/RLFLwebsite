@@ -1,32 +1,34 @@
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
-import {
-  FileText,
-  Package,
-  Settings,
-  Users,
-  Newspaper,
-  Image,
-  LogOut,
-} from "lucide-react";
+import { FileText, Package, Newspaper, Image, Users, Settings, LogOut } from "lucide-react";
+import { getCmsUser, cmsLogout, type CmsUser } from "@/lib/cms-auth";
 
 const modules = [
-  { label: "Pages", icon: FileText, href: "/cms/pages", count: "—" },
-  { label: "Products", icon: Package, href: "/cms/products", count: "—" },
-  { label: "News", icon: Newspaper, href: "/cms/news", count: "—" },
-  { label: "Media", icon: Image, href: "/cms/media", count: "—" },
-  { label: "Users", icon: Users, href: "/cms/users", count: "—" },
-  { label: "Settings", icon: Settings, href: "/cms/settings", count: "—" },
+  { label: "Pages", icon: FileText, href: "/cms/pages" },
+  { label: "Products", icon: Package, href: "/cms/products" },
+  { label: "News", icon: Newspaper, href: "/cms/news" },
+  { label: "Media", icon: Image, href: "/cms/media" },
+  { label: "Users", icon: Users, href: "/cms/users" },
+  { label: "Settings", icon: Settings, href: "/cms/settings" },
 ];
 
-export default async function CmsDashboardPage() {
-  const session = await auth();
-  if (!session?.user) redirect("/cms/login");
+export default function CmsDashboardPage() {
+  const router = useRouter();
+  const [user, setUser] = useState<CmsUser | null>(null);
+
+  useEffect(() => {
+    const u = getCmsUser();
+    if (!u) router.replace("/cms/login");
+    else setUser(u);
+  }, [router]);
+
+  if (!user) return null;
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-      {/* Sidebar */}
       <aside className="hidden w-64 flex-col bg-white shadow-sm lg:flex">
         <div className="flex items-center gap-3 border-b px-6 py-5">
           <img
@@ -49,28 +51,21 @@ export default async function CmsDashboardPage() {
           ))}
         </nav>
         <div className="border-t px-3 py-3">
-          <div className="mb-2 px-3 text-xs text-gray-500">
-            {session.user.email}
-          </div>
-          <Link
-            href="/"
-            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-100"
+          <div className="mb-2 px-3 text-xs text-gray-500">{user.email}</div>
+          <button
+            onClick={cmsLogout}
+            className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-100"
           >
-            <LogOut className="h-4 w-4" />
-            View Site
-          </Link>
+            <LogOut className="h-4 w-4" /> Sign Out
+          </button>
         </div>
       </aside>
 
-      {/* Main */}
       <div className="flex-1">
         <header className="flex items-center justify-between bg-white px-6 py-4 shadow-sm">
           <h1 className="text-lg font-bold text-gray-900">Dashboard</h1>
-          <span className="text-sm text-gray-500">
-            Welcome, {session.user.name}
-          </span>
+          <span className="text-sm text-gray-500">Welcome, {user.name}</span>
         </header>
-
         <main className="p-6">
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {modules.map((m) => {
@@ -85,7 +80,6 @@ export default async function CmsDashboardPage() {
                     <Icon className="h-6 w-6" />
                   </div>
                   <h2 className="font-semibold text-gray-900">{m.label}</h2>
-                  <p className="mt-1 text-sm text-gray-500">{m.count} items</p>
                 </Link>
               );
             })}

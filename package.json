@@ -22,6 +22,7 @@
   ],
   "packageManager": "npm@11.9.0",
   "dependencies": {
+    "@cloudflare/next-on-pages": "^1.13.16",
     "drizzle-orm": "^0.37.0"
   }
 }

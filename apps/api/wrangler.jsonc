@@ -7,7 +7,7 @@
     {
       "binding": "DB",
       "database_name": "rfil-db",
-      "database_id": ""
+      "database_id": "0d0bfcb4-7ac6-4e10-a62b-79f32d234c7c"
     }
   ],
   "r2_buckets": [
@@ -21,12 +21,8 @@
     }
   ],
   "vars": {
-    "SITE_URL": "http://localhost:3000",
+    "SITE_URL": "https://reliancenepal.com.np",
     "ADMIN_EMAIL": "info@reliancenepal.com.np",
     "FROM_EMAIL": "noreply@reliancenepal.com.np"
-  },
-  "assets": {
-    "directory": "./public",
-    "binding": "ASSETS"
   }
 }

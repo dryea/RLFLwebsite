@@ -1,17 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: "standalone",
-  images: {
-    remotePatterns: [
-      { protocol: "https", hostname: "rfil-media.r2.cloudflarestorage.com" },
-      { protocol: "https", hostname: "imagedelivery.net" },
-      { protocol: "https", hostname: "reliancenepal.com.np" },
-    ],
-  },
-  experimental: {
-    reactCompiler: false,
-  },
+  output: "export",
+  images: { unoptimized: true },
+  trailingSlash: true,
 };
 
 export default nextConfig;

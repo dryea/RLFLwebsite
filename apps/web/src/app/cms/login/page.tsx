@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { LogIn } from "lucide-react";
+import { cmsLogin } from "@/lib/cms-auth";
 
 export default function CmsLoginPage() {
   const router = useRouter();
@@ -17,17 +17,12 @@ export default function CmsLoginPage() {
     setLoading(true);
     setError("");
 
-    const result = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-    });
-
-    if (result?.error) {
+    try {
+      await cmsLogin(email, password);
+      router.push("/cms/dashboard");
+    } catch {
       setError("Invalid email or password");
       setLoading(false);
-    } else {
-      router.push("/cms/dashboard");
     }
   }
 
@@ -56,7 +51,6 @@ export default function CmsLoginPage() {
               required
             />
           </div>
-
           <div>
             <label className="mb-1 block text-sm font-medium text-gray-700">Password</label>
             <input
@@ -68,11 +62,7 @@ export default function CmsLoginPage() {
               required
             />
           </div>
-
-          {error && (
-            <p className="text-sm text-red-600">{error}</p>
-          )}
-
+          {error && <p className="text-sm text-red-600">{error}</p>}
           <button
             type="submit"
             disabled={loading}

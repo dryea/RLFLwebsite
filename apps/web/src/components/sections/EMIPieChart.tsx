@@ -3,6 +3,7 @@
 export default function EMIPieChart({ principal, interest }: { principal: number; interest: number }) {
   const total = principal + interest;
   const pct = total > 0 ? Math.round((principal / total) * 100) : 50;
+  const pctInterest = 100 - pct;
 
   return (
     <div className="flex flex-col items-center">
@@ -12,15 +13,15 @@ export default function EMIPieChart({ principal, interest }: { principal: number
           <circle
             cx="50" cy="50" r="42"
             fill="none" stroke="#702B86" strokeWidth="8"
-            strokeDasharray={`${pct * 2.64} ${(100 - pct) * 2.64}`}
+            strokeDasharray={`${pct * 2.64} ${pctInterest * 2.64}`}
             transform="rotate(-90 50 50)"
             strokeLinecap="round"
           />
           <circle
             cx="50" cy="50" r="42"
             fill="none" stroke="#F2A900" strokeWidth="8"
-            strokeDasharray={`${(100 - pct) * 2.64} ${pct * 2.64}`}
-            transform="rotate(${-90 + (pct / 100) * 360} 50 50)"
+            strokeDasharray={`${pctInterest * 2.64} ${pct * 2.64}`}
+            transform={`rotate(${-90 + (pct * 360) / 100} 50 50)`}
             strokeLinecap="round"
           />
         </svg>

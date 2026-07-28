@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Calendar, ArrowRight, ExternalLink } from "lucide-react";
 
+const API = process.env.NEXT_PUBLIC_API_URL || "https://rfil-api.sudeepdhakal.workers.dev";
+
 interface NewsItem {
   id: number;
   title: string;
@@ -21,8 +23,8 @@ export default function NewsEventsSection({ lang }: { lang: string }) {
     async function fetchData() {
       try {
         const [newsRes, eventsRes] = await Promise.all([
-          fetch(`/api/news`).then((r) => r.json()),
-          fetch(`/api/events`).then((r) => r.json()),
+          fetch(`${API}/api/news`).then((r) => r.json()),
+          fetch(`${API}/api/events`).then((r) => r.json()),
         ]);
         setNews((newsRes.data || newsRes).slice(0, 4));
         setEvents((eventsRes.data || eventsRes).slice(0, 4));

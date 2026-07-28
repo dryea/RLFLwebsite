@@ -37,6 +37,33 @@ app.use("/*", cors());
 // ── Health ──
 app.get("/api/health", (c) => c.json({ status: "ok", timestamp: new Date().toISOString() }));
 
+// ── Media Serving ──
+app.get("/api/media/:filename", async (c) => {
+  try {
+    const filename = c.req.param("filename");
+    const obj = await c.env.R2.get(filename);
+    if (!obj) return c.json({ error: "Not found" }, 404);
+    const headers = new Headers();
+    obj.writeHttpMetadata(headers);
+    headers.set("etag", obj.httpEtag);
+    headers.set("cache-control", "public, max-age=31536000, immutable");
+    return new Response(obj.body, { headers });
+  } catch { return c.json({ error: "Not found" }, 404); }
+});
+
+app.get("/api/documents/:filename", async (c) => {
+  try {
+    const filename = c.req.param("filename");
+    const obj = await c.env.R2_DOCUMENTS.get(filename);
+    if (!obj) return c.json({ error: "Not found" }, 404);
+    const headers = new Headers();
+    obj.writeHttpMetadata(headers);
+    headers.set("etag", obj.httpEtag);
+    headers.set("cache-control", "public, max-age=31536000, immutable");
+    return new Response(obj.body, { headers });
+  } catch { return c.json({ error: "Not found" }, 404); }
+});
+
 // ── Auth Middleware ──
 async function requireAuth(c: any, next: any) {
   const auth = c.req.header("Authorization");

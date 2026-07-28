@@ -16,6 +16,7 @@ import {
   jobListings, jobApplications,
   contactSubmissions, loanEnquiries, newsletterSubscribers,
   auctionNotices, merchantOffers, siteSettings,
+  heroSlides, offeringCards, offeringLinks, siteStats, appBanner, csrActivities,
 } from "./db/schema";
 
 type Bindings = {
@@ -112,6 +113,40 @@ app.get("/api/homepage", async (c) => {
     db.select().from(news).where(eq(news.isFeatured, true)).orderBy(desc(news.publishedAt)).limit(4).all(),
   ]);
   return c.json({ products: productsResult, services: servicesResult, featuredNews });
+});
+
+// ── Homepage: CMS-managed content ──
+
+app.get("/api/homepage/full", async (c) => {
+  const db = createDb(c.env.DB);
+  const [
+    slidesResult,
+    offeringsResult,
+    statsResult,
+    bannerResult,
+    csrResult,
+  ] = await Promise.all([
+    db.select().from(heroSlides).where(eq(heroSlides.isActive, true)).orderBy(heroSlides.sortOrder).all(),
+    db.select().from(offeringCards).where(eq(offeringCards.isActive, true)).orderBy(offeringCards.sortOrder).all(),
+    db.select().from(siteStats).where(eq(siteStats.isActive, true)).orderBy(siteStats.sortOrder).all(),
+    db.select().from(appBanner).where(eq(appBanner.isActive, true)).limit(1).all(),
+    db.select().from(csrActivities).where(eq(csrActivities.isActive, true)).orderBy(csrActivities.sortOrder).limit(6).all(),
+  ]);
+
+  // Fetch offering links for each card
+  const offeringLinksPromises = offeringsResult.map(async (card) => {
+    const links = await db.select().from(offeringLinks).where(eq(offeringLinks.cardId, card.id)).orderBy(offeringLinks.sortOrder).all();
+    return { ...card, links };
+  });
+  const offeringsWithLinks = await Promise.all(offeringLinksPromises);
+
+  return c.json({
+    slides: slidesResult,
+    offerings: offeringsWithLinks,
+    stats: statsResult,
+    appBanner: bannerResult[0] || null,
+    csrActivities: csrResult,
+  });
 });
 
 // ── CMS Auth ──
@@ -544,6 +579,12 @@ crud(newsletterSubscribers, "newsletter");
 crud(auctionNotices, "auctions");
 crud(merchantOffers, "merchants");
 crud(siteSettings, "settings");
+crud(heroSlides, "hero-slides");
+crud(offeringCards, "offering-cards");
+crud(offeringLinks, "offering-links");
+crud(siteStats, "site-stats");
+crud(appBanner, "app-banner");
+crud(csrActivities, "csr-activities");
 
 // ── Search ──
 app.get("/api/search", async (c) => {

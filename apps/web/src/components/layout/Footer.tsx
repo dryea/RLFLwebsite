@@ -64,15 +64,22 @@ function FooterLinkColumn({
   );
 }
 
+const socialIconPaths: Record<string, string> = {
+  facebook: "M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z",
+  twitter: "M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z",
+  youtube: "M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.94 2C5.12 20 12 20 12 20s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58zM10 15V9l6 3-6 3z",
+  linkedin: "M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2zM4 6a2 2 0 1 0 0-4 2 2 0 0 0 0 4z",
+  instagram: "M17 2H7a5 5 0 0 0-5 5v10a5 5 0 0 0 5 5h10a5 5 0 0 0 5-5V7a5 5 0 0 0-5-5zm-5 14a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm5-9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z",
+};
+
 export default function Footer() {
   const lang = useLang();
   const c = footerContact;
 
   return (
-    <footer className="bg-gray-900 text-gray-300">
+    <footer className="bg-[#111827] text-gray-400">
       <div className="container-page py-12">
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-6">
-          {/* Report, Media, Rates, EMI columns */}
+        <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
           {footerColumns.map((col) => (
             <FooterLinkColumn
               key={col.title.en}
@@ -80,27 +87,22 @@ export default function Footer() {
               links={col.links}
             />
           ))}
-
-          {/* About */}
           <FooterLinkColumn
             title={lang === "en" ? footerAboutLinks.title.en : footerAboutLinks.title.np}
             links={footerAboutLinks.links}
           />
-
-          {/* Services */}
           <FooterLinkColumn
             title={lang === "en" ? footerServices.title.en : footerServices.title.np}
             links={footerServices.links}
           />
         </div>
 
-        {/* Contact & Social */}
-        <div className="mt-10 grid gap-8 border-t border-gray-800 pt-10 md:grid-cols-2">
+        <div className="mt-10 grid gap-8 border-t border-gray-700/50 pt-10 md:grid-cols-2 lg:grid-cols-3">
           <div>
             <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-white">
               {lang === "en" ? c.title.en : c.title.np}
             </h3>
-            <ul className="space-y-2 text-sm text-gray-400">
+            <ul className="space-y-2 text-sm">
               <li className="flex items-start gap-2">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gray-500" />
                 <span>{lang === "en" ? c.address.en : c.address.np}</span>
@@ -131,38 +133,49 @@ export default function Footer() {
                   href={s.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-800 text-gray-400 transition-colors hover:bg-primary-700 hover:text-white"
+                  className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-800 text-gray-400 transition-colors hover:bg-primary-600 hover:text-white"
                   aria-label={s.name}
                 >
-                  <span className="text-xs font-bold">{s.name.charAt(0)}</span>
+                  <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current">
+                    <path d={socialIconPaths[s.icon] || ""} />
+                  </svg>
                 </a>
               ))}
             </div>
 
-            <div className="mb-6">
-              <NewsletterForm />
-            </div>
+            <NewsletterForm />
+          </div>
 
-            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-white">
+          <div>
+            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-white">
               {lang === "en" ? "Mobile App" : "मोबाइल एप"}
             </h3>
+            <p className="mb-4 text-sm text-gray-400">
+              {lang === "en" ? "Download the RFL Smart app for convenient mobile banking." : "सुविधाजनक मोबाइल बैंकिङको लागि RFL Smart एप डाउनलोड गर्नुहोस्।"}
+            </p>
             <a
               href="https://play.google.com/store/apps/details?id=com.rfl.smart"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-lg bg-gray-800 px-4 py-2 text-sm text-white transition-colors hover:bg-primary-700"
+              className="inline-flex items-center gap-2 rounded-lg bg-gray-800 px-4 py-2.5 text-sm text-white transition-colors hover:bg-primary-600"
             >
-              <span>{lang === "en" ? "Download App" : "एप डाउनलोड गर्नुहोस्"}</span>
-              <ExternalLink className="h-4 w-4" />
+              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.523 12.88l-4.463-4.462-2.073 2.074 3.416 3.416-3.416 3.416 2.073 2.074 4.463-4.462a.586.586 0 0 0 0-.826zM5.578 6.443a.61.61 0 0 0-.61.61v9.895a.61.61 0 0 0 .61.61.63.63 0 0 0 .433-.18l4.734-4.734-4.734-4.734a.613.613 0 0 0-.433-.18z" />
+              </svg>
+              <span>{lang === "en" ? "Download for Android" : "एन्ड्रोइडको लागि डाउनलोड गर्नुहोस्"}</span>
             </a>
           </div>
         </div>
       </div>
 
-      <div className="border-t border-gray-800 py-4">
-        <div className="container-page text-center text-xs text-gray-500">
-          &copy; {new Date().getFullYear()} Reliance Finance Limited.{" "}
-          {lang === "en" ? "All rights reserved." : "सर्वाधिकार सुरक्षित।"}
+      <div className="border-t border-gray-700/50">
+        <div className="container-page flex flex-col items-center justify-between gap-2 py-4 text-xs text-gray-500 md:flex-row">
+          <span>&copy; {new Date().getFullYear()} Reliance Finance Limited. {lang === "en" ? "All rights reserved." : "सर्वाधिकार सुरक्षित।"}</span>
+          <div className="flex gap-4">
+            <Link href="/about/privacy-policy" className="transition-colors hover:text-white">{lang === "en" ? "Privacy Policy" : "गोपनीयता नीति"}</Link>
+            <Link href="/faq" className="transition-colors hover:text-white">{lang === "en" ? "FAQ" : "प्रायः सोधिने प्रश्न"}</Link>
+            <Link href="/sitemap" className="transition-colors hover:text-white">{lang === "en" ? "Sitemap" : "साइट नक्सा"}</Link>
+          </div>
         </div>
       </div>
     </footer>

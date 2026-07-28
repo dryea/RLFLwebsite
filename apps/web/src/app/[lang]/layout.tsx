@@ -54,7 +54,7 @@ export default async function LangLayout({
         description: "Your trusted financial partner in Nepal",
         address: { "@type": "PostalAddress", addressCountry: "NP" },
       }} />
-      <Header />
+      <Header lang={lang} />
       <main className="flex-1">{children}</main>
       <CookieConsent />
       <Footer />

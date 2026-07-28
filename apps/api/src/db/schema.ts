@@ -527,3 +527,91 @@ export const siteSettings = sqliteTable("site_settings", {
   description: text("description"),
   updatedAt: text("updated_at").default(sql`CURRENT_TIMESTAMP`),
 });
+
+// ── Homepage: Hero Slides ──
+export const heroSlides = sqliteTable("hero_slides", {
+  id: int("id").primaryKey({ autoIncrement: true }),
+  title: text("title").notNull(),
+  titleNp: text("title_np"),
+  description: text("description").notNull(),
+  descriptionNp: text("description_np"),
+  imageUrl: text("image_url").notNull(),
+  ctaPrimaryText: text("cta_primary_text"),
+  ctaPrimaryLink: text("cta_primary_link"),
+  ctaSecondaryText: text("cta_secondary_text"),
+  ctaSecondaryLink: text("cta_secondary_link"),
+  sortOrder: int("sort_order").default(0),
+  isActive: int("is_active", { mode: "boolean" }).default(true),
+  createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`),
+});
+
+// ── Homepage: Core Offerings Cards ──
+export const offeringCards = sqliteTable("offering_cards", {
+  id: int("id").primaryKey({ autoIncrement: true }),
+  title: text("title").notNull(),
+  titleNp: text("title_np"),
+  summary: text("summary").notNull(),
+  summaryNp: text("summary_np"),
+  icon: text("icon").notNull(),
+  badge: text("badge"),
+  badgeNp: text("badge_np"),
+  linkText: text("link_text").notNull(),
+  linkUrl: text("link_url").notNull(),
+  widgetType: text("widget_type").$type<"savings" | "loan" | "digital" | "branch" | "none">().default("none"),
+  sortOrder: int("sort_order").default(0),
+  isActive: int("is_active", { mode: "boolean" }).default(true),
+  createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`),
+});
+
+// ── Homepage: Offering Sub-links ──
+export const offeringLinks = sqliteTable("offering_links", {
+  id: int("id").primaryKey({ autoIncrement: true }),
+  cardId: int("card_id").notNull().references(() => offeringCards.id),
+  label: text("label").notNull(),
+  labelNp: text("label_np"),
+  url: text("url").notNull(),
+  icon: text("icon").default("chevron-right"),
+  sortOrder: int("sort_order").default(0),
+});
+
+// ── Homepage: Site Statistics ──
+export const siteStats = sqliteTable("site_stats", {
+  id: int("id").primaryKey({ autoIncrement: true }),
+  label: text("label").notNull(),
+  labelNp: text("label_np"),
+  value: text("value").notNull(),
+  suffix: text("suffix").default("+"),
+  sortOrder: int("sort_order").default(0),
+  isActive: int("is_active", { mode: "boolean" }).default(true),
+});
+
+// ── Homepage: App Banner Settings ──
+export const appBanner = sqliteTable("app_banner", {
+  id: int("id").primaryKey({ autoIncrement: true }),
+  title: text("title").notNull(),
+  titleNp: text("title_np"),
+  description: text("description").notNull(),
+  descriptionNp: text("description_np"),
+  imageUrl: text("image_url"),
+  androidUrl: text("android_url"),
+  iosUrl: text("ios_url"),
+  badgeText: text("badge_text").default("Go Digital"),
+  badgeTextNp: text("badge_text_np"),
+  isActive: int("is_active", { mode: "boolean" }).default(true),
+  updatedAt: text("updated_at").default(sql`CURRENT_TIMESTAMP`),
+});
+
+// ── Homepage: CSR Activities ──
+export const csrActivities = sqliteTable("csr_activities", {
+  id: int("id").primaryKey({ autoIncrement: true }),
+  title: text("title").notNull(),
+  titleNp: text("title_np"),
+  summary: text("summary").notNull(),
+  summaryNp: text("summary_np"),
+  imageUrl: text("image_url"),
+  date: text("date"),
+  linkUrl: text("link_url"),
+  sortOrder: int("sort_order").default(0),
+  isActive: int("is_active", { mode: "boolean" }).default(true),
+  createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`),
+});

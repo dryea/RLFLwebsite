@@ -1,19 +1,9 @@
 import type { Metadata } from "next";
-import { Rubik, Roboto } from "next/font/google";
+import { Outfit, Inter } from "next/font/google";
 import "./globals.css";
 
-const rubik = Rubik({
-  subsets: ["latin"],
-  variable: "--font-heading",
-  display: "swap",
-});
-
-const roboto = Roboto({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "700"],
-  variable: "--font-body",
-  display: "swap",
-});
+const outfit = Outfit({ subsets: ["latin"], variable: "--font-heading" });
+const inter = Inter({ subsets: ["latin"], variable: "--font-body" });
 
 export const metadata: Metadata = {
   title: {
@@ -29,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${rubik.variable} ${roboto.variable}`}>
+    <html lang="en" className={`${outfit.variable} ${inter.variable} font-body antialiased`}>
       <head>
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#1a365d" />

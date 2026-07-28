@@ -7,7 +7,7 @@ import Footer from "./Footer";
 export default function PublicLayout({ children, lang = "en" }: { children: React.ReactNode; lang?: string }) {
   return (
     <LanguageProvider lang={lang as "en" | "np"}>
-      <Header />
+      <Header lang={lang} />
       <main className="flex-1">{children}</main>
       <Footer />
     </LanguageProvider>

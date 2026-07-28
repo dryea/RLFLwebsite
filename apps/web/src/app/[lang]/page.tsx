@@ -1,36 +1,13 @@
-import Link from "next/link";
-import { ArrowRight, Building, PiggyBank, Landmark, Handshake } from "lucide-react";
+import { serverFetchAPI } from "@/lib/server-api";
+import HeroSlider from "@/components/sections/HeroSlider";
+import OfferingsGrid from "@/components/sections/OfferingsGrid";
+import AboutSection from "@/components/sections/AboutSection";
+import EMISection from "@/components/sections/EMISection";
+import NewsEventsSection from "@/components/sections/NewsEventsSection";
+import CSRGrid from "@/components/sections/CSRGrid";
+import AppBanner from "@/components/sections/AppBanner";
 
-const products = [
-  {
-    icon: PiggyBank,
-    title: { en: "Savings", np: "बचत" },
-    desc: { en: "Explore our range of savings accounts", np: "हाम्रो बचत खाताहरू हेर्नुहोस्" },
-    href: "/products/savings",
-    color: "bg-blue-50 text-blue-700",
-  },
-  {
-    icon: Landmark,
-    title: { en: "Fixed Deposits", np: "मुद्दती निक्षेप" },
-    desc: { en: "Secure your future with fixed deposits", np: "मुद्दती निक्षेपमा लगानी गर्नुहोस्" },
-    href: "/products/fixed-deposits",
-    color: "bg-green-50 text-green-700",
-  },
-  {
-    icon: Building,
-    title: { en: "Loans", np: "ऋण" },
-    desc: { en: "Easy loans for your needs", np: "तपाईंको आवश्यकताको लागि सहज ऋण" },
-    href: "/products/loans",
-    color: "bg-purple-50 text-purple-700",
-  },
-  {
-    icon: Handshake,
-    title: { en: "Services", np: "सेवाहरू" },
-    desc: { en: "Digital banking services at your fingertips", np: "डिजिटल बैंकिङ सेवाहरू" },
-    href: "/services",
-    color: "bg-amber-50 text-amber-700",
-  },
-];
+export const revalidate = 60;
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
@@ -42,52 +19,89 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   };
 }
 
+interface HomepageData {
+  slides: any[];
+  offerings: any[];
+  stats: any[];
+  csrActivities: any[];
+  appBanner: any | null;
+  aboutTitle?: string;
+  aboutTitleNp?: string;
+  aboutDescription?: string;
+  aboutDescriptionNp?: string;
+  aboutImageUrl?: string;
+}
+
 export default async function HomePage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
 
+  let data: HomepageData = { slides: [], offerings: [], stats: [], csrActivities: [], appBanner: null };
+  try {
+    const res = await serverFetchAPI("/api/homepage/full");
+    data = res.data || res;
+  } catch {
+    // Use default/empty data so the page always renders
+  }
+
   return (
     <>
-      <section className="bg-gradient-to-br from-primary-800 via-primary-700 to-primary-900 py-20 text-white">
-        <div className="container-page text-center">
-          <h1 className="mb-4 text-4xl font-bold md:text-5xl">
-            {lang === "en" ? "Reliance Finance Limited" : "रिलायन्स फाइनान्स लिमिटेड"}
-          </h1>
-          <p className="mx-auto mb-8 max-w-2xl text-lg text-primary-100">
-            {lang === "en" ? "Your trusted financial partner in Nepal" : "नेपालमा तपाईंको विश्वसनीय वित्तीय साझेदार"}
-          </p>
-          <div className="flex justify-center gap-4">
-            <Link href="/loan-enquiry" className="rounded-lg bg-accent-500 px-6 py-3 font-semibold text-white transition-colors hover:bg-accent-600">
-              {lang === "en" ? "Apply for Loan" : "ऋणको लागि आवेदन दिनुहोस्"}
-            </Link>
-            <Link href="/contact" className="rounded-lg border border-white/30 px-6 py-3 font-semibold text-white transition-colors hover:bg-white/10">
-              {lang === "en" ? "Contact Us" : "सम्पर्क गर्नुहोस्"}
-            </Link>
+      <HeroSlider slides={data.slides} lang={lang} />
+
+      <section className="section bg-white">
+        <div className="container-page">
+          <div className="section-header">
+            <h2>{lang === "en" ? "Our Core Offerings" : "हाम्रा मुख्य सेवाहरू"}</h2>
+            <p>{lang === "en" ? "Explore our wide range of tailored financial products designed to build your future and foster mutual growth." : "तपाईंको भविष्य निर्माण गर्न र पारस्परिक वृद्धिलाई बढावा दिन डिजाइन गरिएका हाम्रा अनुकूलित वित्तीय उत्पादनहरूको विस्तृत श्रृंखला अन्वेषण गर्नुहोस्।"}</p>
           </div>
+          <OfferingsGrid offerings={data.offerings} lang={lang} />
         </div>
       </section>
 
-      <section className="py-16">
+      <AboutSection
+        lang={lang}
+        stats={data.stats}
+        title={data.aboutTitle}
+        titleNp={data.aboutTitleNp}
+        description={data.aboutDescription}
+        descriptionNp={data.aboutDescriptionNp}
+        imageUrl={data.aboutImageUrl}
+      />
+
+      <section className="section bg-white">
         <div className="container-page">
-          <h2 className="mb-8 text-center text-2xl font-bold text-gray-900">
-            {lang === "en" ? "Our Products & Services" : "हाम्रा उत्पादन र सेवाहरू"}
-          </h2>
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {products.map((p) => {
-              const Icon = p.icon;
-              return (
-                <Link key={p.href} href={p.href} className="group rounded-xl border p-6 transition-shadow hover:shadow-lg">
-                  <div className={`mb-4 inline-flex rounded-lg p-3 ${p.color}`}>
-                    <Icon className="h-6 w-6" />
-                  </div>
-                  <h3 className="mb-2 font-semibold text-gray-900">{lang === "en" ? p.title.en : p.title.np}</h3>
-                  <p className="mb-4 text-sm text-gray-600">{lang === "en" ? p.desc.en : p.desc.np}</p>
-                  <span className="flex items-center gap-1 text-sm font-medium text-primary-700 group-hover:underline">
-                    {lang === "en" ? "Learn More" : "थप जान्नुहोस्"} <ArrowRight className="h-4 w-4" />
-                  </span>
-                </Link>
-              );
-            })}
+          <div className="section-header">
+            <h2>{lang === "en" ? "Quick Loan EMI Estimator" : "द्रुत ऋण EMI अनुमानक"}</h2>
+            <p>{lang === "en" ? "Plan your expenses efficiently. Adjust the sliders below to get a quick estimate of your monthly installments." : "आफ्नो खर्च कुशलतापूर्वक योजना गर्नुहोस्। आफ्नो मासिक किस्ताको द्रुत अनुमान प्राप्त गर्न तलका स्लाइडरहरू समायोजन गर्नुहोस्।"}</p>
           </div>
+          <EMISection />
+        </div>
+      </section>
+
+      <section className="section bg-surface-alt">
+        <div className="container-page">
+          <div className="section-header">
+            <h2>{lang === "en" ? "Latest Highlights & Events" : "पछिल्लो हाइलाइट्स र कार्यक्रमहरू"}</h2>
+            <p>{lang === "en" ? "Stay up to date with our recent corporate announcements, community services, and public notices." : "हाम्रो हालैका कर्पोरेट घोषणाहरू, सामुदायिक सेवाहरू र सार्वजनिक सूचनाहरूसँग अद्यावधिक रहनुहोस्।"}</p>
+          </div>
+          <NewsEventsSection lang={lang} />
+        </div>
+      </section>
+
+      {(data.csrActivities?.length ?? 0) > 0 && (
+        <section className="section bg-white">
+          <div className="container-page">
+            <div className="section-header">
+              <h2>{lang === "en" ? "Corporate Social Responsibility" : "कर्पोरेट सामाजिक उत्तरदायित्व"}</h2>
+              <p>{lang === "en" ? "Making a difference where it matters. We commit ourselves to enhancing public health, education, and relief efforts across Nepal." : "जहाँ महत्त्व छ त्यहाँ परिवर्तन ल्याउँदै। हामी नेपालभर सार्वजनिक स्वास्थ्य, शिक्षा र राहत प्रयासहरू बढाउन प्रतिबद्ध छौं।"}</p>
+            </div>
+            <CSRGrid activities={data.csrActivities} lang={lang} />
+          </div>
+        </section>
+      )}
+
+      <section className="section bg-surface-alt">
+        <div className="container-page">
+          <AppBanner data={data.appBanner} lang={lang} />
         </div>
       </section>
     </>

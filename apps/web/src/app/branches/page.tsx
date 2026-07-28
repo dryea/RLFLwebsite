@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { MapPin, Phone } from "lucide-react";
 import PublicLayout from "@/components/layout/PublicLayout";
+import BranchMap from "@/components/shared/BranchMap";
 import { getBranches } from "@/lib/public-api";
 
 export default function BranchesPage() {
@@ -38,9 +39,8 @@ export default function BranchesPage() {
               </div>
             ))}
           </div>
-          {/* Map placeholder */}
-          <div className="mt-8 h-80 overflow-hidden rounded-xl bg-gray-200">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14129.5!2d85.3!3d27.7!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjfCsDQyJzAwLjAiTiA4NcKwMTgnMDAuMCJF!5e0!3m2!1sen!2snp!4v1" width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy" />
+          <div className="mt-8">
+            <BranchMap branches={filtered} lang="en" />
           </div>
         </div>
       </section>

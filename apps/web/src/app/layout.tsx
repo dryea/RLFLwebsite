@@ -30,6 +30,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${rubik.variable} ${roboto.variable}`}>
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#1a365d" />
+      </head>
       <body className="flex min-h-screen flex-col">{children}</body>
     </html>
   );

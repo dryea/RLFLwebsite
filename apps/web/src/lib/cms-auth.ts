@@ -1,4 +1,4 @@
-const API_URL = "https://rfil-api.sudeepdhakal.workers.dev";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://rfil-api.sudeepdhakal.workers.dev";
 
 export interface CmsUser {
   id: string;

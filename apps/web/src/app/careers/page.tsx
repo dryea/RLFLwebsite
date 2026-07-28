@@ -34,7 +34,7 @@ export default function CareersPage() {
                         {job.type && <span className="flex items-center gap-1"><Clock className="h-4 w-4" />{job.type}</span>}
                       </div>
                     </div>
-                    <a href={`mailto:careers@reliancenepal.com.np?subject=Application for ${job.title}`} className="flex items-center gap-1 rounded-lg bg-primary-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-800">
+                    <a href={`/careers/apply/${job.id}`} className="flex items-center gap-1 rounded-lg bg-primary-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-800">
                       Apply <ExternalLink className="h-4 w-4" />
                     </a>
                   </div>

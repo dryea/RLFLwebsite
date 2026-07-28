@@ -20,4 +20,5 @@ export const cmsResources: Record<string, ResourceConfig> = {
   careers: { title: "Careers", newLabel: "New Job", basePath: "/cms/careers", apiName: "Careers" },
   users: { title: "Users", newLabel: "New User", basePath: "/cms/users", apiName: "Users" },
   settings: { title: "Settings", newLabel: "New Setting", basePath: "/cms/settings", apiName: "Settings" },
+  enquiries: { title: "Enquiries", newLabel: "", basePath: "/cms/enquiries", apiName: "" },
 };

@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { eq, and, desc, like } from "drizzle-orm";
+import { hashPassword, verifyPassword, signJWT, verifyJWT } from "./lib/auth";
 import { createDb } from "./db";
 import {
   pages, products, news, users,
@@ -37,7 +38,11 @@ app.get("/api/health", (c) => c.json({ status: "ok", timestamp: new Date().toISO
 // ── Auth Middleware ──
 async function requireAuth(c: any, next: any) {
   const auth = c.req.header("Authorization");
-  if (!auth) return c.json({ error: "Unauthorized" }, 401);
+  if (!auth || !auth.startsWith("Bearer ")) return c.json({ error: "Unauthorized" }, 401);
+  const token = auth.slice(7);
+  const payload = await verifyJWT(token, c.env.JWT_SECRET);
+  if (!payload) return c.json({ error: "Unauthorized" }, 401);
+  c.set("user", payload);
   await next();
 }
 
@@ -84,15 +89,39 @@ app.post("/api/cms/auth/login", async (c) => {
     const db = createDb(c.env.DB);
     const user = await db.select().from(users).where(eq(users.email, email)).get();
     if (!user) return c.json({ error: "Invalid credentials" }, 401);
-    if (user.passwordHash !== password) return c.json({ error: "Invalid credentials" }, 401);
+    const valid = await verifyPassword(password, user.passwordHash);
+    if (!valid) return c.json({ error: "Invalid credentials" }, 401);
+    const token = await signJWT(
+      { sub: user.id.toString(), email: user.email, role: "admin" },
+      c.env.JWT_SECRET
+    );
     return c.json({
-      token: "cms-token-placeholder",
+      token,
       user: { id: user.id.toString(), email: user.email, name: user.name, role: "admin" },
     });
   } catch (err) {
     return c.json({ error: "Internal server error", details: String(err) }, 500);
   }
 });
+
+app.post("/api/cms/auth/seed", async (c) => {
+  try {
+    const db = createDb(c.env.DB);
+    const existing = await db.select().from(users).limit(1).all();
+    if (existing.length > 0) return c.json({ error: "Already seeded" }, 400);
+    const { email, password, name } = await c.req.json() as { email: string; password: string; name: string };
+    if (!email || !password || !name) return c.json({ error: "email, password, name required" }, 400);
+    const hashed = await hashPassword(password);
+    const result = await db.insert(users).values({ name, email, passwordHash: hashed }).returning().get();
+    const token = await signJWT({ sub: result.id.toString(), email, role: "admin" }, c.env.JWT_SECRET);
+    return c.json({ token, user: { id: result.id.toString(), email, name, role: "admin" } }, 201);
+  } catch (err) {
+    return c.json({ error: "Seed failed", details: String(err) }, 500);
+  }
+});
+
+// Protect all /api/cms/* routes except auth (defined above)
+app.use("/api/cms/*", requireAuth);
 
 // ── CMS: Pages CRUD ──
 
@@ -209,7 +238,7 @@ app.get("/api/cms/media/folders", async (c) => {
 app.post("/api/cms/media/upload", async (c) => {
   try {
     const formData = await c.req.formData();
-    const file = formData.get("file") as File;
+    const file = formData.get("file") as unknown as File;
     const folderId = formData.get("folderId") ? parseInt(formData.get("folderId") as string) : null;
 
     if (!file) return c.json({ error: "No file provided" }, 400);
@@ -352,11 +381,15 @@ app.get("/api/search", async (c) => {
   if (!q) return c.json([]);
   const db = createDb(c.env.DB);
   const [pageResults, newsResults, productResults] = await Promise.all([
-    db.select({ title: pages.title, slug: pages.slug, type: "page" }).from(pages).where(and(eq(pages.status, "published"), like(pages.title, `%${q}%`))).limit(5).all(),
-    db.select({ title: news.title, slug: news.slug, type: "news" }).from(news).where(like(news.title, `%${q}%`)).limit(5).all(),
-    db.select({ title: products.title, slug: products.slug, type: "product" }).from(products).where(like(products.title, `%${q}%`)).limit(5).all(),
+    db.select({ title: pages.title, slug: pages.slug }).from(pages).where(and(eq(pages.status, "published"), like(pages.title, `%${q}%`))).limit(5).all(),
+    db.select({ title: news.title, slug: news.slug }).from(news).where(like(news.title, `%${q}%`)).limit(5).all(),
+    db.select({ title: products.title, slug: products.slug }).from(products).where(like(products.title, `%${q}%`)).limit(5).all(),
   ]);
-  return c.json([...pageResults, ...newsResults, ...productResults]);
+  return c.json([
+    ...pageResults.map(r => ({ ...r, type: "page" as const })),
+    ...newsResults.map(r => ({ ...r, type: "news" as const })),
+    ...productResults.map(r => ({ ...r, type: "product" as const })),
+  ]);
 });
 
 export default app;

@@ -1,4 +1,4 @@
-const API = "https://rfil-api.sudeepdhakal.workers.dev";
+const API = process.env.NEXT_PUBLIC_API_URL || "https://rfil-api.sudeepdhakal.workers.dev";
 
 async function request(path: string, options?: RequestInit) {
   const token = typeof window !== "undefined" ? localStorage.getItem("cms_token") : null;
@@ -22,6 +22,7 @@ const resources = [
   "products", "services", "product-categories", "team-members",
   "branches", "rates", "news", "events", "notices", "reports",
   "albums", "faq", "careers", "auctions", "merchants", "settings",
+  "contact-submissions", "loan-enquiries",
 ];
 
 function resourceMethods(resource: string) {
@@ -37,7 +38,23 @@ function resourceMethods(resource: string) {
   };
 }
 
-export const api = {
+export interface ApiClient {
+  getPages: (params?: string) => Promise<any>;
+  getPage: (id: number) => Promise<any>;
+  createPage: (data: any) => Promise<any>;
+  updatePage: (id: number, data: any) => Promise<any>;
+  deletePage: (id: number) => Promise<any>;
+  getPageVersions: (id: number) => Promise<any>;
+  getMedia: (folder?: number) => Promise<any>;
+  getMediaFolders: () => Promise<any>;
+  uploadMedia: (file: File, folderId?: number) => Promise<any>;
+  deleteMedia: (id: number) => Promise<any>;
+  getStats: () => Promise<any>;
+  search: (q: string) => Promise<any>;
+  [key: string]: any;
+}
+
+export const api: ApiClient = {
   // Pages
   getPages: (params?: string) => request(`/api/cms/pages${params ? `?${params}` : ""}`),
   getPage: (id: number) => request(`/api/cms/pages/${id}`),
@@ -72,4 +89,4 @@ export const api = {
 
   // Auto-generated resource methods
   ...Object.assign({}, ...resources.map(resourceMethods)),
-} as any;
+};

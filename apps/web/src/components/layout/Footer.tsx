@@ -10,6 +10,7 @@ import {
   footerContact,
   socialLinks,
 } from "@/lib/navigation";
+import NewsletterForm from "@/components/shared/NewsletterForm";
 
 function FooterLink({ href, label, external }: { href: string; label: string; external?: boolean }) {
   if (external) {
@@ -136,6 +137,10 @@ export default function Footer() {
                   <span className="text-xs font-bold">{s.name.charAt(0)}</span>
                 </a>
               ))}
+            </div>
+
+            <div className="mb-6">
+              <NewsletterForm />
             </div>
 
             <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-white">

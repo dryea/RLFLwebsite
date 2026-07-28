@@ -14,7 +14,7 @@ export default function NewsletterForm() {
     e.preventDefault();
     setStatus("loading");
     try {
-      const res = await fetch(`${API}/api/cms/newsletter`, {
+      const res = await fetch(`${API}/api/newsletter`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),

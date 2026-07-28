@@ -1,308 +1,263 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import {
-  Book, Images, Calculator, HelpCircle,
-  ChevronRight, TrendingUp, IndianRupee, Smartphone, MapPin,
-} from "lucide-react";
+import { ChevronRight, Wallet, HandCoins, Smartphone, Handshake } from "lucide-react";
 
 interface OfferingLink {
   label: string;
   labelNp?: string;
-  href: string;
+  url: string;
 }
 
-interface Offering {
+interface OfferingCard {
   id: number;
   title: string;
   titleNp?: string;
-  description: string;
-  descriptionNp?: string;
+  summary: string;
+  summaryNp?: string;
   icon: string;
-  links: OfferingLink[];
-  badge: string;
+  badge?: string;
   badgeNp?: string;
-  ctaText?: string;
-  ctaTextNp?: string;
-  ctaLink?: string;
+  linkText: string;
+  linkUrl: string;
+  widgetType: string;
+  links: OfferingLink[];
 }
 
 const iconMap: Record<string, React.ElementType> = {
-  Book, Images, Calculator, HelpCircle,
+  Wallet, HandCoins, Smartphone, Handshake,
 };
 
 function SavingsWidget() {
-  const [amount, setAmount] = useState(100000);
-  const rate = 8.5;
-  const interest = Math.round(amount * rate / 100);
+  const [product, setProduct] = useState("normal");
+  const rates: Record<string, string> = {
+    normal: "4.25% p.a. | Min Bal: NPR 100",
+    everest: "5.50% p.a. | Min Bal: NPR 20,000",
+    student: "4.75% p.a. | Min Bal: NPR 500",
+    gold: "5.75% p.a. | Min Bal: NPR 50,000",
+    "individual-fd": "Up to 6.25% p.a. | Min: NPR 10,000",
+  };
+
   return (
-    <div className="mt-3 rounded-lg bg-purple-50/50 p-3">
-      <div className="mb-1 flex items-center gap-1 text-xs font-medium text-primary-700">
-        <TrendingUp className="h-3 w-3" />
-        <span>Savings Yield @ {rate}% p.a.</span>
+    <div className="service-mini-widget rounded-lg bg-gray-50 p-3 mb-5 border border-gray-100">
+      <div className="widget-title flex items-center justify-between mb-2">
+        <span className="text-[0.75rem] font-extrabold uppercase tracking-wider text-gray-400">Yield & Min Balance</span>
+        <span className="inline-block h-[6px] w-[6px] rounded-full bg-green-500 animate-pulse" />
       </div>
-      <div className="flex items-center gap-2">
-        <IndianRupee className="h-4 w-4 text-primary-500" />
-        <input
-          type="range"
-          min={10000}
-          max={10000000}
-          step={10000}
-          value={amount}
-          onChange={(e) => setAmount(Number(e.target.value))}
-          className="w-full accent-secondary-500"
-        />
-      </div>
-      <div className="mt-1 flex justify-between text-xs text-gray-500">
-        <span>Rs. 10K</span>
-        <span>Rs. 1Cr</span>
-      </div>
-      <div className="mt-2 rounded bg-white px-2 py-1.5 text-center text-sm font-semibold text-primary-700">
-        Annual Interest: Rs. {interest.toLocaleString()}
+      <select
+        value={product}
+        onChange={(e) => setProduct(e.target.value)}
+        className="widget-control-select w-full rounded border border-gray-200 px-2 py-1.5 text-xs bg-white mb-2 focus:border-primary-500 focus:outline-none"
+      >
+        <option value="normal">Normal Saving</option>
+        <option value="everest">Everest Saving</option>
+        <option value="student">Student Saving</option>
+        <option value="gold">Gold Saving</option>
+        <option value="individual-fd">Individual Fixed Deposit</option>
+      </select>
+      <div className="widget-result-panel rounded border border-gray-200 bg-white px-3 py-2 text-xs font-semibold text-primary-500 text-center">
+        {rates[product]}
       </div>
     </div>
   );
 }
 
 function EMIWidget() {
-  const [amount, setAmount] = useState(500000);
-  const [rate, setRate] = useState(12);
-  const [tenure, setTenure] = useState(60);
+  const [amount, setAmount] = useState(1000000);
+  const [rate, setRate] = useState(9.5);
   const mr = rate / 12 / 100;
-  const emi = Math.round(amount * mr * Math.pow(1 + mr, tenure) / (Math.pow(1 + mr, tenure) - 1));
+  const payments = 60;
+  const emi = mr > 0 ? Math.round(amount * mr * Math.pow(1 + mr, payments) / (Math.pow(1 + mr, payments) - 1)) : Math.round(amount / payments);
+
   return (
-    <div className="mt-3 rounded-lg bg-purple-50/50 p-3">
-      <div className="mb-1 flex items-center gap-1 text-xs font-medium text-primary-700">
-        <IndianRupee className="h-3 w-3" />
-        <span>Quick EMI</span>
+    <div className="service-mini-widget rounded-lg bg-gray-50 p-3 mb-5 border border-gray-100">
+      <div className="widget-title flex items-center justify-between mb-2">
+        <span className="text-[0.75rem] font-extrabold uppercase tracking-wider text-gray-400">EMI Estimator (5 Yrs)</span>
+        <span className="inline-block h-[6px] w-[6px] rounded-full bg-green-500 animate-pulse" />
       </div>
-      <div className="mb-1">
-        <div className="flex justify-between text-xs text-gray-600">
-          <span>Loan</span>
-          <span className="font-medium text-primary-700">Rs. {(amount / 100000).toFixed(1)}L</span>
-        </div>
-        <input type="range" min={100000} max={10000000} step={50000} value={amount} onChange={(e) => setAmount(Number(e.target.value))} className="w-full accent-secondary-500" />
+      <div className="flex gap-1 mb-2">
+        <input
+          type="number"
+          value={amount}
+          onChange={(e) => setAmount(Number(e.target.value))}
+          className="widget-control-input flex-[1.2] rounded border border-gray-200 px-2 py-1.5 text-xs bg-white focus:border-primary-500 focus:outline-none"
+          min={50000}
+          step={50000}
+        />
+        <select
+          value={rate}
+          onChange={(e) => setRate(Number(e.target.value))}
+          className="widget-control-select flex-[0.8] rounded border border-gray-200 px-2 py-1.5 text-xs bg-white focus:border-primary-500 focus:outline-none"
+        >
+          <option value={9.5}>Home (9.5%)</option>
+          <option value={10.0}>Auto (10.0%)</option>
+          <option value={11.0}>Business (11.0%)</option>
+        </select>
       </div>
-      <div className="mb-1">
-        <div className="flex justify-between text-xs text-gray-600">
-          <span>Rate</span>
-          <span className="font-medium text-primary-700">{rate}%</span>
-        </div>
-        <input type="range" min={5} max={25} step={0.5} value={rate} onChange={(e) => setRate(Number(e.target.value))} className="w-full accent-secondary-500" />
-      </div>
-      <div className="mb-1">
-        <div className="flex justify-between text-xs text-gray-600">
-          <span>Tenure</span>
-          <span className="font-medium text-primary-700">{tenure}m</span>
-        </div>
-        <input type="range" min={6} max={360} step={6} value={tenure} onChange={(e) => setTenure(Number(e.target.value))} className="w-full accent-secondary-500" />
-      </div>
-      <div className="mt-2 rounded bg-white px-2 py-1.5 text-center text-sm font-semibold text-primary-700">
-        EMI: Rs. {emi.toLocaleString()}/mo
+      <div className="widget-result-panel rounded border border-gray-200 bg-white px-3 py-2 text-xs font-semibold text-primary-500 text-center">
+        Est. Monthly: NPR {emi.toLocaleString()}
       </div>
     </div>
   );
 }
 
-function DigitalTabsWidget({ lang }: { lang: string }) {
-  const [tab, setTab] = useState<"news" | "events">("news");
-  const items = {
-    news: [
-      { title: "Reliance Finance announces Q3 results", date: "2025-03-15" },
-      { title: "New branch opening in Pokhara", date: "2025-02-28" },
-      { title: "Digital banking service expansion", date: "2025-02-10" },
-    ],
-    events: [
-      { title: "Annual General Meeting 2025", date: "2025-04-20" },
-      { title: "Financial Literacy Workshop", date: "2025-03-25" },
-      { title: "CSR Health Camp in Bardiya", date: "2025-03-05" },
-    ],
+function DigitalTabsWidget() {
+  const [tab, setTab] = useState("mobile");
+  const features: Record<string, string> = {
+    mobile: "✓ Fonepay QR ✓ Bills ✓ Real-time Pay",
+    ips: "✓ Direct Bank Trf ✓ Govt Taxes ✓ High Limit",
+    qr: "✓ Cashless Teller ✓ Scan-to-Pay ✓ Free Setup",
   };
+
   return (
-    <div className="mt-3 rounded-lg bg-purple-50/50 p-3">
-      <div className="mb-2 flex gap-1">
-        <button
-          onClick={() => setTab("news")}
-          className={`rounded px-3 py-1 text-xs font-medium transition-colors ${tab === "news" ? "bg-primary-500 text-white" : "bg-white text-gray-600 hover:bg-primary-100"}`}
-        >
-          {lang === "en" ? "News" : "समाचार"}
-        </button>
-        <button
-          onClick={() => setTab("events")}
-          className={`rounded px-3 py-1 text-xs font-medium transition-colors ${tab === "events" ? "bg-primary-500 text-white" : "bg-white text-gray-600 hover:bg-primary-100"}`}
-        >
-          {lang === "en" ? "Events" : "कार्यक्रम"}
-        </button>
+    <div className="service-mini-widget rounded-lg bg-gray-50 p-3 mb-5 border border-gray-100">
+      <div className="widget-title flex items-center justify-between mb-2">
+        <span className="text-[0.75rem] font-extrabold uppercase tracking-wider text-gray-400">Feature Benefits</span>
+        <span className="inline-block h-[6px] w-[6px] rounded-full bg-green-500 animate-pulse" />
       </div>
-      <ul className="space-y-1.5">
-        {items[tab].map((item, i) => (
-          <li key={i} className="flex items-start gap-1.5 text-xs text-gray-600">
-            <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-secondary-500" />
-            <span>
-              <span className="font-medium text-gray-800">{item.title}</span>
-              <span className="ml-2 text-gray-400">{item.date}</span>
-            </span>
-          </li>
-        ))}
-      </ul>
+      <div className="widget-tabs flex gap-1 mb-2">
+        <button onClick={() => setTab("mobile")} className={`widget-tab-btn flex-1 rounded border px-1 py-1 text-[0.7rem] font-bold transition-colors ${tab === "mobile" ? "bg-primary-500 text-white border-primary-500" : "bg-white text-gray-500 border-gray-200 hover:bg-gray-100"}`}>Mobile</button>
+        <button onClick={() => setTab("ips")} className={`widget-tab-btn flex-1 rounded border px-1 py-1 text-[0.7rem] font-bold transition-colors ${tab === "ips" ? "bg-primary-500 text-white border-primary-500" : "bg-white text-gray-500 border-gray-200 hover:bg-gray-100"}`}>connectIPS</button>
+        <button onClick={() => setTab("qr")} className={`widget-tab-btn flex-1 rounded border px-1 py-1 text-[0.7rem] font-bold transition-colors ${tab === "qr" ? "bg-primary-500 text-white border-primary-500" : "bg-white text-gray-500 border-gray-200 hover:bg-gray-100"}`}>QR Pay</button>
+      </div>
+      <div className="widget-result-panel rounded border border-gray-200 bg-white px-3 py-2 text-xs font-semibold text-primary-500 text-center">
+        {features[tab]}
+      </div>
     </div>
   );
 }
 
-function BranchWidget({ lang }: { lang: string }) {
-  const [province, setProvince] = useState("3");
-  const branches: Record<string, { name: string; address: string }[]> = {
-    "1": [{ name: "Biratnagar", address: "Morang" }, { name: "Damak", address: "Jhapa" }],
-    "2": [{ name: "Janakpur", address: "Dhanusha" }, { name: "Birgunj", address: "Parsa" }],
-    "3": [{ name: "Kamaladi", address: "Kathmandu (HO)" }, { name: "Baneshwor", address: "Kathmandu" }, { name: "Lalitpur", address: "Lalitpur" }, { name: "Bharatpur", address: "Chitwan" }],
-    "4": [{ name: "Pokhara", address: "Kaski" }],
-    "5": [{ name: "Butwal", address: "Rupandehi" }, { name: "Nepalgunj", address: "Banke" }],
-    "6": [{ name: "Surkhet", address: "Surkhet" }],
-    "7": [{ name: "Dhangadhi", address: "Kailali" }, { name: "Mahendranagar", address: "Kanchanpur" }],
+function BranchWidget() {
+  const [branch, setBranch] = useState("kamaladi");
+  const contacts: Record<string, string> = {
+    kamaladi: "Tel: +977-01-5361104 / 5323117",
+    butwal: "Tel: +977-071-550992 / 550993",
+    pokhara: "Tel: +977-061-538188 / 538189",
+    kohalpur: "Tel: +977-081-542131 / 542132",
   };
-  const selected = branches[province] || [];
+
   return (
-    <div className="mt-3 rounded-lg bg-purple-50/50 p-3">
-      <div className="mb-1 flex items-center gap-1 text-xs font-medium text-primary-700">
-        <MapPin className="h-3 w-3" />
-        <span>{lang === "en" ? "Find a Branch" : "शाखा खोज्नुहोस्"}</span>
+    <div className="service-mini-widget rounded-lg bg-gray-50 p-3 mb-5 border border-gray-100">
+      <div className="widget-title flex items-center justify-between mb-2">
+        <span className="text-[0.75rem] font-extrabold uppercase tracking-wider text-gray-400">Quick Hub Directory</span>
+        <span className="inline-block h-[6px] w-[6px] rounded-full bg-green-500 animate-pulse" />
       </div>
       <select
-        value={province}
-        onChange={(e) => setProvince(e.target.value)}
-        className="mb-2 w-full rounded border border-gray-200 px-2 py-1 text-xs text-gray-700 focus:border-secondary-500 focus:outline-none"
+        value={branch}
+        onChange={(e) => setBranch(e.target.value)}
+        className="widget-control-select w-full rounded border border-gray-200 px-2 py-1.5 text-xs bg-white mb-2 focus:border-primary-500 focus:outline-none"
       >
-        <option value="1">Province 1</option>
-        <option value="2">Province 2</option>
-        <option value="3">Bagmati</option>
-        <option value="4">Gandaki</option>
-        <option value="5">Lumbini</option>
-        <option value="6">Karnali</option>
-        <option value="7">Sudurpashchim</option>
+        <option value="kamaladi">Kamaladi H.O. (Kathmandu)</option>
+        <option value="butwal">Butwal Branch (Lumbini)</option>
+        <option value="pokhara">Pokhara Branch (Gandaki)</option>
+        <option value="kohalpur">Kohalpur Branch (Banke)</option>
       </select>
-      <ul className="space-y-1">
-        {selected.map((b, i) => (
-          <li key={i} className="flex items-center gap-1.5 text-xs text-gray-600">
-            <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
-            {b.name}
-            <span className="text-gray-400">({b.address})</span>
-          </li>
-        ))}
-      </ul>
+      <div className="widget-result-panel rounded border border-gray-200 bg-white px-3 py-2 text-xs font-semibold text-primary-500 text-center">
+        {contacts[branch]}
+      </div>
     </div>
   );
 }
 
-export default function OfferingsGrid({ offerings, lang }: { offerings: Offering[]; lang: string }) {
-  const defaultOfferings: Offering[] = [
-    {
-      id: 1, title: "Report", titleNp: "प्रतिवेदन",
-      description: "View our Annual, Quarterly and other Reports",
-      descriptionNp: "हाम्रो वार्षिक, त्रैमासिक र अन्य प्रतिवेदनहरू हेर्नुहोस्",
-      icon: "Book", badge: "01", badgeNp: "१",
-      links: [
-        { label: "Annual Report", href: "/publications/reports/annual-report" },
-        { label: "Quarterly Report", href: "/publications/reports/quarterly-reports" },
-        { label: "Basel II Disclosure", href: "/publications/reports/basel-ii-disclosure" },
-      ],
-      ctaText: "Explore Reports", ctaLink: "/publications",
-    },
-    {
-      id: 2, title: "Media", titleNp: "मिडिया",
-      description: "Connect with us for Latest News, Events and Gallery",
-      descriptionNp: "पछिल्लो समाचार, कार्यक्रम र ग्यालरीको लागि हामीसँग जोडिनुहोस्",
-      icon: "Images", badge: "02", badgeNp: "२",
-      links: [
-        { label: "News", href: "/publications/news" },
-        { label: "Events", href: "/publications/events" },
-        { label: "Gallery", href: "/gallery" },
-      ],
-      ctaText: "View Media", ctaLink: "/publications",
-    },
-    {
-      id: 3, title: "Rates", titleNp: "दरहरू",
-      description: "Find out Interest and Other Rates and EMI Calculator",
-      descriptionNp: "ब्याज र अन्य दरहरू र EMI क्याल्कुलेटर पत्ता लगाउनुहोस्",
-      icon: "Calculator", badge: "03", badgeNp: "३",
-      links: [
-        { label: "Interest Rates", href: "/rates/interest-rates" },
-        { label: "Base Rate / Spread Rate", href: "/rates/base-rate-spread-rate" },
-      ],
-      ctaText: "View Rates", ctaLink: "/rates",
-    },
-    {
-      id: 4, title: "EMI Calculator", titleNp: "EMI क्याल्कुलेटर",
-      description: "Calculate your EMI easily",
-      descriptionNp: "सजिलै आफ्नो EMI गणना गर्नुहोस्",
-      icon: "HelpCircle", badge: "04", badgeNp: "४",
-      links: [
-        { label: "Calculate EMI", href: "/emi-calculator" },
-      ],
-      ctaText: "Calculate Now", ctaLink: "/emi-calculator",
-    },
-  ];
+const defaultCards: OfferingCard[] = [
+  {
+    id: 1, title: "Deposits & Savings", titleNp: "निक्षेप र बचत",
+    summary: "Maximize interest gains with our range of savings accounts and secure high-yield fixed deposit schemes tailored for everyone.",
+    summaryNp: "सबैको लागि तयार पारिएको बचत खाता र उच्च ब्याजदरको मुद्दती निक्षेप योजनाहरू",
+    icon: "Wallet", badge: "14+ Options", badgeNp: "१४+ विकल्प",
+    linkText: "Compare Accounts", linkUrl: "/products/savings",
+    widgetType: "savings",
+    links: [
+      { label: "Savings Accounts", url: "/products/savings" },
+      { label: "Fixed Deposits", url: "/products/fixed-deposits" },
+    ],
+  },
+  {
+    id: 2, title: "Loan Schemes", titleNp: "ऋण योजनाहरू",
+    summary: "Fuel personal milestones or corporate expansions with low-interest Home, Auto, Business, and Agricultural credit lines.",
+    summaryNp: "व्यक्तिगत लक्ष्य र व्यावसायिक विस्तारको लागि कम ब्याजदरको घर, सवारी, व्यवसाय र कृषि ऋण",
+    icon: "HandCoins", badge: "9 Credit Lines", badgeNp: "९ ऋण प्रकार",
+    linkText: "Explore Credit Options", linkUrl: "/products/loans",
+    widgetType: "loan",
+    links: [
+      { label: "Home & Land Loans", url: "/products/loans/home-loan" },
+      { label: "Business & SME Credits", url: "/products/loans/business-loan" },
+    ],
+  },
+  {
+    id: 3, title: "Digital Channels", titleNp: "डिजिटल च्यानलहरू",
+    summary: "Manage accounts securely with modern mobile wallets, Fonepay QR scanning, and online inward remittance settlement portals.",
+    summaryNp: "आधुनिक मोबाइल वालेट, फोनपे QR स्क्यानिङ र अनलाइन रेमिट्यान्स सेवाहरू",
+    icon: "Smartphone", badge: "24/7 Access", badgeNp: "२४/७ पहुँच",
+    linkText: "Explore Services", linkUrl: "/services",
+    widgetType: "digital",
+    links: [
+      { label: "Smart Mobile Banking", url: "/services/mobile-banking" },
+      { label: "connectIPS Transfers", url: "/services/connect-ips" },
+    ],
+  },
+  {
+    id: 4, title: "Offers & Network", titleNp: "अफर र नेटवर्क",
+    summary: "Find branches nationwide and enjoy merchant partner outlets offering exclusive discounts for RFL card holders.",
+    summaryNp: "देशभरका शाखाहरू र RFL कार्डधारकहरूको लागि विशेष छुटहरू",
+    icon: "Handshake", badge: "21 Branches", badgeNp: "२१ शाखाहरू",
+    linkText: "Locate Branches", linkUrl: "/branches",
+    widgetType: "branch",
+    links: [
+      { label: "Merchant Discounts", url: "/branches" },
+      { label: "Clearing & Tieups", url: "/branches" },
+    ],
+  },
+];
 
-  const data = offerings.length ? offerings : defaultOfferings;
-
-  const widgetMap: Record<number, React.ReactNode> = {
-    1: <SavingsWidget />,
-    2: <DigitalTabsWidget lang={lang} />,
-    3: <BranchWidget lang={lang} />,
-    4: <EMIWidget />,
-  };
+export default function OfferingsGrid({ offerings, lang }: { offerings: OfferingCard[]; lang: string }) {
+  const cards = offerings.length >= 4 ? offerings : defaultCards;
 
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-      {data.map((offering) => {
-        const Icon = iconMap[offering.icon] || HelpCircle;
+    <div className="service-grid grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      {cards.map((card) => {
+        const Icon = iconMap[card.icon] || Wallet;
         return (
           <div
-            key={offering.id}
-            className="group relative overflow-hidden rounded-xl border border-gray-100 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-t-primary-500"
-            style={{ borderTop: "3px solid transparent" }}
-            onMouseEnter={(e) => e.currentTarget.style.borderTop = "3px solid #702B86"}
-            onMouseLeave={(e) => e.currentTarget.style.borderTop = "3px solid transparent"}
+            key={card.id}
+            className="service-card group relative flex flex-col overflow-hidden rounded-xl border border-gray-100 bg-white p-8 transition-all duration-300 hover:-translate-y-1 hover:border-primary-500 hover:shadow-lg"
           >
-            <div className="mb-4 flex items-start justify-between">
-              <div className="flex h-[60px] w-[60px] items-center justify-center rounded-xl bg-primary-50 text-primary-600 transition-all duration-300 group-hover:bg-secondary-500 group-hover:text-white">
-                <Icon className="h-7 w-7" />
-              </div>
-              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-100 text-xs font-bold text-primary-700">
-                {lang === "np" && offering.badgeNp ? offering.badgeNp : offering.badge}
-              </span>
+            <div className="service-card-icon-wrapper mb-5 flex h-[60px] w-[60px] items-center justify-center rounded-xl bg-primary-50 transition-all duration-300 group-hover:bg-secondary-500">
+              <Icon className="h-7 w-7 text-primary-500 transition-all duration-300 group-hover:text-white" />
             </div>
 
-            <h3 className="mb-1 font-heading text-lg font-bold text-gray-900">
-              {lang === "np" && offering.titleNp ? offering.titleNp : offering.title}
+            <h3 className="mb-3 font-heading text-xl font-extrabold text-primary-500 flex items-center justify-between">
+              {lang === "np" && card.titleNp ? card.titleNp : card.title}
+              {card.badge && (
+                <span className="service-card-counter ml-2 rounded-full bg-gray-100 px-2 py-0.5 text-[0.75rem] font-bold text-gray-500">
+                  {lang === "np" && card.badgeNp ? card.badgeNp : card.badge}
+                </span>
+              )}
             </h3>
-            <p className="mb-3 text-sm text-gray-500">
-              {lang === "np" && offering.descriptionNp ? offering.descriptionNp : offering.description}
+
+            <p className="mb-5 text-sm leading-relaxed text-gray-500">
+              {lang === "np" && card.summaryNp ? card.summaryNp : card.summary}
             </p>
 
-            <ul className="mb-3 space-y-1.5">
-              {offering.links.map((link, i) => (
+            <ul className="service-links-list mb-5 flex flex-col gap-2">
+              {card.links.map((link, i) => (
                 <li key={i}>
-                  <Link href={link.href} className="inline-flex items-center gap-1 text-xs font-medium text-primary-700 transition-colors hover:text-secondary-600">
-                    <ChevronRight className="h-3 w-3" />
-                    {lang === "np" && link.labelNp ? link.labelNp : link.label}
+                  <Link href={link.url} className="flex items-center justify-between rounded-lg border border-gray-100 bg-gray-50 px-3 py-2 text-sm font-medium text-gray-500 transition-colors hover:bg-primary-50 hover:text-primary-500 hover:border-primary-500/20">
+                    {link.label}
+                    <ChevronRight className="h-3 w-3 text-secondary-500 transition-transform group-hover:translate-x-0.5" />
                   </Link>
                 </li>
               ))}
             </ul>
 
-            {widgetMap[offering.id]}
+            {card.widgetType === "savings" && <SavingsWidget />}
+            {card.widgetType === "loan" && <EMIWidget />}
+            {card.widgetType === "digital" && <DigitalTabsWidget />}
+            {card.widgetType === "branch" && <BranchWidget />}
 
-            {offering.ctaText && (
-              <div className="mt-4">
-                <Link
-                  href={offering.ctaLink || "#"}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary-500 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:bg-primary-600 hover:-translate-y-0.5"
-                >
-                  {lang === "np" && offering.ctaTextNp ? offering.ctaTextNp : offering.ctaText}
-                  <ChevronRight className="h-4 w-4" />
-                </Link>
-              </div>
-            )}
+            <Link href={card.linkUrl} className="btn btn-primary service-card-cta mt-auto w-full text-center font-bold">
+              {card.linkText}
+            </Link>
           </div>
         );
       })}

@@ -1,6 +1,6 @@
 import { serverFetchAPI } from "@/lib/server-api";
 
-export const revalidate = 300;
+export const dynamic = "force-dynamic";
 
 const defaultContent: Record<string, any> = {
   en: {

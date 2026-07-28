@@ -3,6 +3,7 @@
   "main": "src/index.ts",
   "compatibility_date": "2026-07-01",
   "compatibility_flags": ["nodejs_compat"],
+  "migrations_dir": "drizzle",
   "d1_databases": [
     {
       "binding": "DB",
@@ -21,10 +22,10 @@
     }
   ],
   "queues": {
-    "EMAIL_QUEUE": {
+    "producers": [{
       "binding": "EMAIL_QUEUE",
-      "queue_name": "rfil-email-queue"
-    }
+      "queue": "rfil-email-queue"
+    }]
   },
   "triggers": {
     "crons": [
@@ -34,6 +35,7 @@
   "vars": {
     "SITE_URL": "https://reliancenepal.com.np",
     "ADMIN_EMAIL": "info@reliancenepal.com.np",
-    "FROM_EMAIL": "noreply@reliancenepal.com.np"
+    "FROM_EMAIL": "noreply@reliancenepal.com.np",
+    "JWT_SECRET": "rfil-jwt-secret-2026"
   }
 }

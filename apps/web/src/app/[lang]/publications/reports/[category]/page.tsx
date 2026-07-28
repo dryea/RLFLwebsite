@@ -10,7 +10,7 @@ const categoryMeta: Record<string, { en: string; np: string }> = {
   "sebon-report": { en: "SEBON Report", np: "सेबोन प्रतिवेदन" },
 };
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 export async function generateStaticParams() {
   return Object.keys(categoryMeta).map((category) => ({ category }));
@@ -31,7 +31,7 @@ export default async function ReportsByCategoryPage({ params }: { params: Promis
   const meta = categoryMeta[category];
   if (!meta) notFound();
 
-  const allReports: any[] = await serverFetchAPI("/api/cms/reports", { next: { revalidate: 3600 } });
+  const allReports: any[] = await serverFetchAPI("/api/reports", { next: { revalidate: 3600 } });
   const reports = allReports.filter((r: any) => r.category?.toLowerCase().replace(/\s+/g, "-") === category);
 
   const formatDate = (d: string) => {

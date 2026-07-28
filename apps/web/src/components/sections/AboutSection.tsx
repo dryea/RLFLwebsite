@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 
 interface Stat {
   label: string;
@@ -12,67 +11,49 @@ export default function AboutSection({
   lang,
   stats,
   imageUrl,
-  title,
-  titleNp,
-  description,
-  descriptionNp,
 }: {
   lang: string;
   stats: Stat[];
   imageUrl?: string;
-  title?: string;
-  titleNp?: string;
-  description?: string;
-  descriptionNp?: string;
 }) {
-  const defaultTitle = "About Reliance Finance Limited";
-  const defaultTitleNp = "रिलायन्स फाइनान्स लिमिटेडको बारेमा";
-  const defaultDesc = "Reliance Finance Limited is a trusted C-class financial institution licensed by Nepal Rastra Bank. We are dedicated to providing innovative financial solutions and exceptional service to our customers across Nepal.";
-  const defaultDescNp = "रिलायन्स फाइनान्स लिमिटेड नेपाल राष्ट्र बैंकबाट इजाजतपत्र प्राप्त एक विश्वसनीय वर्ग 'ग' को वित्तीय संस्था हो। हामी नेपालभरका ग्राहकहरूलाई अभिनव वित्तीय समाधान र उत्कृष्ट सेवा प्रदान गर्न समर्पित छौं।";
   const defaultStats: Stat[] = [
-    { label: "Years of Trust", labelNp: "वर्षको विश्वास", value: "25", suffix: "+" },
-    { label: "Branches", labelNp: "शाखाहरू", value: "30", suffix: "+" },
+    { label: "Active Branches", labelNp: "सक्रिय शाखाहरू", value: "21", suffix: "+" },
     { label: "Happy Customers", labelNp: "सन्तुष्ट ग्राहक", value: "100000", suffix: "+" },
-    { label: "Awards", labelNp: "पुरस्कार", value: "15", suffix: "+" },
+    { label: "Years of Legacy", labelNp: "वर्षको विरासत", value: "17", suffix: "+" },
   ];
 
   const s = stats.length ? stats : defaultStats;
 
   return (
-    <section className="section bg-surface-alt">
+    <section className="section bg-white">
       <div className="container-page">
-        <div className="grid items-center gap-12 lg:grid-cols-2">
-          <div className="relative">
-            <div className="relative overflow-hidden rounded-xl">
-              <img
-                src={imageUrl || "https://reliancenepal.com.np/assets/images/reliance/reliance_building.jpg"}
-                alt="Reliance Finance"
-                className="h-[400px] w-full object-cover"
-              />
-            </div>
-            <div className="absolute -bottom-6 -right-6 rounded-xl bg-primary-500 p-6 text-white shadow-lg lg:-bottom-8 lg:-right-8 lg:p-8">
-              <div className="text-4xl font-extrabold lg:text-5xl">25+</div>
-              <div className="mt-1 text-sm font-medium text-primary-100">
-                {lang === "en" ? "Years of Trust" : "वर्षको विश्वास"}
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <h2 className="relative mb-4 pb-3 text-3xl font-bold text-primary-800 after:absolute after:bottom-0 after:left-0 after:h-1 after:w-16 after:rounded-full after:bg-secondary-500 md:text-4xl">
-              {lang === "np" && titleNp ? titleNp : title || defaultTitle}
+        <div className="about-section-grid grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="about-text-content">
+            <h4 className="mb-2 text-xs font-bold uppercase tracking-[0.1em] text-secondary-500">
+              {lang === "en" ? "Introduction" : "परिचय"}
+            </h4>
+            <h2 className="relative mb-6 pb-3 text-3xl font-bold text-primary-800 after:absolute after:bottom-0 after:left-0 after:h-1 after:w-16 after:rounded-full after:bg-secondary-500 md:text-4xl">
+              {lang === "en" ? "Trusted Financial Partner for Over a Decade" : "एक दशक भन्दा बढीको विश्वसनीय वित्तीय साझेदार"}
             </h2>
-            <p className="mb-8 leading-relaxed text-gray-600">
-              {lang === "np" && descriptionNp ? descriptionNp : description || defaultDesc}
+            <p className="mb-6 text-[1.05rem] leading-relaxed text-gray-500">
+              {lang === "en"
+                ? 'Reliance Finance Limited, a licensed "C" class financial institution, was incorporated in the year 2066 B.S. Promoted by a highly qualified team of diverse business leaders and bankers, we have built a legacy of trust and financial solidity in Nepal.'
+                : "रिलायन्स फाइनान्स लिमिटेड, इजाजतपत्र प्राप्त 'ग' वर्गको वित्तीय संस्था, वि.सं. २०६६ मा स्थापना भएको थियो। विविध व्यवसायिक नेताहरू र बैंकरहरूको अत्यधिक योग्य टोलीद्वारा प्रवर्द्धित, हामीले नेपालमा विश्वास र वित्तीय सुदृढताको विरासत निर्माण गरेका छौं।"}
+            </p>
+            <p className="mb-6 text-[1.05rem] leading-relaxed text-gray-500">
+              {lang === "en"
+                ? "Led by the vision of our board members and inspired by customer loyalty, we offer robust retail banking, lending, and corporate solutions through a wide network of branches across the country."
+                : "हाम्रा सञ्चालक समितिको दृष्टिकोण र ग्राहकको वफादारीबाट प्रेरित भई, हामी देशभरका शाखाहरूको विस्तृत नेटवर्क मार्फत बलियो खुद्रा बैंकिङ, ऋण र कर्पोरेट समाधानहरू प्रदान गर्दछौं।"}
             </p>
 
-            <div className="mb-8 grid grid-cols-2 gap-4">
+            <div className="stats-grid mt-8 grid grid-cols-3 gap-5">
               {s.map((stat) => (
-                <div key={stat.label} className="border-b-2 border-secondary-500 pb-3">
-                  <div className="text-2xl font-extrabold text-primary-700 lg:text-3xl">
+                <div key={stat.label} className="stat-item relative overflow-hidden rounded-xl border border-gray-100 bg-gray-50 p-5 text-center">
+                  <div className="absolute bottom-0 left-0 h-1 w-full bg-secondary-500" />
+                  <div className="text-3xl font-extrabold text-primary-500 lg:text-4xl">
                     {stat.value}{stat.suffix || ""}
                   </div>
-                  <div className="text-xs font-medium uppercase tracking-wide text-gray-500 lg:text-sm">
+                  <div className="mt-1 text-sm font-medium text-gray-500">
                     {lang === "np" && stat.labelNp ? stat.labelNp : stat.label}
                   </div>
                 </div>
@@ -81,11 +62,28 @@ export default function AboutSection({
 
             <Link
               href={`/${lang}/about/introduction`}
-              className="btn btn-primary"
+              className="btn btn-primary mt-8 inline-flex"
             >
-              {lang === "en" ? "Learn More About Us" : "हाम्रो बारेमा थप जान्नुहोस्"}
-              <ArrowRight className="h-4 w-4" />
+              {lang === "en" ? "Read More About Us" : "हाम्रो बारेमा थप पढ्नुहोस्"}
             </Link>
+          </div>
+
+          <div className="about-image-frame relative">
+            <img
+              src={imageUrl || "https://reliancenepal.com.np/uploads/page/48141a0a9b0736d944baf8fb179564c1b770f3f9.jpg"}
+              alt="Reliance Finance"
+              className="w-full rounded-xl"
+            />
+            <div className="about-image-overlay-card absolute -bottom-4 -left-4 max-w-[220px] rounded-xl bg-primary-500 p-5 text-white shadow-lg">
+              <div className="text-3xl font-extrabold text-secondary-500 lg:text-4xl">
+                {lang === "en" ? "B.S. 2066" : "वि.सं. २०६६"}
+              </div>
+              <p className="mt-1 text-xs leading-relaxed text-white">
+                {lang === "en"
+                  ? "Established & Licensed by Nepal Rastra Bank to deliver absolute excellence."
+                  : "नेपाल राष्ट्र बैंकद्वारा स्थापित र इजाजतपत्र प्राप्त।"}
+              </p>
+            </div>
           </div>
         </div>
       </div>

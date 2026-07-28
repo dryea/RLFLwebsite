@@ -2,10 +2,10 @@ import PublicLayout from "@/components/layout/PublicLayout";
 import { serverFetchAPI } from "@/lib/server-api";
 import GalleryGrid from "@/components/shared/GalleryGrid";
 
-export const revalidate = 300;
+export const dynamic = "force-dynamic";
 
 export default async function GalleryPage() {
-  const albums = await serverFetchAPI("/api/cms/albums");
+  const albums = await serverFetchAPI("/api/gallery/albums");
 
   return (
     <PublicLayout>

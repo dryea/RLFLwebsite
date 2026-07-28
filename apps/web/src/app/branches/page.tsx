@@ -2,10 +2,10 @@ import PublicLayout from "@/components/layout/PublicLayout";
 import { serverFetchAPI } from "@/lib/server-api";
 import BranchList from "@/components/shared/BranchList";
 
-export const revalidate = 300;
+export const dynamic = "force-dynamic";
 
 export default async function BranchesPage() {
-  const branches = await serverFetchAPI("/api/cms/branches");
+  const branches = await serverFetchAPI("/api/branches");
 
   return (
     <PublicLayout>

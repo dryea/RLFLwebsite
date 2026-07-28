@@ -2,10 +2,10 @@ import PublicLayout from "@/components/layout/PublicLayout";
 import { serverFetchAPI } from "@/lib/server-api";
 import FaqAccordion from "@/components/shared/FaqAccordion";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 export default async function FaqPage() {
-  const faqs = await serverFetchAPI("/api/cms/faq");
+  const faqs = await serverFetchAPI("/api/faq");
 
   return (
     <PublicLayout>

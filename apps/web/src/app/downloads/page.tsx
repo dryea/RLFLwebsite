@@ -2,10 +2,10 @@ import { Download } from "lucide-react";
 import PublicLayout from "@/components/layout/PublicLayout";
 import { serverFetchAPI } from "@/lib/server-api";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 export default async function DownloadsPage() {
-  const items = await serverFetchAPI("/api/cms/downloads");
+  const items = await serverFetchAPI("/api/downloads");
 
   return (
     <PublicLayout>

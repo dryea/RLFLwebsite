@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
 
 export default async function NoticesPage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
-  const notices = await serverFetchAPI("/api/cms/notices", { cache: "no-store" });
+  const notices = await serverFetchAPI("/api/notices", { cache: "no-store" });
 
   return (
     <>

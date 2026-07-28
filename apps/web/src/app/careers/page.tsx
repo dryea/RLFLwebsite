@@ -5,7 +5,7 @@ import { serverFetchAPI } from "@/lib/server-api";
 export const dynamic = "force-dynamic";
 
 export default async function CareersPage() {
-  const jobs = await serverFetchAPI("/api/cms/careers");
+  const jobs = await serverFetchAPI("/api/careers");
 
   return (
     <PublicLayout>

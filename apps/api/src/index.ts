@@ -15,7 +15,7 @@ import {
   downloadCategories, downloads, faqCategories, faqs,
   jobListings, jobApplications,
   contactSubmissions, loanEnquiries, newsletterSubscribers,
-  auctionNotices, merchantOffers, siteSettings,
+  auctionNotices, merchantOffers, siteSettings, calendarEvents,
   heroSlides, offeringCards, offeringLinks, siteStats, appBanner, csrActivities,
 } from "./db/schema";
 
@@ -147,6 +147,181 @@ app.get("/api/homepage/full", async (c) => {
     appBanner: bannerResult[0] || null,
     csrActivities: csrResult,
   });
+});
+
+// ── Public Content Endpoints ──
+
+app.get("/api/news", async (c) => {
+  const db = createDb(c.env.DB);
+  const result = await db.select().from(news).where(eq(news.status, "published")).orderBy(desc(news.publishedAt)).all();
+  return c.json(result);
+});
+
+app.get("/api/news/:slug", async (c) => {
+  const db = createDb(c.env.DB);
+  const slug = c.req.param("slug");
+  const result = await db.select().from(news).where(and(eq(news.slug, slug), eq(news.status, "published"))).get();
+  if (!result) return c.json({ error: "Not found" }, 404);
+  return c.json(result);
+});
+
+app.get("/api/events", async (c) => {
+  const db = createDb(c.env.DB);
+  const result = await db.select().from(events).orderBy(desc(events.eventDate)).all();
+  return c.json(result);
+});
+
+app.get("/api/notices", async (c) => {
+  const db = createDb(c.env.DB);
+  const cat = c.req.query("category");
+  const conditions = [eq(notices.status, "published")];
+  if (cat) conditions.push(eq(notices.categoryId, parseInt(cat)));
+  const result = await db.select().from(notices).where(and(...conditions)).orderBy(desc(notices.publishedDate)).all();
+  return c.json(result);
+});
+
+app.get("/api/notices/categories", async (c) => {
+  const db = createDb(c.env.DB);
+  const result = await db.select().from(noticeCategories).all();
+  return c.json(result);
+});
+
+app.get("/api/reports", async (c) => {
+  const db = createDb(c.env.DB);
+  const cat = c.req.query("category");
+  const conditions = [eq(reports.status, "published")];
+  if (cat) conditions.push(eq(reports.categoryId, parseInt(cat)));
+  const result = await db.select().from(reports).where(and(...conditions)).orderBy(desc(reports.publishedAt)).all();
+  return c.json(result);
+});
+
+app.get("/api/reports/categories", async (c) => {
+  const db = createDb(c.env.DB);
+  const result = await db.select().from(reportCategories).all();
+  return c.json(result);
+});
+
+app.get("/api/services", async (c) => {
+  const db = createDb(c.env.DB);
+  const result = await db.select().from(servicesTable).where(eq(servicesTable.status, "published")).orderBy(servicesTable.sortOrder).all();
+  return c.json(result);
+});
+
+app.get("/api/services/:slug", async (c) => {
+  const db = createDb(c.env.DB);
+  const slug = c.req.param("slug");
+  const result = await db.select().from(servicesTable).where(and(eq(servicesTable.slug, slug), eq(servicesTable.status, "published"))).get();
+  if (!result) return c.json({ error: "Not found" }, 404);
+  return c.json(result);
+});
+
+app.get("/api/products", async (c) => {
+  const db = createDb(c.env.DB);
+  const cat = c.req.query("category");
+  const type = c.req.query("type");
+  const conditions = [eq(products.status, "published")];
+  if (cat) conditions.push(eq(products.categoryId, parseInt(cat)));
+  if (type) conditions.push(eq(productCategories.type, type as any));
+  const result = await db.select().from(products).where(and(...conditions)).orderBy(products.sortOrder).all();
+  return c.json(result);
+});
+
+app.get("/api/products/categories", async (c) => {
+  const db = createDb(c.env.DB);
+  const result = await db.select().from(productCategories).where(eq(productCategories.isActive, true)).orderBy(productCategories.sortOrder).all();
+  return c.json(result);
+});
+
+app.get("/api/products/:slug", async (c) => {
+  const db = createDb(c.env.DB);
+  const slug = c.req.param("slug");
+  const result = await db.select().from(products).where(and(eq(products.slug, slug), eq(products.status, "published"))).get();
+  if (!result) return c.json({ error: "Not found" }, 404);
+  return c.json(result);
+});
+
+app.get("/api/branches", async (c) => {
+  const db = createDb(c.env.DB);
+  const result = await db.select().from(branches).where(eq(branches.isActive, true)).orderBy(branches.sortOrder).all();
+  return c.json(result);
+});
+
+app.get("/api/team/categories", async (c) => {
+  const db = createDb(c.env.DB);
+  const result = await db.select().from(teamCategories).orderBy(teamCategories.sortOrder).all();
+  return c.json(result);
+});
+
+app.get("/api/team/:categorySlug", async (c) => {
+  const db = createDb(c.env.DB);
+  const slug = c.req.param("categorySlug");
+  const cat = await db.select().from(teamCategories).where(eq(teamCategories.slug, slug)).get();
+  if (!cat) return c.json([]);
+  const result = await db.select().from(teamMembers).where(and(eq(teamMembers.categoryId, cat.id), eq(teamMembers.isActive, true))).orderBy(teamMembers.sortOrder).all();
+  return c.json(result);
+});
+
+app.get("/api/faq", async (c) => {
+  const db = createDb(c.env.DB);
+  const result = await db.select().from(faqs).where(eq(faqs.isActive, true)).orderBy(faqs.sortOrder).all();
+  return c.json(result);
+});
+
+app.get("/api/gallery/albums", async (c) => {
+  const db = createDb(c.env.DB);
+  const result = await db.select().from(albums).where(eq(albums.isActive, true)).orderBy(albums.sortOrder).all();
+  return c.json(result);
+});
+
+app.get("/api/gallery/albums/:slug", async (c) => {
+  const db = createDb(c.env.DB);
+  const slug = c.req.param("slug");
+  const album = await db.select().from(albums).where(and(eq(albums.slug, slug), eq(albums.isActive, true))).get();
+  if (!album) return c.json({ error: "Not found" }, 404);
+  const images = await db.select().from(galleryImages).where(eq(galleryImages.albumId, album.id)).orderBy(galleryImages.sortOrder).all();
+  return c.json({ album, images });
+});
+
+app.get("/api/downloads", async (c) => {
+  const db = createDb(c.env.DB);
+  const cat = c.req.query("category");
+  const conditions = [eq(downloads.isActive, true)];
+  if (cat) conditions.push(eq(downloads.categoryId, parseInt(cat)));
+  const result = await db.select().from(downloads).where(and(...conditions)).orderBy(downloads.sortOrder).all();
+  return c.json(result);
+});
+
+app.get("/api/downloads/categories", async (c) => {
+  const db = createDb(c.env.DB);
+  const result = await db.select().from(downloadCategories).orderBy(downloadCategories.sortOrder).all();
+  return c.json(result);
+});
+
+app.get("/api/careers", async (c) => {
+  const db = createDb(c.env.DB);
+  const result = await db.select().from(jobListings).where(eq(jobListings.status, "open")).all();
+  return c.json(result);
+});
+
+app.get("/api/rates", async (c) => {
+  const db = createDb(c.env.DB);
+  const cat = c.req.query("category");
+  const conditions = [eq(rates.status, "active")];
+  if (cat) conditions.push(eq(rates.categoryId, parseInt(cat)));
+  const result = await db.select().from(rates).where(and(...conditions)).all();
+  return c.json(result);
+});
+
+app.get("/api/auctions", async (c) => {
+  const db = createDb(c.env.DB);
+  const result = await db.select().from(auctionNotices).where(eq(auctionNotices.status, "published")).all();
+  return c.json(result);
+});
+
+app.get("/api/calendar/events", async (c) => {
+  const db = createDb(c.env.DB);
+  const result = await db.select().from(calendarEvents).orderBy(calendarEvents.adDate).limit(100).all();
+  return c.json(result);
 });
 
 // ── CMS Auth ──

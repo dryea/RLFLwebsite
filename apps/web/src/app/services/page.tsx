@@ -3,10 +3,10 @@ import { ArrowRight } from "lucide-react";
 import PublicLayout from "@/components/layout/PublicLayout";
 import { serverFetchAPI } from "@/lib/server-api";
 
-export const revalidate = 300;
+export const dynamic = "force-dynamic";
 
 export default async function ServicesPage() {
-  const services = await serverFetchAPI("/api/cms/services");
+  const services = await serverFetchAPI("/api/services");
 
   return (
     <PublicLayout>

@@ -11,7 +11,7 @@ export default function GrievanceForm({ lang }: { lang: string }) {
     e.preventDefault();
     setStatus("loading");
     try {
-      const res = await fetch(`${API}/api/cms/contact-submissions`, {
+      const res = await fetch(`${API}/api/contact`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...form, type: "grievance" }),

@@ -1,7 +1,7 @@
 import { Calendar, MapPin, Clock } from "lucide-react";
 import { serverFetchAPI } from "@/lib/server-api";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
 
 export default async function EventsListPage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
-  const events: any[] = await serverFetchAPI("/api/cms/events", { next: { revalidate: 60 } });
+  const events: any[] = await serverFetchAPI("/api/events", { next: { revalidate: 60 } });
 
   const now = new Date();
   const upcoming = events.filter((e: any) => !e.eventDate || new Date(e.eventDate) >= now);

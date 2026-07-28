@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Calendar, Newspaper, ArrowRight } from "lucide-react";
 import { serverFetchAPI } from "@/lib/server-api";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
 
 export default async function NewsListPage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
-  const news: any[] = await serverFetchAPI("/api/cms/news", { next: { revalidate: 60 } });
+  const news: any[] = await serverFetchAPI("/api/news", { next: { revalidate: 60 } });
 
   const formatDate = (d: string) => {
     if (!d) return "";

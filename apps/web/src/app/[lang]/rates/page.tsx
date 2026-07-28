@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
 
 export default async function RatesPage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
-  const rates = await serverFetchAPI("/api/cms/rates", { cache: "no-store" });
+  const rates = await serverFetchAPI("/api/rates", { cache: "no-store" });
 
   const grouped: Record<string, any[]> = {};
   rates.forEach((r: any) => {

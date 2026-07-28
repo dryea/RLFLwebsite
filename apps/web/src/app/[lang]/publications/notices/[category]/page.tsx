@@ -14,6 +14,7 @@ const categoryMeta: Record<string, { en: string; np: string }> = {
 
 export const dynamic = "force-dynamic";
 
+
 export async function generateStaticParams() {
   return Object.keys(categoryMeta).map((category) => ({ category }));
 }
@@ -33,7 +34,7 @@ export default async function NoticesByCategoryPage({ params }: { params: Promis
   const meta = categoryMeta[category];
   if (!meta) notFound();
 
-  const allNotices: any[] = await serverFetchAPI("/api/cms/notices", { cache: "no-store" });
+  const allNotices: any[] = await serverFetchAPI("/api/notices", { cache: "no-store" });
   const notices = allNotices.filter((n: any) => n.category?.toLowerCase().replace(/\s+/g, "-") === category);
 
   const formatDate = (d: string) => {

@@ -1,7 +1,7 @@
 import { serverFetchAPI } from "@/lib/server-api";
 import GrievanceForm from "./GrievanceForm";
 
-export const revalidate = 300;
+export const dynamic = "force-dynamic";
 
 const defaultContent = {
   en: {

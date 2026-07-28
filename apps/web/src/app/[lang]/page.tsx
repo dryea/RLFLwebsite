@@ -25,10 +25,6 @@ interface HomepageData {
   stats: any[];
   csrActivities: any[];
   appBanner: any | null;
-  aboutTitle?: string;
-  aboutTitleNp?: string;
-  aboutDescription?: string;
-  aboutDescriptionNp?: string;
   aboutImageUrl?: string;
 }
 
@@ -60,10 +56,6 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
       <AboutSection
         lang={lang}
         stats={data.stats}
-        title={data.aboutTitle}
-        titleNp={data.aboutTitleNp}
-        description={data.aboutDescription}
-        descriptionNp={data.aboutDescriptionNp}
         imageUrl={data.aboutImageUrl}
       />
 

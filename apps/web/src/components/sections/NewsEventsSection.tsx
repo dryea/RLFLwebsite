@@ -21,8 +21,8 @@ export default function NewsEventsSection({ lang }: { lang: string }) {
     async function fetchData() {
       try {
         const [newsRes, eventsRes] = await Promise.all([
-          fetch(`/api/cms/news`).then((r) => r.json()),
-          fetch(`/api/cms/events`).then((r) => r.json()),
+          fetch(`/api/news`).then((r) => r.json()),
+          fetch(`/api/events`).then((r) => r.json()),
         ]);
         setNews((newsRes.data || newsRes).slice(0, 4));
         setEvents((eventsRes.data || eventsRes).slice(0, 4));

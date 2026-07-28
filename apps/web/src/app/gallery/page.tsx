@@ -1,13 +1,11 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import PublicLayout from "@/components/layout/PublicLayout";
-import { getAlbums } from "@/lib/public-api";
+import { serverFetchAPI } from "@/lib/server-api";
+import GalleryGrid from "@/components/shared/GalleryGrid";
 
-export default function GalleryPage() {
-  const [albums, setAlbums] = useState<any[]>([]);
-  const [selected, setSelected] = useState<any>(null);
-  useEffect(() => { getAlbums().then(setAlbums).catch(() => {}); }, []);
+export const revalidate = 300;
+
+export default async function GalleryPage() {
+  const albums = await serverFetchAPI("/api/cms/albums");
 
   return (
     <PublicLayout>
@@ -16,26 +14,9 @@ export default function GalleryPage() {
       </section>
       <section className="py-12">
         <div className="container-page">
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {albums.map((album: any) => (
-              <button key={album.id} onClick={() => setSelected(album)} className="group overflow-hidden rounded-xl border bg-white text-left shadow-sm transition-shadow hover:shadow-md">
-                <div className="aspect-video overflow-hidden bg-gray-100">
-                  {album.coverImage ? <img src={album.coverImage} alt={album.title} className="h-full w-full object-cover transition-transform group-hover:scale-105" /> : <div className="flex h-full items-center justify-center text-gray-400">📷</div>}
-                </div>
-                <div className="p-4"><h3 className="font-semibold text-gray-900">{album.title}</h3></div>
-              </button>
-            ))}
-          </div>
+          <GalleryGrid albums={albums} />
         </div>
       </section>
-      {selected && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4" onClick={() => setSelected(null)}>
-          <div className="max-w-4xl" onClick={(e) => e.stopPropagation()}>
-            <img src={selected.coverImage} alt={selected.title} className="max-h-[80vh] rounded-lg" />
-            <p className="mt-3 text-center text-white">{selected.title}</p>
-          </div>
-        </div>
-      )}
     </PublicLayout>
   );
 }

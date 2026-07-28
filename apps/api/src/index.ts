@@ -1,10 +1,11 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import { eq, and, desc, like } from "drizzle-orm";
+import { eq, and, desc, like, sql } from "drizzle-orm";
 import { hashPassword, verifyPassword, signJWT, verifyJWT } from "./lib/auth";
+import { contactConfirmation, contactNotification, loanEnquiryNotification, jobApplicationNotification } from "./lib/email";
 import { createDb } from "./db";
 import {
-  pages, products, news, users,
+  pages, products, news, users, roles,
   pageVersions, media, mediaFolders,
   productCategories, services as servicesTable,
   teamCategories, teamMembers, branches,
@@ -44,6 +45,38 @@ async function requireAuth(c: any, next: any) {
   if (!payload) return c.json({ error: "Unauthorized" }, 401);
   c.set("user", payload);
   await next();
+}
+
+// Permission middleware factory
+function requirePermission(resource: string, action: string) {
+  return async function(c: any, next: any) {
+    await requireAuth(c, async () => {
+      const user = c.get("user");
+      const db = createDb(c.env.DB);
+      const userWithRole = await db.select({
+        roleId: users.roleId,
+        permissions: roles.permissions,
+      })
+      .from(users)
+      .leftJoin(roles, eq(users.roleId, roles.id))
+      .where(eq(users.id, parseInt(user.sub)))
+      .get();
+
+      if (!userWithRole) return c.json({ error: "Forbidden" }, 403);
+
+      if (user.role === "admin" || user.role === "super-admin") {
+        await next();
+        return;
+      }
+
+      const perms = userWithRole.permissions as Record<string, string[]> || {};
+      const resourcePerms = perms[resource];
+      if (!resourcePerms || !resourcePerms.includes(action)) {
+        return c.json({ error: `Missing ${action} permission on ${resource}` }, 403);
+      }
+      await next();
+    });
+  };
 }
 
 // ── Public API ──
@@ -123,6 +156,114 @@ app.post("/api/cms/auth/seed", async (c) => {
 // Protect all /api/cms/* routes except auth (defined above)
 app.use("/api/cms/*", requireAuth);
 
+// ── CMS: Users & Roles ──
+
+const allResources = ["pages", "products", "services", "team", "branches", "rates", "news", "events", "notices", "reports", "gallery", "downloads", "faq", "careers", "applications", "media", "users", "roles", "settings", "enquiries", "calendar", "auctions", "merchants"];
+
+// Seed default roles if none exist
+app.post("/api/cms/roles/seed", async (c) => {
+  const db = createDb(c.env.DB);
+  const existing = await db.select().from(roles).limit(1).all();
+  if (existing.length > 0) return c.json({ error: "Already seeded" }, 400);
+
+  const defaultRoles = [
+    {
+      name: "super-admin",
+      description: "Full access to everything",
+      permissions: allResources.reduce((acc, r) => ({ ...acc, [r]: ["create", "read", "update", "delete", "publish", "schedule"] }), {}),
+    },
+    {
+      name: "admin",
+      description: "All CRUD + publish + user management",
+      permissions: allResources.reduce((acc, r) => ({ ...acc, [r]: ["create", "read", "update", "delete", "publish", "schedule"] }), {}),
+    },
+    {
+      name: "editor",
+      description: "CRUD + publish on content, no users/roles",
+      permissions: Object.fromEntries(
+        allResources.filter(r => !["users", "roles", "settings"].includes(r)).map(r => [r, ["create", "read", "update", "delete", "publish"]])
+      ),
+    },
+    {
+      name: "author",
+      description: "Create + edit own content, cannot publish",
+      permissions: Object.fromEntries(
+        allResources.filter(r => !["users", "roles", "settings"].includes(r)).map(r => [r, ["create", "read", "update"]])
+      ),
+    },
+  ];
+
+  for (const role of defaultRoles) {
+    await db.insert(roles).values(role).run();
+  }
+  return c.json({ success: true, count: defaultRoles.length });
+});
+
+// List roles
+app.get("/api/cms/roles", async (c) => {
+  const db = createDb(c.env.DB);
+  const result = await db.select().from(roles).all();
+  return c.json(result);
+});
+
+// CRUD for users
+app.get("/api/cms/users", async (c) => {
+  const db = createDb(c.env.DB);
+  const result = await db.select({
+    id: users.id, name: users.name, email: users.email,
+    roleId: users.roleId, isActive: users.isActive,
+    createdAt: users.createdAt,
+  }).from(users).all();
+  return c.json(result);
+});
+
+app.get("/api/cms/users/:id", async (c) => {
+  const db = createDb(c.env.DB);
+  const id = parseInt(c.req.param("id"));
+  const result = await db.select({
+    id: users.id, name: users.name, email: users.email,
+    roleId: users.roleId, isActive: users.isActive,
+    createdAt: users.createdAt,
+  }).from(users).where(eq(users.id, id)).get();
+  if (!result) return c.json({ error: "Not found" }, 404);
+  return c.json(result);
+});
+
+app.post("/api/cms/users", async (c) => {
+  const db = createDb(c.env.DB);
+  const data = await c.req.json() as Record<string, any>;
+  if (!data.name || !data.email || !data.password) return c.json({ error: "Name, email, password required" }, 400);
+  const hashed = await hashPassword(data.password);
+  const result = await db.insert(users).values({
+    name: data.name, email: data.email, passwordHash: hashed,
+    roleId: data.roleId || null, isActive: data.isActive !== false,
+  }).returning().get();
+  return c.json(result, 201);
+});
+
+app.put("/api/cms/users/:id", async (c) => {
+  const db = createDb(c.env.DB);
+  const id = parseInt(c.req.param("id"));
+  const data = await c.req.json() as Record<string, any>;
+  const updateData: Record<string, any> = {
+    name: data.name, email: data.email,
+    roleId: data.roleId, isActive: data.isActive,
+  };
+  if (data.password) {
+    updateData.passwordHash = await hashPassword(data.password);
+  }
+  await db.update(users).set(updateData).where(eq(users.id, id)).run();
+  const updated = await db.select().from(users).where(eq(users.id, id)).get();
+  return c.json(updated);
+});
+
+app.delete("/api/cms/users/:id", async (c) => {
+  const db = createDb(c.env.DB);
+  const id = parseInt(c.req.param("id"));
+  await db.delete(users).where(eq(users.id, id)).run();
+  return c.json({ success: true });
+});
+
 // ── CMS: Pages CRUD ──
 
 app.get("/api/cms/pages", async (c) => {
@@ -149,7 +290,9 @@ app.post("/api/cms/pages", async (c) => {
   const result = await db.insert(pages).values({
     slug: data.slug,
     title: data.title,
+    titleNp: data.titleNp || null,
     content: data.content || null,
+    contentNp: data.contentNp || null,
     bannerImage: data.bannerImage || null,
     language: data.language || "en",
     parentId: data.parentId || null,
@@ -189,7 +332,9 @@ app.put("/api/cms/pages/:id", async (c) => {
   await db.update(pages).set({
     slug: data.slug,
     title: data.title,
+    titleNp: data.titleNp,
     content: data.content,
+    contentNp: data.contentNp,
     bannerImage: data.bannerImage,
     language: data.language,
     parentId: data.parentId,
@@ -210,6 +355,31 @@ app.delete("/api/cms/pages/:id", async (c) => {
   const id = parseInt(c.req.param("id"));
   await db.delete(pages).where(eq(pages.id, id)).run();
   return c.json({ success: true });
+});
+
+// Publish/schedule a page
+app.post("/api/cms/pages/:id/publish", async (c) => {
+  const db = createDb(c.env.DB);
+  const id = parseInt(c.req.param("id"));
+  const { scheduledAt } = await c.req.json() as { scheduledAt?: string } || {};
+  
+  const currentUser = (c as any).get("user");
+  if (scheduledAt) {
+    await db.update(pages).set({
+      status: "scheduled",
+      scheduledAt,
+      updatedBy: parseInt(currentUser.sub),
+    }).where(eq(pages.id, id)).run();
+  } else {
+    await db.update(pages).set({
+      status: "published",
+      publishedAt: new Date().toISOString(),
+      scheduledAt: null,
+      updatedBy: parseInt(currentUser.sub),
+    }).where(eq(pages.id, id)).run();
+  }
+  const updated = await db.select().from(pages).where(eq(pages.id, id)).get();
+  return c.json(updated);
 });
 
 app.get("/api/cms/pages/:id/versions", async (c) => {
@@ -392,4 +562,101 @@ app.get("/api/search", async (c) => {
   ]);
 });
 
-export default app;
+// ── Email-enabled form submissions ──
+
+app.post("/api/contact", async (c) => {
+  const db = createDb(c.env.DB);
+  const data = await c.req.json() as Record<string, any>;
+  const result = await db.insert(contactSubmissions).values({
+    name: data.name, email: data.email, phone: data.phone || null,
+    subject: data.subject, message: data.message,
+  }).returning().get();
+
+  try {
+    await c.env.EMAIL_QUEUE.send([
+      { to: data.email, subject: "Thank you for contacting Reliance Finance", html: contactConfirmation(data.name) },
+      { to: c.env.ADMIN_EMAIL, subject: `New Contact: ${data.subject}`, html: contactNotification(data.name, data.email, data.phone || "", data.subject, data.message) },
+    ]);
+  } catch (e) { console.error("Email queue error:", e); }
+
+  return c.json(result, 201);
+});
+
+app.post("/api/loan-enquiry", async (c) => {
+  const db = createDb(c.env.DB);
+  const data = await c.req.json() as Record<string, any>;
+  const result = await db.insert(loanEnquiries).values({
+    name: data.name, address: data.address, phone: data.phone,
+    email: data.email, nationality: data.nationality,
+    customerProfile: data.customerProfile || null,
+    loanType: data.loanType, proposedAmount: data.proposedAmount || null,
+    preferredBranch: data.preferredBranch || null, remarks: data.remarks || null,
+    consent: data.consent || false,
+  }).returning().get();
+
+  try {
+    await c.env.EMAIL_QUEUE.send([
+      { to: data.email, subject: "Loan Enquiry Received - Reliance Finance", html: `<p>Dear ${data.name},<br/>We have received your loan enquiry. Our team will contact you shortly.</p>` },
+      { to: c.env.ADMIN_EMAIL, subject: `New Loan Enquiry from ${data.name}`, html: loanEnquiryNotification(data) },
+    ]);
+  } catch (e) { console.error("Email queue error:", e); }
+
+  return c.json(result, 201);
+});
+
+app.post("/api/careers/apply", async (c) => {
+  const db = createDb(c.env.DB);
+  const formData = await c.req.formData();
+  const data = {
+    jobId: parseInt(formData.get("jobId") as string),
+    name: formData.get("name") as string,
+    email: formData.get("email") as string,
+    phone: formData.get("phone") as string,
+    address: formData.get("address") as string || null,
+    coverLetter: formData.get("coverLetter") as string || null,
+  };
+
+  let cvUrl = "";
+  const cvFile = formData.get("cv") as File | null;
+  if (cvFile && cvFile.size > 0) {
+    const filename = `cvs/${Date.now()}-${cvFile.name.replace(/[^a-zA-Z0-9.-]/g, "_")}`;
+    const buffer = await cvFile.arrayBuffer();
+    await c.env.R2_DOCUMENTS.put(filename, buffer, { httpMetadata: { contentType: cvFile.type } });
+    cvUrl = `${c.env.SITE_URL}/api/documents/${filename}`;
+  }
+
+  const result = await db.insert(jobApplications).values({
+    jobId: data.jobId,
+    name: data.name,
+    email: data.email,
+    phone: data.phone,
+    address: data.address || "",
+    coverLetter: data.coverLetter || "",
+    cvUrl,
+  }).returning().get();
+
+  try {
+    const job = await db.select().from(jobListings).where(eq(jobListings.id, data.jobId)).get();
+    await c.env.EMAIL_QUEUE.send([
+      { to: data.email, subject: "Application Received - Reliance Finance", html: `<p>Dear ${data.name},<br/>Thank you for applying. We will review your application and contact you.</p>` },
+      { to: c.env.ADMIN_EMAIL, subject: `New Job Application: ${job?.title || "Unknown"}`, html: jobApplicationNotification(data.name, data.email, data.phone, job?.title || "") },
+    ]);
+  } catch (e) { console.error("Email queue error:", e); }
+
+  return c.json(result, 201);
+});
+
+// ── Cron Jobs ──
+
+export default {
+  fetch: app.fetch,
+  async scheduled(event: any, env: any, ctx: any) {
+    const db = createDb(env.DB);
+    switch (event.cron) {
+      case "0 0 * * *":
+        await db.update(pages).set({ status: "published", publishedAt: new Date().toISOString() })
+          .where(and(eq(pages.status, "scheduled"), sql`scheduled_at <= ${new Date().toISOString()}`)).run();
+        break;
+    }
+  },
+};

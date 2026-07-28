@@ -1,14 +1,13 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import PublicLayout from "@/components/layout/PublicLayout";
-import { getServices } from "@/lib/public-api";
+import { serverFetchAPI } from "@/lib/server-api";
 
-export default function ServicesPage() {
-  const [services, setServices] = useState<any[]>([]);
-  useEffect(() => { getServices().then(setServices).catch(() => {}); }, []);
+export const revalidate = 300;
+
+export default async function ServicesPage() {
+  const services = await serverFetchAPI("/api/cms/services");
+
   return (
     <PublicLayout>
       <section className="bg-gradient-to-br from-primary-800 to-primary-900 py-12 text-white">
@@ -22,9 +21,7 @@ export default function ServicesPage() {
                 <div className="mb-3 text-2xl">{svc.icon || "📱"}</div>
                 <h3 className="font-semibold text-gray-900">{svc.title}</h3>
                 <p className="mt-1 text-sm text-gray-600">{svc.summary}</p>
-                <span className="mt-3 flex items-center gap-1 text-sm font-medium text-primary-700 group-hover:underline">
-                  Learn More <ArrowRight className="h-4 w-4" />
-                </span>
+                <span className="mt-3 flex items-center gap-1 text-sm font-medium text-primary-700 group-hover:underline">Learn More <ArrowRight className="h-4 w-4" /></span>
               </Link>
             ))}
           </div>

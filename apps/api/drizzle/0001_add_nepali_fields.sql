@@ -1,0 +1,2 @@
+ALTER TABLE pages ADD COLUMN title_np TEXT;
+ALTER TABLE pages ADD COLUMN content_np TEXT;

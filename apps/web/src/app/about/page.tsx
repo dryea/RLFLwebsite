@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import PublicLayout from "@/components/layout/PublicLayout";
@@ -22,7 +20,7 @@ export default function AboutPage() {
       </section>
       <section className="py-12">
         <div className="container-page max-w-3xl">
-          <p className="mb-8 text-gray-600 leading-relaxed">
+          <p className="mb-8 leading-relaxed text-gray-600">
             Reliance Finance Limited is a trusted financial institution in Nepal, committed to providing innovative banking solutions
             and exceptional customer service. With a wide range of products and services, we strive to meet the diverse needs of our customers.
           </p>

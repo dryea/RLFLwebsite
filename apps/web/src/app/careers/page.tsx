@@ -1,13 +1,12 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import { Briefcase, MapPin, Clock, ExternalLink } from "lucide-react";
 import PublicLayout from "@/components/layout/PublicLayout";
-import { getCareers } from "@/lib/public-api";
+import { serverFetchAPI } from "@/lib/server-api";
 
-export default function CareersPage() {
-  const [jobs, setJobs] = useState<any[]>([]);
-  useEffect(() => { getCareers().then(setJobs).catch(() => {}); }, []);
+export const dynamic = "force-dynamic";
+
+export default async function CareersPage() {
+  const jobs = await serverFetchAPI("/api/cms/careers");
+
   return (
     <PublicLayout>
       <section className="bg-gradient-to-br from-primary-800 to-primary-900 py-12 text-white">

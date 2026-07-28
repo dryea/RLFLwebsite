@@ -13,7 +13,7 @@ export default function LoanEnquiryPage() {
     if (!form.consent) return alert("Please accept the terms");
     setLoading(true);
     try {
-      const res = await fetch("https://rfil-api.sudeepdhakal.workers.dev/api/cms/loan-enquiries", {
+      const res = await fetch("/api/loan-enquiry", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...form, proposedAmount: form.proposedAmount ? Number(form.proposedAmount) : null }),

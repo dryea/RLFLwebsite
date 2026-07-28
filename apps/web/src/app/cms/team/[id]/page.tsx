@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { Save, ArrowLeft } from "lucide-react";
 import CMSLayout from "@/components/cms/CMSLayout";
+import LanguageTabs from "@/components/cms/LanguageTabs";
 import { api } from "@/lib/api";
 
 export default function TeamEditorPage() {
@@ -13,6 +14,7 @@ export default function TeamEditorPage() {
   const isNew = id === "new";
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [activeLang, setActiveLang] = useState("en");
   const [categories, setCategories] = useState<any[]>([]);
   const [form, setForm] = useState({
     categoryId: "", name: "", nameNp: "", designation: "", designationNp: "",
@@ -77,18 +79,27 @@ export default function TeamEditorPage() {
         </div>
       </div>
 
+      <LanguageTabs active={activeLang} onChange={setActiveLang} />
+
       <div className="grid gap-6 lg:grid-cols-2">
         <div className="space-y-4">
           <div><label className="mb-1 block text-sm font-medium">Category</label>
             <input value={form.categoryId} onChange={(e) => updateField("categoryId", e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm" placeholder="Category ID" /></div>
-          <div><label className="mb-1 block text-sm font-medium">Name</label>
-            <input value={form.name} onChange={(e) => updateField("name", e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm" /></div>
-          <div><label className="mb-1 block text-sm font-medium">Name (Nepali)</label>
-            <input value={form.nameNp} onChange={(e) => updateField("nameNp", e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm" /></div>
-          <div><label className="mb-1 block text-sm font-medium">Designation</label>
-            <input value={form.designation} onChange={(e) => updateField("designation", e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm" /></div>
-          <div><label className="mb-1 block text-sm font-medium">Designation (Nepali)</label>
-            <input value={form.designationNp} onChange={(e) => updateField("designationNp", e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm" /></div>
+          {activeLang === "en" ? (
+            <>
+              <div><label className="mb-1 block text-sm font-medium">Name</label>
+                <input value={form.name} onChange={(e) => updateField("name", e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm" /></div>
+              <div><label className="mb-1 block text-sm font-medium">Designation</label>
+                <input value={form.designation} onChange={(e) => updateField("designation", e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm" /></div>
+            </>
+          ) : (
+            <>
+              <div><label className="mb-1 block text-sm font-medium">Name (Nepali)</label>
+                <input value={form.nameNp} onChange={(e) => updateField("nameNp", e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm" /></div>
+              <div><label className="mb-1 block text-sm font-medium">Designation (Nepali)</label>
+                <input value={form.designationNp} onChange={(e) => updateField("designationNp", e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm" /></div>
+            </>
+          )}
           <div><label className="mb-1 block text-sm font-medium">Photo URL</label>
             <input value={form.photo} onChange={(e) => updateField("photo", e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm" /></div>
         </div>

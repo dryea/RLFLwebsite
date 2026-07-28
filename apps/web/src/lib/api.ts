@@ -1,4 +1,4 @@
-const API = process.env.NEXT_PUBLIC_API_URL || "https://rfil-api.sudeepdhakal.workers.dev";
+export const API = process.env.NEXT_PUBLIC_API_URL || "https://rfil-api.sudeepdhakal.workers.dev";
 
 async function request(path: string, options?: RequestInit) {
   const token = typeof window !== "undefined" ? localStorage.getItem("cms_token") : null;
@@ -51,6 +51,13 @@ export interface ApiClient {
   deleteMedia: (id: number) => Promise<any>;
   getStats: () => Promise<any>;
   search: (q: string) => Promise<any>;
+  getUsers: () => Promise<any>;
+  getUser: (id: number) => Promise<any>;
+  createUser: (data: any) => Promise<any>;
+  updateUser: (id: number, data: any) => Promise<any>;
+  deleteUser: (id: number) => Promise<any>;
+  getRoles: () => Promise<any>;
+  seedRoles: () => Promise<any>;
   [key: string]: any;
 }
 
@@ -86,6 +93,15 @@ export const api: ApiClient = {
 
   // Public
   search: (q: string) => request(`/api/search?q=${encodeURIComponent(q)}`),
+
+  // Users & Roles
+  getUsers: () => request("/api/cms/users"),
+  getUser: (id: number) => request(`/api/cms/users/${id}`),
+  createUser: (data: any) => request("/api/cms/users", { method: "POST", body: JSON.stringify(data) }),
+  updateUser: (id: number, data: any) => request(`/api/cms/users/${id}`, { method: "PUT", body: JSON.stringify(data) }),
+  deleteUser: (id: number) => request(`/api/cms/users/${id}`, { method: "DELETE" }),
+  getRoles: () => request("/api/cms/roles"),
+  seedRoles: () => request("/api/cms/roles/seed", { method: "POST" }),
 
   // Auto-generated resource methods
   ...Object.assign({}, ...resources.map(resourceMethods)),

@@ -1,8 +1,4 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import { Shield } from "lucide-react";
-import { useLang } from "@/contexts/LanguageContext";
 
 const enContent = [
   { title: "Information We Collect", body: "We collect personal information such as name, address, phone number, email, citizenship details, financial history, and transaction data when you use our services or visit our website." },
@@ -24,8 +20,16 @@ const npContent = [
   { title: "सम्पर्क गर्नुहोस्", body: "गोपनीयता-सम्बन्धित सोधपुछको लागि, कृपया हाम्रो डेटा संरक्षण अधिकारीलाई info@reliancenepal.com.np मा सम्पर्क गर्नुहोस् वा +977-01-5361104 मा कल गर्नुहोस्।" },
 ];
 
-export default function PrivacyPolicyPage() {
-  const lang = useLang();
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang } = await params;
+  return {
+    title: lang === "en" ? "Privacy Policy | Reliance Finance Limited" : "गोपनीयता नीति | रिलायन्स फाइनान्स लिमिटेड",
+    description: lang === "en" ? "How we handle your personal information" : "हामी तपाईंको व्यक्तिगत जानकारी कसरी ह्यान्डल गर्छौं",
+  };
+}
+
+export default async function PrivacyPolicyPage({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang } = await params;
   const content = lang === "en" ? enContent : npContent;
 
   return (
@@ -35,12 +39,8 @@ export default function PrivacyPolicyPage() {
           <div className="flex items-center gap-3">
             <Shield className="h-8 w-8 text-secondary-300" />
             <div>
-              <h1 className="text-3xl font-bold">
-                {lang === "en" ? "Privacy Policy" : "गोपनीयता नीति"}
-              </h1>
-              <p className="mt-1 text-primary-100">
-                {lang === "en" ? "How we handle your personal information" : "हामी तपाईंको व्यक्तिगत जानकारी कसरी ह्यान्डल गर्छौं"}
-              </p>
+              <h1 className="text-3xl font-bold">{lang === "en" ? "Privacy Policy" : "गोपनीयता नीति"}</h1>
+              <p className="mt-1 text-primary-100">{lang === "en" ? "How we handle your personal information" : "हामी तपाईंको व्यक्तिगत जानकारी कसरी ह्यान्डल गर्छौं"}</p>
             </div>
           </div>
         </div>
@@ -48,11 +48,8 @@ export default function PrivacyPolicyPage() {
 
       <section className="py-12">
         <div className="container-page max-w-3xl">
-          <div className="mb-8 rounded-xl border bg-white p-6 shadow-sm text-sm text-gray-500 leading-relaxed">
-            <p>
-              <strong>{lang === "en" ? "Last updated:" : "पछिल्लो अद्यावधिक:"}</strong>{" "}
-              {lang === "en" ? "January 2025" : "जनवरी २०२५"}
-            </p>
+          <div className="mb-8 rounded-xl border bg-white p-6 text-sm leading-relaxed text-gray-500 shadow-sm">
+            <p><strong>{lang === "en" ? "Last updated:" : "पछिल्लो अद्यावधिक:"}</strong> {lang === "en" ? "January 2025" : "जनवरी २०२५"}</p>
             <p className="mt-2">
               {lang === "en"
                 ? "At Reliance Finance Limited, we are committed to protecting your privacy. This policy explains how we collect, use, and safeguard your personal information."

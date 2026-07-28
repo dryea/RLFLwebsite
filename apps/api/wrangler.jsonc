@@ -20,6 +20,17 @@
       "bucket_name": "rfil-documents"
     }
   ],
+  "queues": {
+    "EMAIL_QUEUE": {
+      "binding": "EMAIL_QUEUE",
+      "queue_name": "rfil-email-queue"
+    }
+  },
+  "triggers": {
+    "crons": [
+      "0 0 * * *"
+    ]
+  },
   "vars": {
     "SITE_URL": "https://reliancenepal.com.np",
     "ADMIN_EMAIL": "info@reliancenepal.com.np",

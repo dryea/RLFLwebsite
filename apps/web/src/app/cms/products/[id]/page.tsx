@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { Save, ArrowLeft, Plus, Trash2 } from "lucide-react";
 import CMSLayout from "@/components/cms/CMSLayout";
+import LanguageTabs from "@/components/cms/LanguageTabs";
 import { api } from "@/lib/api";
 
 export default function ProductEditorPage() {
@@ -13,6 +14,7 @@ export default function ProductEditorPage() {
   const isNew = id === "new";
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [activeLang, setActiveLang] = useState("en");
   const [categories, setCategories] = useState<any[]>([]);
   const [form, setForm] = useState({
     categoryId: "", title: "", titleNp: "", slug: "", summary: "", content: "",
@@ -109,6 +111,8 @@ export default function ProductEditorPage() {
         </div>
       </div>
 
+      <LanguageTabs active={activeLang} onChange={setActiveLang} />
+
       <div className="grid gap-6 lg:grid-cols-2">
         <div className="space-y-4">
           <div><label className="mb-1 block text-sm font-medium">Category</label>
@@ -116,10 +120,13 @@ export default function ProductEditorPage() {
               <option value="">Select...</option>
               {categories.map((c: any) => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select></div>
-          <div><label className="mb-1 block text-sm font-medium">Title</label>
-            <input value={form.title} onChange={(e) => updateField("title", e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm" /></div>
-          <div><label className="mb-1 block text-sm font-medium">Title (Nepali)</label>
-            <input value={form.titleNp} onChange={(e) => updateField("titleNp", e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm" /></div>
+          {activeLang === "en" ? (
+            <div><label className="mb-1 block text-sm font-medium">Title</label>
+              <input value={form.title} onChange={(e) => updateField("title", e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm" /></div>
+          ) : (
+            <div><label className="mb-1 block text-sm font-medium">Title (Nepali)</label>
+              <input value={form.titleNp} onChange={(e) => updateField("titleNp", e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm" /></div>
+          )}
           <div><label className="mb-1 block text-sm font-medium">Slug</label>
             <input value={form.slug} onChange={(e) => updateField("slug", e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm" /></div>
           <div><label className="mb-1 block text-sm font-medium">Summary</label>

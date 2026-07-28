@@ -67,7 +67,7 @@ export default function CmsPagesPage() {
                   <td className="px-4 py-3 text-gray-500">/{page.slug}</td>
                   <td className="px-4 py-3">
                       <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${
-                        page.status === "published" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"
+                        page.status === "published" ? "bg-green-100 text-green-800" : page.status === "scheduled" ? "bg-blue-100 text-blue-800" : "bg-yellow-100 text-yellow-800"
                       }`}>
                       {page.status}
                     </span>

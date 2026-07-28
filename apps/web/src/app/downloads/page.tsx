@@ -1,13 +1,12 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import { Download } from "lucide-react";
 import PublicLayout from "@/components/layout/PublicLayout";
-import { getDownloads } from "@/lib/public-api";
+import { serverFetchAPI } from "@/lib/server-api";
 
-export default function DownloadsPage() {
-  const [items, setItems] = useState<any[]>([]);
-  useEffect(() => { getDownloads().then(setItems).catch(() => {}); }, []);
+export const revalidate = 3600;
+
+export default async function DownloadsPage() {
+  const items = await serverFetchAPI("/api/cms/downloads");
+
   return (
     <PublicLayout>
       <section className="bg-gradient-to-br from-primary-800 to-primary-900 py-12 text-white">

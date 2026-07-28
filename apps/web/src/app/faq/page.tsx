@@ -1,15 +1,11 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { ChevronDown } from "lucide-react";
 import PublicLayout from "@/components/layout/PublicLayout";
-import { getFaqs } from "@/lib/public-api";
+import { serverFetchAPI } from "@/lib/server-api";
+import FaqAccordion from "@/components/shared/FaqAccordion";
 
-export default function FAQPage() {
-  const [faqs, setFaqs] = useState<any[]>([]);
-  const [open, setOpen] = useState<Set<number>>(new Set());
-  useEffect(() => { getFaqs().then(setFaqs).catch(() => {}); }, []);
-  const toggle = (id: number) => setOpen((p) => { const n = new Set(p); n.has(id) ? n.delete(id) : n.add(id); return n; });
+export const revalidate = 3600;
+
+export default async function FaqPage() {
+  const faqs = await serverFetchAPI("/api/cms/faq");
 
   return (
     <PublicLayout>
@@ -18,17 +14,7 @@ export default function FAQPage() {
       </section>
       <section className="py-12">
         <div className="container-page max-w-3xl">
-          <div className="space-y-3">
-            {faqs.map((faq: any) => (
-              <div key={faq.id} className="overflow-hidden rounded-lg border bg-white">
-                <button onClick={() => toggle(faq.id)} className="flex w-full items-center justify-between px-6 py-4 text-left font-medium text-gray-900 transition-colors hover:bg-gray-50">
-                  {faq.question}
-                  <ChevronDown className={`h-5 w-5 text-gray-400 transition-transform ${open.has(faq.id) ? "rotate-180" : ""}`} />
-                </button>
-                {open.has(faq.id) && <div className="border-t px-6 py-4 text-sm text-gray-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: faq.answer }} />}
-              </div>
-            ))}
-          </div>
+          <FaqAccordion faqs={faqs} />
         </div>
       </section>
     </PublicLayout>

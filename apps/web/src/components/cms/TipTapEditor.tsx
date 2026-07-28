@@ -15,6 +15,10 @@ import Highlight from "@tiptap/extension-highlight";
 import TaskList from "@tiptap/extension-task-list";
 import TaskItem from "@tiptap/extension-task-item";
 import { useCallback } from "react";
+import { ProductGridExtension } from "./extensions/ProductGrid";
+import { RateTableExtension } from "./extensions/RateTable";
+import { ButtonExtension } from "./extensions/Button";
+import { AccordionExtension } from "./extensions/Accordion";
 
 const MenuButton = ({ onClick, active, children }: any) => (
   <button
@@ -38,6 +42,7 @@ export default function TipTapEditor({ content, onChange }: { content?: string; 
       Placeholder.configure({ placeholder: "Start writing..." }),
       Underline, Highlight,
       TaskList, TaskItem.configure({ nested: true }),
+      ProductGridExtension, RateTableExtension, ButtonExtension, AccordionExtension,
     ],
     content: content || "",
     onUpdate: ({ editor }) => onChange(editor.getHTML()),
@@ -119,6 +124,24 @@ export default function TipTapEditor({ content, onChange }: { content?: string; 
         <MenuButton onClick={() => editor.chain().focus().redo().run()}>
           ↪
         </MenuButton>
+      </div>
+      <div className="flex flex-wrap gap-1 border-b px-3 py-1.5">
+        <button onClick={() => editor.chain().focus().insertContent({ type: "productGrid", attrs: { type: "savings", limit: "6" } }).run()}
+          className="rounded px-2 py-1 text-xs hover:bg-gray-100" title="Insert Product Grid" type="button">
+          📦 Products
+        </button>
+        <button onClick={() => editor.chain().focus().insertContent({ type: "rateTable", attrs: { category: "savings" } }).run()}
+          className="rounded px-2 py-1 text-xs hover:bg-gray-100" title="Insert Rate Table" type="button">
+          📊 Rates
+        </button>
+        <button onClick={() => editor.chain().focus().insertContent({ type: "customButton", attrs: { text: "Learn More", url: "#" } }).run()}
+          className="rounded px-2 py-1 text-xs hover:bg-gray-100" title="Insert Button" type="button">
+          🔘 Button
+        </button>
+        <button onClick={() => editor.chain().focus().insertContent({ type: "accordion", attrs: { title: "Section Title" } }).run()}
+          className="rounded px-2 py-1 text-xs hover:bg-gray-100" title="Insert Accordion" type="button">
+          📑 Accordion
+        </button>
       </div>
       <EditorContent editor={editor} />
     </div>

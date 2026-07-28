@@ -1,7 +1,4 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { useLang } from "@/contexts/LanguageContext";
+import { serverFetchAPI } from "@/lib/server-api";
 
 const defaultTeams = [
   {
@@ -40,64 +37,57 @@ const defaultTeams = [
   },
 ];
 
-export default function GovernancePage() {
-  const lang = useLang();
-  const [teams, setTeams] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+export const revalidate = 300;
 
-  useEffect(() => {
-    fetch("https://rfil-api.sudeepdhakal.workers.dev/api/cms/teams")
-      .then((res) => (res.ok ? res.json() : []))
-      .then((data) => setTeams(Array.isArray(data) && data.length > 0 ? data : defaultTeams))
-      .catch(() => setTeams(defaultTeams))
-      .finally(() => setLoading(false));
-  }, []);
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang } = await params;
+  return {
+    title: lang === "en" ? "Governance | Reliance Finance Limited" : "सुशासन | रिलायन्स फाइनान्स लिमिटेड",
+    description: lang === "en" ? "Our leadership and management team" : "हाम्रो नेतृत्व र व्यवस्थापन टोली",
+  };
+}
 
-  const displayTeams = teams.length > 0 ? teams : defaultTeams;
+export default async function GovernancePage({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang } = await params;
+  let teams;
+  try {
+    teams = await serverFetchAPI("/api/cms/teams");
+  } catch {
+    teams = [];
+  }
+  const displayTeams = Array.isArray(teams) && teams.length > 0 ? teams : defaultTeams;
 
   return (
     <>
       <section className="bg-gradient-to-br from-primary-800 to-primary-900 py-12 text-white">
         <div className="container-page">
-          <h1 className="text-3xl font-bold">
-            {lang === "en" ? "Governance" : "सुशासन"}
-          </h1>
-          <p className="mt-2 text-primary-100">
-            {lang === "en" ? "Our leadership and management team" : "हाम्रो नेतृत्व र व्यवस्थापन टोली"}
-          </p>
+          <h1 className="text-3xl font-bold">{lang === "en" ? "Governance" : "सुशासन"}</h1>
+          <p className="mt-2 text-primary-100">{lang === "en" ? "Our leadership and management team" : "हाम्रो नेतृत्व र व्यवस्थापन टोली"}</p>
         </div>
       </section>
 
       <section className="py-12">
         <div className="container-page">
-          {loading ? (
-            <div className="flex justify-center py-12">
-              <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary-700 border-t-transparent" />
-            </div>
-          ) : (
-            <div className="space-y-12">
-              {displayTeams.map((group: any, gi: number) => (
-                <div key={gi}>
-                  <h2 className="mb-6 text-xl font-bold text-gray-900 border-b-2 border-primary-100 pb-2 inline-block">
-                    {lang === "en" ? (typeof group.category === "object" ? group.category.en : group.category) : (typeof group.category === "object" ? group.category.np : group.category)}
-                  </h2>
-                  <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {(group.members || []).map((m: any, mi: number) => (
-                      <div key={mi} className="rounded-xl border bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
-                        <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-primary-100 text-xl font-bold text-primary-700">
-                          {m.name.charAt(0)}
-                        </div>
-                        <h3 className="font-semibold text-gray-900">{m.name}</h3>
-                        <p className="mt-1 text-sm text-gray-500">
-                          {lang === "en" ? (typeof m.position === "object" ? m.position.en : m.position) : (typeof m.position === "object" ? m.position.np : m.position)}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
+          <div className="space-y-12">
+            {displayTeams.map((group: any, gi: number) => (
+              <div key={gi}>
+                <h2 className="mb-6 inline-block border-b-2 border-primary-100 pb-2 text-xl font-bold text-gray-900">
+                  {lang === "en" ? (typeof group.category === "object" ? group.category.en : group.category) : (typeof group.category === "object" ? group.category.np : group.category)}
+                </h2>
+                <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                  {(group.members || []).map((m: any, mi: number) => (
+                    <div key={mi} className="rounded-xl border bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
+                      <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-primary-100 text-xl font-bold text-primary-700">{m.name.charAt(0)}</div>
+                      <h3 className="font-semibold text-gray-900">{m.name}</h3>
+                      <p className="mt-1 text-sm text-gray-500">
+                        {lang === "en" ? (typeof m.position === "object" ? m.position.en : m.position) : (typeof m.position === "object" ? m.position.np : m.position)}
+                      </p>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          )}
+              </div>
+            ))}
+          </div>
         </div>
       </section>
     </>

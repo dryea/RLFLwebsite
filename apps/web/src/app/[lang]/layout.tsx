@@ -17,7 +17,15 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       template: "%s | Reliance Finance Limited",
       default: "Reliance Finance Limited",
     },
-    description: "Reliance Finance Limited — Your trusted financial partner in Nepal, offering savings, fixed deposits, loans, and digital banking services.",
+    description: "Reliance Finance Limited — a trusted C-class finance company in Nepal offering savings, loans, fixed deposits, and banking services.",
+    alternates: {
+      canonical: `https://reliancenepal.com.np/${lang}`,
+      languages: {
+        "en": "https://reliancenepal.com.np/en",
+        "np": "https://reliancenepal.com.np/np",
+        "x-default": "https://reliancenepal.com.np/en",
+      } as Record<string, string>,
+    },
     openGraph: {
       siteName: "Reliance Finance Limited",
       locale: lang === "np" ? "ne_NP" : "en_US",

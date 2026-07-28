@@ -27,10 +27,15 @@ export default function ApplyPage() {
     setLoading(true);
     try {
       const fd = new FormData();
-      fd.append("data", JSON.stringify({ ...form, careerId: Number(id) }));
+      fd.append("jobId", id);
+      fd.append("name", form.name);
+      fd.append("email", form.email);
+      fd.append("phone", form.phone);
+      fd.append("address", form.address);
+      fd.append("coverLetter", form.coverLetter);
       if (file) fd.append("cv", file);
 
-      await fetch(`${API}/api/cms/job-applications`, {
+      await fetch("/api/careers/apply", {
         method: "POST",
         body: fd,
       });

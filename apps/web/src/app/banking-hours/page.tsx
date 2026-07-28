@@ -1,5 +1,3 @@
-"use client";
-
 import { Clock } from "lucide-react";
 import PublicLayout from "@/components/layout/PublicLayout";
 

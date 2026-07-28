@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { FileText, Package, Newspaper, Image, Users, Settings, LogOut, LayoutDashboard, MapPin, HelpCircle, Briefcase, Download, ImageIcon, MessageSquare } from "lucide-react";
+import { FileText, Package, Newspaper, Image, Users, Settings, LogOut, LayoutDashboard, MapPin, HelpCircle, Briefcase, Download, ImageIcon, MessageSquare, Shield, UserCog } from "lucide-react";
 import { getCmsUser, cmsLogout, type CmsUser } from "@/lib/cms-auth";
 
 const navItems = [
@@ -23,6 +23,8 @@ const navItems = [
   { label: "Careers", icon: FileText, href: "/cms/careers" },
   { label: "Enquiries", icon: MessageSquare, href: "/cms/enquiries" },
   { label: "Media", icon: Image, href: "/cms/media" },
+  { label: "Users", icon: UserCog, href: "/cms/users" },
+  { label: "Roles", icon: Shield, href: "/cms/roles" },
   { label: "Settings", icon: Settings, href: "/cms/settings" },
 ];
 

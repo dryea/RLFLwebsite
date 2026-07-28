@@ -24,3 +24,17 @@
 .high-contrast body { background: #000 !important; color: #fff !important; }
 .high-contrast a { color: #ff0 !important; }
 .high-contrast img { filter: brightness(1.2) contrast(1.2); }
+
+.hide-images img { display: none !important; }
+
+.pause-animations *,
+.pause-animations *::before,
+.pause-animations *::after {
+  animation-play-state: paused !important;
+  transition: none !important;
+}
+
+.highlight-links a:not(nav a) {
+  outline: 2px solid #ff0 !important;
+  background: rgba(255, 255, 0, 0.1) !important;
+}

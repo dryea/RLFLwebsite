@@ -19,8 +19,12 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
       - run: npm ci --legacy-peer-deps
-      - run: npm run typecheck
-      - run: npm run lint --if-present
+      - name: Typecheck
+        run: npm run typecheck --workspaces --if-present
+      - name: Tests
+        run: npx vitest run
+      - name: Lint
+        run: npm run lint --if-present
 
   migrate-db:
     needs: quality
@@ -58,7 +62,7 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
-  deploy-pages:
+  deploy-web:
     needs: deploy-api
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
@@ -69,10 +73,12 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
       - run: npm ci --legacy-peer-deps
-      - name: Build Next.js
-        run: npm run build
-      - name: Deploy to Cloudflare Pages
-        run: npx wrangler pages deploy .vercel/output/static --project-name=rfil-website --branch=main
+      - name: Build Next.js (OpenNext)
+        run: npx opennextjs-cloudflare build
+        working-directory: apps/web
+      - name: Deploy Web Worker
+        run: npx wrangler deploy --config wrangler.jsonc
+        working-directory: apps/web
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

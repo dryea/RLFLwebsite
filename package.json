@@ -30,6 +30,7 @@
   "packageManager": "npm@11.9.0",
   "dependencies": {
     "@cloudflare/next-on-pages": "^1.13.16",
+    "@next/swc-win32-x64-msvc": "^16.2.12",
     "@tiptap/extension-bullet-list": "^3.29.1",
     "@tiptap/extension-code-block": "^3.29.1",
     "@tiptap/extension-highlight": "^3.29.1",

@@ -7,9 +7,16 @@ import { ArrowLeft, CheckCircle, FileText, Users, Percent, Banknote } from "luci
 import { useLang } from "@/contexts/LanguageContext";
 import { getProducts } from "@/lib/public-api";
 
+const categoryLabels: Record<string, { en: string; np: string; href: string }> = {
+  savings: { en: "Savings", np: "बचत", href: "/products/savings" },
+  "fixed-deposits": { en: "Fixed Deposits", np: "मुद्दती निक्षेप", href: "/products/fixed-deposits" },
+  loans: { en: "Loans", np: "ऋण", href: "/products/loans" },
+};
+
 export default function ProductDetailPage() {
   const lang = useLang();
   const params = useParams();
+  const category = params.category as string;
   const slug = params.slug as string;
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -32,6 +39,8 @@ export default function ProductDetailPage() {
     );
   }
 
+  const cat = categoryLabels[category];
+
   if (!product) {
     return (
       <section className="bg-gradient-to-br from-primary-800 to-primary-900 py-20 text-white">
@@ -42,7 +51,7 @@ export default function ProductDetailPage() {
           <p className="mb-6 text-primary-100">
             {lang === "en" ? "The product you're looking for doesn't exist." : "तपाईंले खोज्नुभएको उत्पादन अवस्थित छैन।"}
           </p>
-          <Link href="/products" className="rounded-lg bg-accent-500 px-6 py-3 font-semibold text-white hover:bg-accent-600">
+          <Link href={cat?.href || "/products"} className="rounded-lg bg-accent-500 px-6 py-3 font-semibold text-white hover:bg-accent-600">
             {lang === "en" ? "View All Products" : "सबै उत्पादनहरू हेर्नुहोस्"}
           </Link>
         </div>
@@ -52,26 +61,26 @@ export default function ProductDetailPage() {
 
   const features = Array.isArray(product.features) ? product.features : [];
   const eligibility = Array.isArray(product.eligibility) ? product.eligibility : [];
-  const documents = Array.isArray(product.requiredDocuments) ? product.requiredDocuments : [];
+  const documents = Array.isArray(product.documentsRequired) ? product.documentsRequired : [];
 
   return (
     <>
       <section className="bg-gradient-to-br from-primary-800 via-primary-700 to-primary-900 py-14 text-white">
         <div className="container-page">
-          <Link href="/" className="mb-4 inline-flex items-center gap-1 text-sm text-primary-200 transition-colors hover:text-white">
-            <ArrowLeft className="h-4 w-4" /> {lang === "en" ? "Back to Products" : "उत्पादनहरूमा फर्कनुहोस्"}
+          <Link href={`/${lang}${cat?.href || "/products"}`} className="mb-4 inline-flex items-center gap-1 text-sm text-primary-200 transition-colors hover:text-white">
+            <ArrowLeft className="h-4 w-4" /> {lang === "en" ? `Back to ${cat?.en || "Products"}` : cat ? cat.np : "उत्पादनहरूमा फर्कनुहोस्"}
           </Link>
-          <h1 className="text-3xl font-bold md:text-4xl">{product.title}</h1>
+          <h1 className="text-3xl font-bold md:text-4xl">{lang === "np" && product.titleNp ? product.titleNp : product.title}</h1>
           {product.summary && <p className="mt-3 max-w-2xl text-lg text-primary-100">{product.summary}</p>}
           <div className="mt-4 flex flex-wrap gap-4 text-sm text-primary-200">
-            {product.category && (
+            {cat && (
               <span className="flex items-center gap-1">
-                <Banknote className="h-4 w-4" /> {product.category}
+                <Banknote className="h-4 w-4" /> {lang === "np" ? cat.np : cat.en}
               </span>
             )}
-            {product.interestRate && (
+            {product.interestRateInfo && (
               <span className="flex items-center gap-1">
-                <Percent className="h-4 w-4" /> {product.interestRate}
+                <Percent className="h-4 w-4" /> {product.interestRateInfo}
               </span>
             )}
           </div>
@@ -82,6 +91,19 @@ export default function ProductDetailPage() {
         <div className="container-page">
           <div className="grid gap-8 lg:grid-cols-3">
             <div className="lg:col-span-2 space-y-8">
+              {product.bannerImage && (
+                <div className="overflow-hidden rounded-xl border bg-white shadow-sm">
+                  <img
+                    src={product.bannerImage}
+                    alt={lang === "np" && product.titleNp ? `${product.titleNp} — रिलायन्स फाइनान्स लिमिटेड` : `${product.title} — Reliance Finance Limited`}
+                    width={1200}
+                    height={400}
+                    loading="lazy"
+                    className="h-auto w-full object-cover"
+                  />
+                </div>
+              )}
+
               {product.content && (
                 <div className="rounded-xl border bg-white p-6 shadow-sm">
                   <h2 className="mb-4 text-xl font-bold text-gray-900">
@@ -127,13 +149,31 @@ export default function ProductDetailPage() {
             </div>
 
             <div className="space-y-6">
-              {product.interestRate && (
+              {product.interestRateInfo && (
                 <div className="rounded-xl border bg-white p-6 shadow-sm">
                   <h3 className="mb-3 flex items-center gap-2 font-semibold text-gray-900">
                     <Percent className="h-5 w-5 text-accent-600" />
                     {lang === "en" ? "Interest Rate" : "ब्याज दर"}
                   </h3>
-                  <p className="text-2xl font-bold text-primary-700">{product.interestRate}</p>
+                  <p className="text-lg font-bold text-primary-700">{product.interestRateInfo}</p>
+                </div>
+              )}
+
+              {product.minAmount && (
+                <div className="rounded-xl border bg-white p-6 shadow-sm">
+                  <h3 className="mb-3 font-semibold text-gray-900">
+                    {lang === "en" ? "Minimum Balance" : "न्यूनतम ब्यालेन्स"}
+                  </h3>
+                  <p className="text-lg font-bold text-primary-700">Rs. {Number(product.minAmount).toLocaleString()}</p>
+                </div>
+              )}
+
+              {product.maxTenure && (
+                <div className="rounded-xl border bg-white p-6 shadow-sm">
+                  <h3 className="mb-3 font-semibold text-gray-900">
+                    {lang === "en" ? "Maximum Tenure" : "अधिकतम अवधि"}
+                  </h3>
+                  <p className="text-lg font-bold text-primary-700">{product.maxTenure}</p>
                 </div>
               )}
 
@@ -162,10 +202,10 @@ export default function ProductDetailPage() {
                   {lang === "en" ? "Apply online or visit our nearest branch." : "अनलाइन आवेदन गर्नुहोस् वा हाम्रो नजिकको शाखामा जानुहोस्।"}
                 </p>
                 <div className="flex flex-col gap-2">
-                  <Link href="/loan-enquiry" className="rounded-lg bg-accent-500 px-4 py-2 text-center text-sm font-semibold text-white transition-colors hover:bg-accent-600">
+                  <Link href={`/${lang}/loan-enquiry`} className="rounded-lg bg-accent-500 px-4 py-2 text-center text-sm font-semibold text-white transition-colors hover:bg-accent-600">
                     {lang === "en" ? "Apply Now" : "अहिले नै आवेदन दिनुहोस्"}
                   </Link>
-                  <Link href="/contact" className="rounded-lg border bg-white px-4 py-2 text-center text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50">
+                  <Link href={`/${lang}/contact`} className="rounded-lg border bg-white px-4 py-2 text-center text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50">
                     {lang === "en" ? "Contact Us" : "सम्पर्क गर्नुहोस्"}
                   </Link>
                 </div>

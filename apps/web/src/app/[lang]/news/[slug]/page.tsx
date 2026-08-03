@@ -89,7 +89,7 @@ export default function NewsDetailPage() {
           <div className="mx-auto max-w-3xl">
             {article.coverImage && (
               <div className="mb-8 overflow-hidden rounded-xl">
-                <img src={article.coverImage} alt={article.title} className="h-full w-full object-cover" />
+                <img src={article.coverImage} alt={`${article.title} — Reliance Finance Limited`} width={1200} height={675} className="h-auto w-full object-cover" loading="lazy" />
               </div>
             )}
 

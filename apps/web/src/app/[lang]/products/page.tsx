@@ -89,7 +89,10 @@ export default async function ProductsPage({ params }: { params: Promise<{ lang:
                     <>
                       <img
                         src={div.image}
-                        alt=""
+                        alt={`${lang === "en" ? div.title.en : div.title.np} — Reliance Finance Limited`}
+                        width={560}
+                        height={280}
+                        loading="lazy"
                         className="h-[280px] w-full rounded-xl object-cover shadow-lg"
                       />
                       <div>
@@ -129,7 +132,10 @@ export default async function ProductsPage({ params }: { params: Promise<{ lang:
                       </div>
                       <img
                         src={div.image}
-                        alt=""
+                        alt={`${lang === "en" ? div.title.en : div.title.np} — Reliance Finance Limited`}
+                        width={560}
+                        height={280}
+                        loading="lazy"
                         className="h-[280px] w-full rounded-xl object-cover shadow-lg"
                       />
                     </>

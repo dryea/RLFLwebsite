@@ -30,7 +30,7 @@ export default async function EventsListPage({ params }: { params: Promise<{ lan
     <div className="rounded-xl border p-5 transition-shadow hover:shadow-md">
       {event.coverImage && (
         <div className="mb-4 h-40 w-full overflow-hidden rounded-lg">
-          <img src={event.coverImage} alt={event.title} className="h-full w-full object-cover" />
+          <img src={event.coverImage} alt={`${event.title} — Reliance Finance Limited event`} width={400} height={225} className="h-full w-full object-cover" loading="lazy" />
         </div>
       )}
       <h3 className="font-semibold text-gray-900">{event.title}</h3>

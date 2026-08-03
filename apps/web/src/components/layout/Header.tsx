@@ -84,8 +84,18 @@ const navItems = [
   },
 ];
 
+// Routes that exist at root level (tool pages), not under /[lang]
+const ROOT_ROUTES = [
+  "/services", "/branches", "/careers", "/contact", "/faq", "/gallery",
+  "/downloads", "/emi-calculator", "/loan-enquiry", "/calendar", "/search",
+  "/banking-hours", "/auction-notice", "/merchant-offers", "/partner", "/write-to-us",
+];
+
 function localize(href: string, lang: string) {
-  if (href.startsWith("http") || href.startsWith("/") && href.startsWith("/api")) return href;
+  if (href.startsWith("http")) return href;
+  if (href.startsWith("/api")) return href;
+  const rootMatch = ROOT_ROUTES.find((r) => href === r || href.startsWith(`${r}/`));
+  if (rootMatch) return href;
   return `/${lang}${href}`;
 }
 
@@ -126,8 +136,15 @@ export default function Header({ lang }: { lang: string }) {
 
       <div className={`sticky top-0 z-50 transition-all duration-300 ${scrolled ? "bg-white/95 backdrop-blur-md shadow-sm" : "bg-white/85 backdrop-blur-md"}`}>
         <div className="container-page flex h-20 items-center justify-between">
-          <Link href={`/${lang}`} className="flex-shrink-0">
-            <img src="https://reliancenepal.com.np/assets/images/reliance/logo.png" alt="Reliance Finance" className="h-12 w-auto" />
+          <Link href={`/${lang}`} className="flex-shrink-0" aria-label="Reliance Finance Limited — Home">
+            <img
+              src="https://reliancenepal.com.np/assets/images/reliance/logo.png"
+              alt="Reliance Finance Limited"
+              width={160}
+              height={48}
+              fetchPriority="high"
+              className="h-12 w-auto"
+            />
           </Link>
 
           <nav className="hidden items-center gap-1 lg:flex">

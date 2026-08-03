@@ -120,7 +120,9 @@ export default function AlbumDetailPage() {
                   <div className="aspect-[4/3] overflow-hidden">
                     <img
                       src={img}
-                      alt={`${album.title} ${i + 1}`}
+                      alt={`${album.title} — photo ${i + 1} — Reliance Finance Limited gallery`}
+                      width={400}
+                      height={300}
                       className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
                       loading="lazy"
                     />
@@ -163,7 +165,9 @@ export default function AlbumDetailPage() {
           <div className="max-h-[85vh] max-w-[90vw]" onClick={(e) => e.stopPropagation()}>
             <img
               src={images[lightboxIndex]}
-              alt={`${album.title} ${lightboxIndex + 1}`}
+              alt={`${album.title} ${lightboxIndex + 1} — Reliance Finance Limited`}
+              width={1200}
+              height={900}
               className="max-h-[85vh] max-w-[90vw] rounded-lg object-contain"
             />
             <p className="mt-3 text-center text-sm text-white/70">

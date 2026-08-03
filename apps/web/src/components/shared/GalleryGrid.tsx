@@ -24,7 +24,10 @@ export default function GalleryGrid({ albums }: { albums: Album[] }) {
               {album.coverImage ? (
                 <img
                   src={album.coverImage}
-                  alt={album.title}
+                  alt={`${album.title} — Reliance Finance Limited gallery`}
+                  width={640}
+                  height={360}
+                  loading="lazy"
                   className="h-full w-full object-cover transition-transform group-hover:scale-105"
                 />
               ) : (
@@ -47,7 +50,9 @@ export default function GalleryGrid({ albums }: { albums: Album[] }) {
           <div className="max-w-4xl" onClick={(e) => e.stopPropagation()}>
             <img
               src={selected.coverImage}
-              alt={selected.title}
+              alt={`${selected.title} — Reliance Finance Limited`}
+              width={1200}
+              height={675}
               className="max-h-[80vh] rounded-lg"
             />
             <p className="mt-3 text-center text-white">{selected.title}</p>

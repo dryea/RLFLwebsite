@@ -98,15 +98,29 @@ app.use("/api/*", async (c, next) => {
 app.get("/api/health", (c) => c.json({ status: "ok", timestamp: new Date().toISOString() }));
 
 // ── Media Serving ──
-app.get("/api/media/:filename", async (c) => {
+app.get("/api/media/*", async (c) => {
   try {
-    const filename = c.req.param("filename");
+    const filename = c.req.path.replace("/api/media/", "");
+    if (!filename) return c.json({ error: "Not found" }, 404);
     const obj = await c.env.R2.get(filename);
     if (!obj) return c.json({ error: "Not found" }, 404);
     const headers = new Headers();
     obj.writeHttpMetadata(headers);
     headers.set("etag", obj.httpEtag);
     headers.set("cache-control", "public, max-age=31536000, immutable");
+    // Ensure correct content type for images if not already set
+    if (!headers.get("content-type")) {
+      const mime = filename.endsWith(".png") ? "image/png"
+        : filename.endsWith(".jpg") || filename.endsWith(".jpeg") ? "image/jpeg"
+        : filename.endsWith(".webp") ? "image/webp"
+        : filename.endsWith(".avif") ? "image/avif"
+        : filename.endsWith(".gif") ? "image/gif"
+        : filename.endsWith(".svg") ? "image/svg+xml"
+        : filename.endsWith(".ico") ? "image/x-icon"
+        : filename.endsWith(".pdf") ? "application/pdf"
+        : "application/octet-stream";
+      headers.set("content-type", mime);
+    }
     return new Response(obj.body, { headers });
   } catch { return c.json({ error: "Not found" }, 404); }
 });

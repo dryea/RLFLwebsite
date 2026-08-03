@@ -53,7 +53,7 @@ export default async function NewsListPage({ params }: { params: Promise<{ lang:
                 >
                   {article.coverImage && (
                     <div className="h-32 w-full shrink-0 overflow-hidden rounded-lg sm:h-24 sm:w-40">
-                      <img src={article.coverImage} alt={article.title} className="h-full w-full object-cover" />
+                      <img src={article.coverImage} alt={`${article.title} — Reliance Finance Limited news`} width={160} height={96} className="h-full w-full object-cover" loading="lazy" />
                     </div>
                   )}
                   <div className="flex flex-1 flex-col justify-between">

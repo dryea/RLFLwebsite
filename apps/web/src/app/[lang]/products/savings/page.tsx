@@ -56,7 +56,7 @@ export default async function SavingsPage({ params }: { params: Promise<{ lang: 
                     ))}
                   </ul>
                   <div className="mt-auto flex gap-2">
-                    <Link href={`/${lang}/products/${product.slug}`} className="btn btn-outline flex-1 py-2 text-xs">View Details</Link>
+                    <Link href={`/${lang}/products/savings/${product.slug}`} className="btn btn-outline flex-1 py-2 text-xs">View Details</Link>
                     <Link href={`/${lang}/emi-calculator`} className="btn btn-primary flex-1 py-2 text-xs">Calculate EMI</Link>
                   </div>
                 </div>

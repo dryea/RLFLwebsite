@@ -32,6 +32,26 @@ type Bindings = {
 
 const app = new Hono<{ Bindings: Bindings }>();
 
+// ── Global error handler ──
+app.onError((err, c) => {
+  console.error("Unhandled error:", err);
+  if (err instanceof SyntaxError && err.message.includes("JSON")) {
+    return c.json({ error: "Invalid JSON body" }, 400);
+  }
+  return c.json({ error: "Internal server error" }, 500);
+});
+
+// ── Security headers ──
+app.use("/*", async (c, next) => {
+  await next();
+  c.header("X-Content-Type-Options", "nosniff");
+  c.header("X-Frame-Options", "DENY");
+  c.header("Referrer-Policy", "strict-origin-when-cross-origin");
+  c.header("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
+  c.header("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+  c.header("Content-Security-Policy", "default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'");
+});
+
 app.use("/*", cors({
   origin: ["https://reliancenepal.com.np", "https://www.reliancenepal.com.np", "https://rfil-web.sudeepdhakal.workers.dev", "http://localhost:3000"],
   allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
@@ -410,6 +430,7 @@ app.post("/api/cms/auth/login", async (c) => {
       user: { id: user.id.toString(), email: user.email, name: user.name, role: "admin" },
     });
   } catch (err) {
+    if (err instanceof SyntaxError) return c.json({ error: "Invalid JSON body" }, 400);
     return c.json({ error: "Internal server error", details: String(err) }, 500);
   }
 });
@@ -426,6 +447,7 @@ app.post("/api/cms/auth/seed", async (c) => {
     const token = await signJWT({ sub: result.id.toString(), email, role: "admin" }, c.env.JWT_SECRET);
     return c.json({ token, user: { id: result.id.toString(), email, name, role: "admin" } }, 201);
   } catch (err) {
+    if (err instanceof SyntaxError) return c.json({ error: "Invalid JSON body" }, 400);
     return c.json({ error: "Seed failed", details: String(err) }, 500);
   }
 });

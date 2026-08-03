@@ -409,7 +409,46 @@ app.get("/api/rates", async (c) => {
   const cat = c.req.query("category");
   const conditions = [eq(rates.status, "active")];
   if (cat) conditions.push(eq(rates.categoryId, parseInt(cat)));
-  const result = await db.select().from(rates).where(and(...conditions)).all();
+  const result = await db
+    .select({
+      id: rates.id,
+      categoryId: rates.categoryId,
+      categorySlug: rateCategories.slug,
+      categoryName: rateCategories.name,
+      productName: rates.productName,
+      tenure: rates.tenure,
+      rateType: rates.rateType,
+      minRate: rates.minRate,
+      maxRate: rates.maxRate,
+      singleRate: rates.singleRate,
+      effectiveDate: rates.effectiveDate,
+      notes: rates.notes,
+      status: rates.status,
+    })
+    .from(rates)
+    .leftJoin(rateCategories, eq(rates.categoryId, rateCategories.id))
+    .where(and(...conditions))
+    .all();
+  return c.json(result);
+});
+
+app.get("/api/rates/base-rate-spread-rate", async (c) => {
+  const db = createDb(c.env.DB);
+  const cat = await db.select().from(rateCategories).where(eq(rateCategories.slug, "base-rate-spread-rate")).get();
+  if (!cat) return c.json([]);
+  const result = await db
+    .select({
+      id: rates.id,
+      productName: rates.productName,
+      minRate: rates.minRate,
+      maxRate: rates.maxRate,
+      notes: rates.notes,
+      effectiveDate: rates.effectiveDate,
+    })
+    .from(rates)
+    .where(and(eq(rates.status, "active"), eq(rates.categoryId, cat.id)))
+    .orderBy(rates.id)
+    .all();
   return c.json(result);
 });
 

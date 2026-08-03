@@ -12,7 +12,22 @@ import {
 } from "@/lib/navigation";
 import NewsletterForm from "@/components/shared/NewsletterForm";
 
-function FooterLink({ href, label, external }: { href: string; label: string; external?: boolean }) {
+// Routes that exist at root level (tool pages), not under /[lang]
+const ROOT_ROUTES = [
+  "/services", "/branches", "/careers", "/contact", "/faq", "/gallery",
+  "/downloads", "/emi-calculator", "/loan-enquiry", "/calendar", "/search",
+  "/banking-hours", "/auction-notice", "/merchant-offers", "/partner", "/write-to-us",
+];
+
+function localize(href: string, lang: string) {
+  if (href.startsWith("http")) return href;
+  if (href.startsWith("/api")) return href;
+  const rootMatch = ROOT_ROUTES.find((r) => href === r || href.startsWith(`${r}/`));
+  if (rootMatch) return href;
+  return `/${lang}${href}`;
+}
+
+function FooterLink({ href, label, external, lang }: { href: string; label: string; external?: boolean; lang: string }) {
   if (external) {
     return (
       <a
@@ -28,7 +43,7 @@ function FooterLink({ href, label, external }: { href: string; label: string; ex
   }
   return (
     <Link
-      href={href}
+      href={localize(href, lang)}
       className="text-sm text-gray-400 transition-colors hover:text-white"
     >
       {label}
@@ -56,6 +71,7 @@ function FooterLinkColumn({
               href={link.href}
               label={lang === "en" ? link.en : link.np}
               external={link.external}
+              lang={lang}
             />
           </li>
         ))}

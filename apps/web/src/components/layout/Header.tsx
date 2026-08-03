@@ -63,9 +63,9 @@ const navItems = [
     href: "/rates",
     children: [
       { label: { en: "Interest Rates", np: "ब्याज दर" }, href: "/rates" },
-      { label: { en: "Base Rate", np: "आधार दर" }, href: "/rates" },
-      { label: { en: "Tariff Charges", np: "शुल्क" }, href: "/rates" },
-      { label: { en: "Forex Rates", np: "विदेशी विनिमय" }, href: "/rates" },
+      { label: { en: "Base Rate / Spread Rate", np: "आधार दर / स्प्रेड दर" }, href: "/rates/base-rate-spread-rate" },
+      { label: { en: "Tariff Charges", np: "मापदण्ड शुल्क" }, href: "/rates/standard-tariff-charges" },
+      { label: { en: "Forex Rates", np: "विदेशी विनिमय" }, href: "/rates/forex-rates" },
     ],
   },
   {

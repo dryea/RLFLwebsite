@@ -1,89 +1,159 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Percent } from "lucide-react";
+import Link from "next/link";
+import { Percent, Download, ArrowRight, FileText } from "lucide-react";
 import { getRates } from "@/lib/public-api";
 import { useLang } from "@/contexts/LanguageContext";
 
-const categoryLabels: Record<string, { en: string; np: string }> = {
-  savings: { en: "Savings Interest Rates", np: "बचत ब्याज दरहरू" },
-  fixed: { en: "Fixed Deposit Interest Rates", np: "मुद्दती निक्षेप ब्याज दरहरू" },
-  loan: { en: "Loan Interest Rates", np: "ऋण ब्याज दरहरू" },
-  tariff: { en: "Service Charges & Tariffs", np: "सेवा शुल्क र दरहरू" },
-  forex: { en: "Foreign Exchange Rates", np: "विदेशी विनिमय दरहरू" },
-};
-
-const categoryOrder = ["savings", "fixed", "loan", "tariff", "forex"];
-
 export default function RatesPage() {
   const lang = useLang();
+  const isNp = lang === "np";
   const [rates, setRates] = useState<any[]>([]);
-  useEffect(() => { getRates().then(setRates).catch(() => {}); }, []);
 
-  const grouped: Record<string, any[]> = {};
-  rates.forEach((r: any) => {
-    const cat = r.category || "other";
-    if (!grouped[cat]) grouped[cat] = [];
-    grouped[cat].push(r);
-  });
+  useEffect(() => {
+    getRates().then((all) => {
+      // Only current categories, exclude base-rate (separate page)
+      setRates(all.filter((r: any) => r.category !== "base-rate-spread-rate"));
+    }).catch(() => {});
+  }, []);
 
-  const t = (obj: { en: string; np: string }) => (lang === "en" ? obj.en : obj.np);
+  const savings = rates.filter((r: any) => r.category === "savings");
+  const fixed = rates.filter((r: any) => r.category === "fixed");
+  const loans = rates.filter((r: any) => r.category === "loan");
+
+  const rateValue = (r: any) => {
+    if (r.singleRate != null) return `${r.singleRate}%`;
+    if (r.rate != null) return `${r.rate}%`;
+    if (r.notes && r.notes.includes("+") && r.category === "loan") return r.notes;
+    return r.value || r.notes || "-";
+  };
 
   return (
     <>
       <section className="bg-gradient-to-br from-primary-800 to-primary-900 py-12 text-white">
         <div className="container-page">
-          <h1 className="text-3xl font-bold">{lang === "en" ? "Interest Rates" : "ब्याज दरहरू"}</h1>
-          <p className="mt-2 text-primary-100">{lang === "en" ? "Current interest rates and service charges" : "हालको ब्याज दर र सेवा शुल्कहरू"}</p>
+          <h1 className="text-3xl font-bold">{isNp ? "ब्याज दरहरू" : "Interest Rates"}</h1>
+          <p className="mt-2 text-primary-100">{isNp ? "हालको ब्याज दर र सेवा शुल्कहरू" : "Current interest rates and service charges"}</p>
+          <p className="mt-3 inline-block rounded bg-white/10 px-3 py-1 text-sm">
+            {isNp ? "प्रभावकारी मिति" : "Effective From"}: 2083-04-01
+          </p>
         </div>
       </section>
 
       <section className="py-12">
-        <div className="container-page">
-          {rates.length === 0 ? (
-            <div className="rounded-xl border-2 border-dashed p-12 text-center text-gray-500">
-              <Percent className="mx-auto mb-3 h-10 w-10 text-gray-300" />
-              <p className="text-lg font-medium">{lang === "en" ? "No rates available" : "कुनै दरहरू उपलब्ध छैनन्"}</p>
-              <p className="mt-1 text-sm">{lang === "en" ? "Rates will be updated soon." : "दरहरू चाँडै अद्यावधिक गरिनेछ।"}</p>
+        <div className="container-page space-y-14">
+          {/* Download link */}
+          <div className="flex flex-wrap gap-4">
+            <a href="https://reliancenepal.com.np/uploads/document/aa72ec286ce3a90b8e335685a3f214490e82b3b5.jpg" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-800">
+              <Download className="h-4 w-4" /> {isNp ? "ब्याज दर डाउनलोड गर्नुहोस्" : "Download Interest Rates"}
+            </a>
+            <Link href={`/${lang}/rates/base-rate-spread-rate`} className="inline-flex items-center gap-2 rounded-lg border border-primary-200 px-5 py-2.5 text-sm font-semibold text-primary-700 transition-colors hover:bg-primary-50">
+              {isNp ? "आधार दर / स्प्रेड दर हेर्नुहोस्" : "View Base Rate / Spread Rate"} <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+
+          {/* Savings */}
+          {savings.length > 0 && (
+            <div>
+              <h2 className="mb-5 flex items-center gap-2 text-2xl font-bold text-gray-900">
+                <Percent className="h-6 w-6 text-primary-700" />
+                {isNp ? "बचत खाता ब्याज दर" : "Savings Account Interest Rates"}
+              </h2>
+              <div className="overflow-hidden rounded-xl border bg-white shadow-sm">
+                <table className="w-full text-left text-sm">
+                  <thead className="bg-primary-50 text-gray-800">
+                    <tr>
+                      <th className="px-5 py-3 font-semibold">S.No</th>
+                      <th className="px-5 py-3 font-semibold">{isNp ? "खाता प्रकार" : "Account Type"}</th>
+                      <th className="px-5 py-3 font-semibold">{isNp ? "न्यूनतम ब्यालेन्स" : "Minimum Balance"}</th>
+                      <th className="px-5 py-3 font-semibold">{isNp ? "ब्याज दर" : "Interest Rate"}</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {savings.map((r: any, i: number) => (
+                      <tr key={r.id || i} className="transition-colors hover:bg-gray-50">
+                        <td className="px-5 py-3 text-gray-500">{i + 1}</td>
+                        <td className="px-5 py-3 font-medium text-gray-900">{r.productName}</td>
+                        <td className="px-5 py-3 text-gray-600">
+                          {r.notes && r.notes.includes("Minimum Balance") ? r.notes.replace("Minimum Balance: ", "Rs ") : "—"}
+                        </td>
+                        <td className="px-5 py-3 font-semibold text-primary-700">{rateValue(r)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <p className="mt-2 text-xs text-gray-400">{isNp ? "प्रभावकारी मिति" : "Effective From"}: 2083-04-01</p>
             </div>
-          ) : (
-            <div className="space-y-10">
-              {categoryOrder.map((cat) => {
-                const items = grouped[cat];
-                if (!items || items.length === 0) return null;
-                return (
-                  <div key={cat}>
-                    <h2 className="mb-4 text-xl font-bold text-gray-900">{t(categoryLabels[cat] || { en: cat, np: cat })}</h2>
-                    <div className="overflow-hidden rounded-xl border bg-white shadow-sm">
-                      <table className="w-full text-left text-sm">
-                        <thead className="bg-gray-50 text-gray-700">
-                          <tr>
-                            <th className="px-5 py-3 font-semibold">{lang === "en" ? "Description" : "विवरण"}</th>
-                            <th className="px-5 py-3 font-semibold">{lang === "en" ? "Rate" : "दर"}</th>
-                            {items.some((i: any) => i.period) && (
-                              <th className="px-5 py-3 font-semibold">{lang === "en" ? "Period" : "अवधि"}</th>
-                            )}
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-100">
-                          {items.map((rate: any, i: number) => (
-                            <tr key={rate.id || i} className="transition-colors hover:bg-gray-50">
-                              <td className="px-5 py-3 font-medium text-gray-900">{rate.title || rate.description}</td>
-                              <td className="px-5 py-3 font-semibold text-primary-700">{rate.rate || rate.value}</td>
-                              {items.some((r: any) => r.period) && (
-                                <td className="px-5 py-3 text-gray-500">{rate.period || "-"}</td>
-                              )}
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                    {items.some((i: any) => i.effectiveDate) && (
-                      <p className="mt-2 text-xs text-gray-400">{lang === "en" ? "Effective from" : "देखि लागू"}: {items[0].effectiveDate}</p>
-                    )}
-                  </div>
-                );
-              })}
+          )}
+
+          {/* Fixed Deposits */}
+          {fixed.length > 0 && (
+            <div>
+              <h2 className="mb-5 flex items-center gap-2 text-2xl font-bold text-gray-900">
+                <FileText className="h-6 w-6 text-primary-700" />
+                {isNp ? "मुद्दती निक्षेप ब्याज दर" : "Fixed Deposit Interest Rates"}
+              </h2>
+              <div className="overflow-hidden rounded-xl border bg-white shadow-sm">
+                <table className="w-full text-left text-sm">
+                  <thead className="bg-primary-50 text-gray-800">
+                    <tr>
+                      <th className="px-5 py-3 font-semibold">{isNp ? "उत्पादन" : "Product"}</th>
+                      <th className="px-5 py-3 font-semibold">{isNp ? "अवधि" : "Period"}</th>
+                      <th className="px-5 py-3 font-semibold">{isNp ? "ब्याज दर" : "Interest Rate"}</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {fixed.map((r: any, i: number) => (
+                      <tr key={r.id || i} className="transition-colors hover:bg-gray-50">
+                        <td className="px-5 py-3 font-medium text-gray-900">{r.productName}</td>
+                        <td className="px-5 py-3 text-gray-600">{r.tenure || "—"}</td>
+                        <td className="px-5 py-3 font-semibold text-primary-700">{rateValue(r)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <p className="mt-2 text-xs text-gray-400">{isNp ? "प्रभावकारी मिति" : "Effective From"}: 2083-04-01</p>
+            </div>
+          )}
+
+          {/* Loans */}
+          {loans.length > 0 && (
+            <div>
+              <h2 className="mb-5 flex items-center gap-2 text-2xl font-bold text-gray-900">
+                <ArrowRight className="h-6 w-6 text-primary-700" />
+                {isNp ? "ऋण ब्याज दरहरू" : "Loan Interest Rates"}
+              </h2>
+              <div className="overflow-hidden rounded-xl border bg-white shadow-sm">
+                <table className="w-full text-left text-sm">
+                  <thead className="bg-primary-50 text-gray-800">
+                    <tr>
+                      <th className="px-5 py-3 font-semibold">S.No</th>
+                      <th className="px-5 py-3 font-semibold">{isNp ? "क्रेडिट सुविधा" : "Credit Facility"}</th>
+                      <th className="px-5 py-3 font-semibold">{isNp ? "प्रिमियम दर" : "Premium Rate"}</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {loans.map((r: any, i: number) => (
+                      <tr key={r.id || i} className="transition-colors hover:bg-gray-50">
+                        <td className="px-5 py-3 text-gray-500">{i + 1}</td>
+                        <td className="px-5 py-3 font-medium text-gray-900">{r.productName}</td>
+                        <td className="px-5 py-3 font-semibold text-primary-700">{r.notes || rateValue(r)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className="mt-4 flex flex-wrap gap-3">
+                <Link href={`/${lang}/emi-calculator`} className="inline-flex items-center gap-2 rounded-lg border border-primary-200 px-4 py-2 text-sm font-semibold text-primary-700 hover:bg-primary-50">
+                  <Percent className="h-4 w-4" /> {isNp ? "EMI गणना गर्नुहोस्" : "Calculate EMI"}
+                </Link>
+                <Link href={`/${lang}/rates/base-rate-spread-rate`} className="inline-flex items-center gap-2 rounded-lg border border-primary-200 px-4 py-2 text-sm font-semibold text-primary-700 hover:bg-primary-50">
+                  <ArrowRight className="h-4 w-4" /> {isNp ? "आधार दर हेर्नुहोस्" : "View Base Rate"}
+                </Link>
+              </div>
             </div>
           )}
         </div>
@@ -91,7 +161,7 @@ export default function RatesPage() {
 
       <section className="border-t bg-gray-50 py-8">
         <div className="container-page text-center text-sm text-gray-500">
-          <p>{lang === "en" ? "Rates are subject to change as per Nepal Rastra Bank directives." : "दरहरू नेपाल राष्ट्र बैंकको निर्देशन अनुसार परिवर्तन हुन सक्छन्।"}</p>
+          <p>{isNp ? "दरहरू नेपाल राष्ट्र बैंकको निर्देशन अनुसार परिवर्तन हुन सक्छन्।" : "Rates are subject to change as per Nepal Rastra Bank directives."}</p>
         </div>
       </section>
     </>

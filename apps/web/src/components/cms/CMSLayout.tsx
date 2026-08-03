@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FileText, Package, Newspaper, Image, Users, Settings, LogOut, LayoutDashboard, MapPin, HelpCircle, Briefcase, Download, ImageIcon, MessageSquare, Shield, UserCog } from "lucide-react";
 import { getCmsUser, cmsLogout, type CmsUser } from "@/lib/cms-auth";
+import OnboardingCoachMarks from "./OnboardingCoachMarks";
 
 const navItems = [
   { label: "Dashboard", icon: LayoutDashboard, href: "/cms/dashboard" },
@@ -42,7 +43,7 @@ export default function CMSLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-      <aside className="hidden w-64 flex-col bg-white shadow-sm lg:flex">
+      <aside data-coach="sidebar" className="hidden w-64 flex-col bg-white shadow-sm lg:flex">
         <div className="flex items-center gap-3 border-b px-6 py-5">
           <img src="https://reliancenepal.com.np/assets/images/reliance/logo.png" alt="" className="h-8" />
           <span className="text-sm font-semibold text-gray-700">CMS</span>
@@ -52,6 +53,7 @@ export default function CMSLayout({ children }: { children: React.ReactNode }) {
             <Link
               key={item.href}
               href={item.href}
+              data-coach={item.href === "/cms/pages" ? "pages" : item.href === "/cms/media" ? "media" : undefined}
               className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-gray-700 transition-colors hover:bg-gray-100"
             >
               <item.icon className="h-4 w-4 text-gray-400" />
@@ -59,7 +61,7 @@ export default function CMSLayout({ children }: { children: React.ReactNode }) {
             </Link>
           ))}
         </nav>
-        <div className="border-t px-3 py-3">
+        <div className="border-t px-3 py-3" data-coach="user-menu">
           <div className="mb-2 px-3 text-xs text-gray-500">{user.email}</div>
           <button onClick={cmsLogout} className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-100">
             <LogOut className="h-4 w-4" /> Sign Out
@@ -72,8 +74,10 @@ export default function CMSLayout({ children }: { children: React.ReactNode }) {
           <h1 className="text-lg font-bold text-gray-900">CMS</h1>
           <span className="text-sm text-gray-500">{user.name}</span>
         </header>
-        <main className="flex-1 p-6">{children}</main>
+        <main data-coach="main-content" className="flex-1 p-6">{children}</main>
       </div>
+
+      <OnboardingCoachMarks />
     </div>
   );
 }

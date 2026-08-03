@@ -33,7 +33,7 @@ export default function CmsPagesPage() {
     <CMSLayout>
       <div className="mb-6 flex items-center justify-between">
         <h2 className="text-xl font-bold text-gray-900">Pages</h2>
-        <Link href="/cms/pages/new" className="flex items-center gap-2 rounded-lg bg-primary-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary-800">
+        <Link href="/cms/pages/new" data-coach="new-page" className="flex items-center gap-2 rounded-lg bg-primary-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary-800">
           <Plus className="h-4 w-4" /> New Page
         </Link>
       </div>

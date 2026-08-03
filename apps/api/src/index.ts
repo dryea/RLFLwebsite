@@ -39,20 +39,35 @@ app.use("/*", cors({
   maxAge: 86400,
 }));
 
-// ── Simple rate limiter (per-IP, in-memory) ──
-const rateLimits = new Map<string, { count: number; resetAt: number }>();
-const RATE_LIMIT = 100; // requests per window per IP
-const RATE_WINDOW = 60_000; // 1 minute
+// ── Rate limiter (per-IP, in-memory) ──
+// GET (reads): 600/min per IP — page loads fire many API reads
+// POST/PUT/DELETE (mutations): 30/min per IP — protects forms and CMS writes
+const rateLimits = new Map<string, { getCount: number; postCount: number; resetAt: number }>();
+const GET_LIMIT = 600;
+const POST_LIMIT = 30;
+const RATE_WINDOW = 60_000;
 
 app.use("/api/*", async (c, next) => {
+  const path = c.req.path;
+  if (path === "/api/health" || path.startsWith("/api/media/")) {
+    return next();
+  }
   const ip = c.req.header("CF-Connecting-IP") || c.req.header("x-forwarded-for") || "unknown";
+  const method = c.req.method;
   const now = Date.now();
   const entry = rateLimits.get(ip);
   if (!entry || entry.resetAt < now) {
-    rateLimits.set(ip, { count: 1, resetAt: now + RATE_WINDOW });
+    rateLimits.set(ip, { getCount: 0, postCount: 0, resetAt: now + RATE_WINDOW });
+    return next();
+  }
+  if (method === "GET") {
+    entry.getCount += 1;
+    if (entry.getCount > GET_LIMIT) {
+      return c.json({ error: "Too many requests", retryAfter: Math.ceil((entry.resetAt - now) / 1000) }, 429);
+    }
   } else {
-    entry.count += 1;
-    if (entry.count > RATE_LIMIT) {
+    entry.postCount += 1;
+    if (entry.postCount > POST_LIMIT) {
       return c.json({ error: "Too many requests", retryAfter: Math.ceil((entry.resetAt - now) / 1000) }, 429);
     }
   }

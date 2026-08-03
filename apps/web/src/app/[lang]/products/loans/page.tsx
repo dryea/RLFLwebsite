@@ -265,7 +265,7 @@ export default async function LoansPage({ params }: { params: Promise<{ lang: st
   return (
     <>
       <section className="relative bg-gradient-to-r from-primary-800 via-primary-700 to-primary-900 py-16 text-white">
-        <div className="absolute inset-0 bg-[url('https://reliancenepal.com.np/uploads/slider/d6515bd5f4c1b099740dde56a7faa2ec3c852757.jpg')] bg-cover bg-center opacity-10" />
+        <div className="absolute inset-0 bg-[url('/assets/slider-loans.jpg')] bg-cover bg-center opacity-10" />
         <div className="container-page relative z-10">
           <div className="mx-auto max-w-3xl text-center">
             <span className="mb-3 inline-block rounded-full bg-white/10 px-4 py-1 text-xs font-bold uppercase tracking-widest text-secondary-300">

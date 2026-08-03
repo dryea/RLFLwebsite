@@ -64,7 +64,7 @@ export default function AppBanner({ data, lang }: { data: AppBannerData | null; 
 
         <div className="digital-banner-img hidden justify-end md:flex">
           <img
-            src="https://reliancenepal.com.np/assets/images/reliance/mobilebankingWebImage.png"
+            src="/assets/mobilebankingWebImage.png"
             alt="RFL Mobile app"
             className="max-h-[320px]"
           />

@@ -65,7 +65,7 @@ export default async function FixedDepositsPage({ params }: { params: Promise<{ 
         className="section"
         style={{
           background:
-            "linear-gradient(rgba(112,43,134,0.85),rgba(62,12,78,0.95)),url('https://reliancenepal.com.np/assets/images/reliance/partners-n-tieups.png') center/cover no-repeat",
+            "linear-gradient(rgba(112,43,134,0.85),rgba(62,12,78,0.95)),url('/assets/partners-n-tieups.png') center/cover no-repeat",
           padding: "6rem 0",
         }}
       >

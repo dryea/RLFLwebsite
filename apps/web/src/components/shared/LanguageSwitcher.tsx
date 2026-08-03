@@ -33,8 +33,8 @@ export default function LanguageSwitcher() {
         <img
           src={
             switchTo === "en"
-              ? "https://reliancenepal.com.np/assets/images/reliance/en_flag.png"
-              : "https://reliancenepal.com.np/assets/images/reliance/nep_flag.png"
+              ? "/assets/en_flag.png"
+              : "/assets/nep_flag.png"
           }
           alt={switchTo === "en" ? "English flag" : "नेपाली झण्डा"}
           width={24}

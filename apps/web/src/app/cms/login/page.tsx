@@ -31,7 +31,7 @@ export default function CmsLoginPage() {
       <div className="w-full max-w-sm rounded-xl bg-white p-8 shadow-lg">
         <div className="mb-6 text-center">
           <img
-            src="https://reliancenepal.com.np/assets/images/reliance/logo.png"
+            src="/assets/logo.png"
             alt="Reliance Finance"
             className="mx-auto mb-4 h-10"
           />

@@ -45,7 +45,7 @@ export default function CMSLayout({ children }: { children: React.ReactNode }) {
     <div className="flex min-h-screen bg-gray-100">
       <aside data-coach="sidebar" className="hidden w-64 flex-col bg-white shadow-sm lg:flex">
         <div className="flex items-center gap-3 border-b px-6 py-5">
-          <img src="https://reliancenepal.com.np/assets/images/reliance/logo.png" alt="" className="h-8" />
+          <img src="/assets/logo.png" alt="" className="h-8" />
           <span className="text-sm font-semibold text-gray-700">CMS</span>
         </div>
         <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">

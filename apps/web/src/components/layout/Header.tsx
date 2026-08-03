@@ -138,7 +138,7 @@ export default function Header({ lang }: { lang: string }) {
         <div className="container-page flex h-20 items-center justify-between">
           <Link href={`/${lang}`} className="flex-shrink-0" aria-label="Reliance Finance Limited — Home">
             <img
-              src="https://reliancenepal.com.np/assets/images/reliance/logo.png"
+              src="/assets/logo.png"
               alt="Reliance Finance Limited"
               width={160}
               height={48}

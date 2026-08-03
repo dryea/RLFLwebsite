@@ -22,7 +22,7 @@ export default async function ProductsPage({ params }: { params: Promise<{ lang:
         np: "विद्यार्थीदेखि गृहिणी, संस्थादेखि वरिष्ठ नागरिकसम्मका लागि डिजाइन गरिएको बचत खाताहरूको विविध पोर्टफोलियो। दैनिक कारोबार वा उच्च-उपज मुद्दती निक्षेप — हरेक आवश्यकताको लागि उपयुक्त समाधान।",
       },
       icon: PiggyBank,
-      image: "https://reliancenepal.com.np/uploads/slider/214dd0a0bdac9c93312f3f57d3e0f9f3de0504b2.jpg",
+      image: "/assets/slider-savings.jpg",
       cta: { en: "Explore Savings", np: "बचत हेर्नुहोस्" },
       link: `/${lang}/products/savings`,
     },
@@ -35,7 +35,7 @@ export default async function ProductsPage({ params }: { params: Promise<{ lang:
         np: "आफ्नो वित्तीय प्रतिफल अधिकतम बनाउनुहोस्। कर्पोरेट कोष, ट्रस्ट पुँजी वा व्यक्तिगत बचतलाई उच्च-उपज, सुरक्षित पोर्टफोलियोमा राख्नुहोस्। ३ महिनादेखि ५ वर्षभन्दा बढी लचिलो अवधि। रेमिट्यान्स निक्षेपकर्ताहरूले मानक दरभन्दा +१.०% थप ब्याज पाउनुहुन्छ।",
       },
       icon: Lock,
-      image: "https://reliancenepal.com.np/assets/images/reliance/partners-n-tieups.png",
+      image: "/assets/partners-n-tieups.png",
       cta: { en: "Go to FD Calculator", np: "FD क्याल्कुलेटर" },
       link: `/${lang}/products/fixed-deposits`,
     },
@@ -48,7 +48,7 @@ export default async function ProductsPage({ params }: { params: Promise<{ lang:
         np: "हाम्रो व्यापक ऋण उत्पादनहरूले तपाईंको सपनालाई बल दिनुहोस्। घर स्वामित्व, सवारी साधन वित्तदेखि व्यवसाय विस्तार र कृषि विकाससम्म — प्रतिस्पर्धी ब्याजदर र लचिलो भुक्तानी योजनाले ऋण सरल र सुलभ बनाउँछ।",
       },
       icon: HandCoins,
-      image: "https://reliancenepal.com.np/uploads/slider/d6515bd5f4c1b099740dde56a7faa2ec3c852757.jpg",
+      image: "/assets/slider-loans.jpg",
       cta: { en: "Explore Loans", np: "ऋण हेर्नुहोस्" },
       link: `/${lang}/products/loans`,
     },
@@ -60,7 +60,7 @@ export default async function ProductsPage({ params }: { params: Promise<{ lang:
         className="section"
         style={{
           background:
-            "linear-gradient(rgba(112,43,134,0.85),rgba(62,12,78,0.95)),url('https://reliancenepal.com.np/uploads/slider/214dd0a0bdac9c93312f3f57d3e0f9f3de0504b2.jpg') center/cover no-repeat",
+            "linear-gradient(rgba(112,43,134,0.85),rgba(62,12,78,0.95)),url('/assets/slider-savings.jpg') center/cover no-repeat",
           padding: "6rem 0",
         }}
       >

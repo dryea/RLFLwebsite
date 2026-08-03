@@ -70,7 +70,7 @@ export default function AboutSection({
 
           <div className="about-image-frame relative">
             <img
-              src={imageUrl || "https://reliancenepal.com.np/uploads/page/48141a0a9b0736d944baf8fb179564c1b770f3f9.jpg"}
+              src={imageUrl || "/assets/about-building.jpg"}
               alt="Reliance Finance"
               className="w-full rounded-xl"
             />

@@ -1,11 +1,13 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import PublicLayout from "@/components/layout/PublicLayout";
-import { serverFetchAPI } from "@/lib/server-api";
+import { getAlbums } from "@/lib/public-api";
 import GalleryGrid from "@/components/shared/GalleryGrid";
 
-export const dynamic = "force-dynamic";
-
-export default async function GalleryPage() {
-  const albums = await serverFetchAPI("/api/gallery/albums");
+export default function GalleryPage() {
+  const [albums, setAlbums] = useState<any[]>([]);
+  useEffect(() => { getAlbums().then(setAlbums).catch(() => {}); }, []);
 
   return (
     <PublicLayout>

@@ -16,7 +16,7 @@ export default async function MilestonesPage({ params }: { params: Promise<{ lan
   const { lang } = await params;
   let milestones: any[] = [];
   try {
-    const res = await fetch(`${API}/api/cms/milestones`);
+    const res = await fetch(`${API}/api/pages/milestones`);
     if (res.ok) {
       const data = await res.json();
       milestones = Array.isArray(data) ? data : data.data ? data.data : [];

@@ -51,7 +51,7 @@ export default async function GovernancePage({ params }: { params: Promise<{ lan
   const { lang } = await params;
   let teams;
   try {
-    teams = await serverFetchAPI("/api/cms/teams");
+    teams = await serverFetchAPI("/api/team/categories");
   } catch {
     teams = [];
   }

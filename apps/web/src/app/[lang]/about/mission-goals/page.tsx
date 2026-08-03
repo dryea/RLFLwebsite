@@ -16,7 +16,7 @@ export default async function MissionGoalsPage({ params }: { params: Promise<{ l
   const { lang } = await params;
   let page: any = null;
   try {
-    const res = await fetch(`${API}/api/cms/mission-goals`);
+    const res = await fetch(`${API}/api/pages/mission-goals`);
     if (res.ok) page = await res.json();
   } catch {}
 

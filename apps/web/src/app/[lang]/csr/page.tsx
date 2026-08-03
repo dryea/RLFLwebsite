@@ -41,7 +41,7 @@ export default async function CSRPage({ params }: { params: Promise<{ lang: stri
   const { lang } = await params;
   let cms: any = null;
   try {
-    cms = await serverFetchAPI("/api/cms/pages?slug=csr");
+    cms = await serverFetchAPI("/api/pages/csr");
   } catch {}
   const content = cms?.data?.[0] || defaultContent;
 

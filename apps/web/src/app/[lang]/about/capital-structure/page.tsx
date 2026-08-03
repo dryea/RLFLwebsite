@@ -16,7 +16,7 @@ export default async function CapitalStructurePage({ params }: { params: Promise
   const { lang } = await params;
   let page: any = null;
   try {
-    const res = await fetch(`${API}/api/cms/capital-structure`);
+    const res = await fetch(`${API}/api/pages/capital-structure`);
     if (res.ok) page = await res.json();
   } catch {}
 

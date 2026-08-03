@@ -19,12 +19,20 @@ interface Branch {
   managerName?: string;
 }
 
-export default function BranchList({ branches }: { branches: Branch[] }) {
+export default function BranchList({ branches, lang = "en" }: { branches: Branch[]; lang?: string }) {
   const [filter, setFilter] = useState<string>("all");
   const filtered =
     filter === "all"
       ? branches
       : branches.filter((b) => b.region === filter);
+
+  const isNp = lang === "np";
+  const labels = {
+    all: isNp ? "सबै" : "All",
+    "head-office": isNp ? "प्रधान कार्यालय" : "Head Office",
+    "inside-valley": isNp ? "उपत्यका भित्र" : "Inside Valley",
+    "outside-valley": isNp ? "उपत्यका बाहिर" : "Outside Valley",
+  };
 
   return (
     <>
@@ -40,13 +48,7 @@ export default function BranchList({ branches }: { branches: Branch[] }) {
                   : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
             >
-              {r === "all"
-                ? "All"
-                : r === "head-office"
-                  ? "Head Office"
-                  : r === "inside-valley"
-                    ? "Inside Valley"
-                    : "Outside Valley"}
+              {labels[r as keyof typeof labels]}
             </button>
           ),
         )}
@@ -57,11 +59,13 @@ export default function BranchList({ branches }: { branches: Branch[] }) {
             key={b.id}
             className="rounded-xl border bg-white p-6 shadow-sm"
           >
-            <h3 className="font-semibold text-gray-900">{b.name}</h3>
+            <h3 className="font-semibold text-gray-900">
+              {isNp && b.nameNp ? b.nameNp : b.name}
+            </h3>
             <div className="mt-3 space-y-2 text-sm text-gray-600">
               <p className="flex items-start gap-2">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary-700" />
-                {b.address}
+                {isNp && b.addressNp ? b.addressNp : b.address}
               </p>
               {b.phone && (
                 <a
@@ -80,7 +84,7 @@ export default function BranchList({ branches }: { branches: Branch[] }) {
         ))}
       </div>
       <div className="mt-8">
-        <BranchMap branches={filtered} lang="en" />
+        <BranchMap branches={filtered} lang={lang} />
       </div>
     </>
   );

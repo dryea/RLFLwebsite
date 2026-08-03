@@ -16,7 +16,7 @@ export default async function StrategicFrameworkPage({ params }: { params: Promi
   const { lang } = await params;
   let page: any = null;
   try {
-    const res = await fetch(`${API}/api/cms/strategic-framework`);
+    const res = await fetch(`${API}/api/pages/strategic-framework`);
     if (res.ok) page = await res.json();
   } catch {}
 

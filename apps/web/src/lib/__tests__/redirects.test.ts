@@ -24,7 +24,7 @@ describe("redirects", () => {
   });
 
   it("contains rate page redirects", () => {
-    expect(redirects["/interest-rate"]).toBe("/en/rates/interest-rates");
+    expect(redirects["/interest-rate"]).toBe("/en/rates");
   });
 
   it("contains all 70+ entries", () => {

@@ -25,8 +25,8 @@ export const topBarLinks = {
       { en: "EMI Calculator", np: "EMI क्याल्कुलेटर", href: "/emi-calculator" },
       { en: "Gallery", np: "ग्यालरी", href: "/gallery" },
       { en: "Calendar", np: "पात्रो", href: "/calendar" },
-      { en: "Interest Rates", np: "ब्याज दर", href: "/rates/interest-rates" },
-      { en: "Base Rate / Spread Rate", np: "आधार दर", href: "/rates/base-rate-spread-rate" },
+      { en: "Interest Rates", np: "ब्याज दर", href: "/rates" },
+      { en: "Base Rate / Spread Rate", np: "आधार दर", href: "/rates" },
       { en: "Check Right Share Eligibility", np: "अधिकार शेयर योग्यता जाँच", href: "https://sunrisecapital.com.np/Right-Eligibility", external: true },
       { en: "Check Web Mail", np: "वेब मेल जाँच", href: "https://makuri.accessworld.net:2096/", external: true },
     ],
@@ -119,10 +119,10 @@ export const mainNav: NavItem[] = [
   {
     label: "Rates", labelNp: "दरहरू",
     children: [
-      { label: "Interest Rate", labelNp: "ब्याज दर", href: "/rates/interest-rates" },
-      { label: "Base Rate / Spread Rate", labelNp: "आधार दर / स्प्रेड दर", href: "/rates/base-rate-spread-rate" },
-      { label: "Standard Tariff Charges", labelNp: "मापदण्ड शुल्क", href: "/rates/standard-tariff-charges" },
-      { label: "Forex Rates", labelNp: "विदेशी विनिमय दर", href: "/rates/forex-rates" },
+      { label: "Interest Rate", labelNp: "ब्याज दर", href: "/rates" },
+      { label: "Base Rate / Spread Rate", labelNp: "आधार दर / स्प्रेड दर", href: "/rates" },
+      { label: "Standard Tariff Charges", labelNp: "मापदण्ड शुल्क", href: "/rates" },
+      { label: "Forex Rates", labelNp: "विदेशी विनिमय दर", href: "/rates" },
     ],
   },
   {
@@ -148,7 +148,7 @@ export const mainNav: NavItem[] = [
           { label: "AGM Minute", labelNp: "AGM मिनेट", href: "/publications/reports/agm-minute" },
           { label: "Annual Report", labelNp: "वार्षिक प्रतिवेदन", href: "/publications/reports/annual-report" },
           { label: "Quarterly Reports", labelNp: "त्रैमासिक प्रतिवेदन", href: "/publications/reports/quarterly-reports" },
-          { label: "Base Rate / Spread Rate", labelNp: "आधार दर", href: "/rates/base-rate-spread-rate" },
+          { label: "Base Rate / Spread Rate", labelNp: "आधार दर", href: "/rates" },
           { label: "Basel II Disclosure", labelNp: "बासेल II खुलासा", href: "/publications/reports/basel-ii-disclosure" },
           { label: "SEBON Report", labelNp: "SEBON प्रतिवेदन", href: "/publications/reports/sebon-report" },
         ],
@@ -216,10 +216,10 @@ export const footerColumns: FooterSection[] = [
   {
     title: { en: "Rates", np: "दरहरू" },
     links: [
-      { en: "Interest Rate", np: "ब्याज दर", href: "/rates/interest-rates" },
-      { en: "Base Rate / Spread Rate", np: "आधार दर / स्प्रेड दर", href: "/rates/base-rate-spread-rate" },
-      { en: "Standard Tariff Charges", np: "मापदण्ड शुल्क", href: "/rates/standard-tariff-charges" },
-      { en: "Forex Rates", np: "विदेशी विनिमय दर", href: "/rates/forex-rates" },
+      { en: "Interest Rate", np: "ब्याज दर", href: "/rates" },
+      { en: "Base Rate / Spread Rate", np: "आधार दर / स्प्रेड दर", href: "/rates" },
+      { en: "Standard Tariff Charges", np: "मापदण्ड शुल्क", href: "/rates" },
+      { en: "Forex Rates", np: "विदेशी विनिमय दर", href: "/rates" },
     ],
   },
   {

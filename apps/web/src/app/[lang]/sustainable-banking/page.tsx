@@ -41,7 +41,7 @@ export default async function SustainableBankingPage({ params }: { params: Promi
   const { lang } = await params;
   let cms: any = null;
   try {
-    cms = await serverFetchAPI("/api/cms/pages?slug=sustainable-banking");
+    cms = await serverFetchAPI("/api/pages/sustainable-banking");
   } catch {}
   const content = cms?.data?.[0] || defaultContent;
 

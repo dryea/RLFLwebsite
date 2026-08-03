@@ -19,9 +19,7 @@ describe("serverFetchAPI", () => {
 
     expect(mockFetch).toHaveBeenCalledWith(
       expect.stringContaining("/api/test"),
-      expect.objectContaining({
-        next: expect.objectContaining({ revalidate: 300 }),
-      })
+      expect.objectContaining({ cache: "no-store" })
     );
     expect(result).toEqual({ data: "test" });
   });

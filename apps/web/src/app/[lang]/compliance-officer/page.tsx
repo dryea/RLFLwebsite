@@ -49,7 +49,7 @@ export default async function CompliancePage({ params }: { params: Promise<{ lan
   const { lang } = await params;
   let cms: any = null;
   try {
-    cms = await serverFetchAPI("/api/cms/pages?slug=compliance-officer");
+    cms = await serverFetchAPI("/api/pages/compliance-officer");
   } catch {}
   const content = cms?.data?.[0] || defaultContent;
 

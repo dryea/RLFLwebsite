@@ -1,20 +1,15 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { Megaphone } from "lucide-react";
-import { serverFetchAPI } from "@/lib/server-api";
 import NoticeBoard from "@/components/shared/NoticeBoard";
+import { getNotices } from "@/lib/public-api";
+import { useLang } from "@/contexts/LanguageContext";
 
-export const dynamic = "force-dynamic";
-
-export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
-  const { lang } = await params;
-  return {
-    title: lang === "en" ? "Notices | Reliance Finance Limited" : "सूचनाहरू | रिलायन्स फाइनान्स लिमिटेड",
-    description: lang === "en" ? "Official notices and announcements" : "आधिकारिक सूचना र घोषणाहरू",
-  };
-}
-
-export default async function NoticesPage({ params }: { params: Promise<{ lang: string }> }) {
-  const { lang } = await params;
-  const notices = await serverFetchAPI("/api/notices", { cache: "no-store" });
+export default function NoticesPage() {
+  const lang = useLang();
+  const [notices, setNotices] = useState<any[]>([]);
+  useEffect(() => { getNotices().then(setNotices).catch(() => {}); }, []);
 
   return (
     <>

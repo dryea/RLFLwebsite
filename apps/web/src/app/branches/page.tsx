@@ -1,11 +1,16 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import PublicLayout from "@/components/layout/PublicLayout";
-import { serverFetchAPI } from "@/lib/server-api";
+import { getBranches } from "@/lib/public-api";
 import BranchList from "@/components/shared/BranchList";
 
-export const dynamic = "force-dynamic";
+export default function BranchesPage() {
+  const [branches, setBranches] = useState<any[]>([]);
 
-export default async function BranchesPage() {
-  const branches = await serverFetchAPI("/api/branches");
+  useEffect(() => {
+    getBranches().then(setBranches).catch(() => {});
+  }, []);
 
   return (
     <PublicLayout>
@@ -14,7 +19,7 @@ export default async function BranchesPage() {
       </section>
       <section className="py-12">
         <div className="container-page">
-          <BranchList branches={branches} />
+          <BranchList branches={branches} lang="en" />
         </div>
       </section>
     </PublicLayout>

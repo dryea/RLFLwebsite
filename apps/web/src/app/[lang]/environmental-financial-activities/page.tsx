@@ -45,7 +45,7 @@ export default async function EnvironmentalPage({ params }: { params: Promise<{ 
   const { lang } = await params;
   let cms: any = null;
   try {
-    cms = await serverFetchAPI("/api/cms/pages?slug=environmental-financial-activities");
+    cms = await serverFetchAPI("/api/pages/environmental-financial-activities");
   } catch {}
   const content = cms?.data?.[0] || defaultContent;
 

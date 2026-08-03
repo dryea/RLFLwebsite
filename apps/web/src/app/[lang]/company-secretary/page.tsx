@@ -47,7 +47,7 @@ export default async function CompanySecretaryPage({ params }: { params: Promise
   const { lang } = await params;
   let cms: any = null;
   try {
-    cms = await serverFetchAPI("/api/cms/pages?slug=company-secretary");
+    cms = await serverFetchAPI("/api/pages/company-secretary");
   } catch {}
   const content = cms?.data?.[0] || defaultContent;
 

@@ -1,6 +1,10 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import { Megaphone, FileDown, ExternalLink, Calendar } from "lucide-react";
-import { notFound } from "next/navigation";
-import { serverFetchAPI } from "@/lib/server-api";
+import { getNotices } from "@/lib/public-api";
+import { useLang } from "@/contexts/LanguageContext";
 
 const categoryMeta: Record<string, { en: string; np: string }> = {
   "agm-notice": { en: "AGM Notice", np: "एजीएम सूचना" },
@@ -12,30 +16,19 @@ const categoryMeta: Record<string, { en: string; np: string }> = {
   "general-notice": { en: "General Notice", np: "साधारण सूचना" },
 };
 
-export const dynamic = "force-dynamic";
+export default function NoticesByCategoryPage() {
+  const lang = useLang();
+  const params = useParams();
+  const category = (params.category as string) || "";
+  const [notices, setNotices] = useState<any[]>([]);
+  const meta = categoryMeta[category] || { en: "Notices", np: "सूचनाहरू" };
 
-
-export async function generateStaticParams() {
-  return Object.keys(categoryMeta).map((category) => ({ category }));
-}
-
-export async function generateMetadata({ params }: { params: Promise<{ lang: string; category: string }> }) {
-  const { lang, category } = await params;
-  const meta = categoryMeta[category];
-  if (!meta) return { title: "Not Found" };
-  return {
-    title: `${lang === "en" ? meta.en : meta.np} | Reliance Finance Limited`,
-    description: lang === "en" ? `${meta.en} notices` : `${meta.np} सूचनाहरू`,
-  };
-}
-
-export default async function NoticesByCategoryPage({ params }: { params: Promise<{ lang: string; category: string }> }) {
-  const { lang, category } = await params;
-  const meta = categoryMeta[category];
-  if (!meta) notFound();
-
-  const allNotices: any[] = await serverFetchAPI("/api/notices", { cache: "no-store" });
-  const notices = allNotices.filter((n: any) => n.category?.toLowerCase().replace(/\s+/g, "-") === category);
+  useEffect(() => {
+    if (!category) return;
+    getNotices().then((all: any[]) => {
+      setNotices(all.filter((n: any) => n.category?.toLowerCase().replace(/\s+/g, "-") === category));
+    }).catch(() => {});
+  }, [category]);
 
   const formatDate = (d: string) => {
     if (!d) return "";
@@ -49,9 +42,7 @@ export default async function NoticesByCategoryPage({ params }: { params: Promis
       <section className="bg-gradient-to-br from-primary-800 via-primary-700 to-primary-900 py-14 text-white">
         <div className="container-page">
           <h1 className="text-3xl font-bold">{lang === "en" ? meta.en : meta.np}</h1>
-          <p className="mt-2 text-primary-100">
-            {lang === "en" ? `${meta.en} notices` : `${meta.np} सूचनाहरू`}
-          </p>
+          <p className="mt-2 text-primary-100">{lang === "en" ? `${meta.en} notices` : `${meta.np} सूचनाहरू`}</p>
         </div>
       </section>
 
@@ -60,9 +51,7 @@ export default async function NoticesByCategoryPage({ params }: { params: Promis
           {notices.length === 0 ? (
             <div className="rounded-xl border-2 border-dashed p-12 text-center text-gray-500">
               <Megaphone className="mx-auto mb-3 h-10 w-10 text-gray-300" />
-              <p className="text-lg font-medium">
-                {lang === "en" ? `No ${meta.en.toLowerCase()} notices` : `${meta.np} सूचनाहरू छैनन्`}
-              </p>
+              <p className="text-lg font-medium">{lang === "en" ? `No ${meta.en.toLowerCase()} notices` : `${meta.np} सूचनाहरू छैनन्`}</p>
             </div>
           ) : (
             <div className="space-y-4">
@@ -80,25 +69,13 @@ export default async function NoticesByCategoryPage({ params }: { params: Promis
                     </div>
                     <div className="flex shrink-0 gap-2">
                       {notice.fileUrl && (
-                        <a
-                          href={notice.fileUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 rounded-lg bg-primary-50 px-3 py-1.5 text-xs font-medium text-primary-700 hover:bg-primary-100"
-                        >
-                          <FileDown className="h-3.5 w-3.5" />
-                          {lang === "en" ? "Download" : "डाउनलोड"}
+                        <a href={notice.fileUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 rounded-lg bg-primary-50 px-3 py-1.5 text-xs font-medium text-primary-700 hover:bg-primary-100">
+                          <FileDown className="h-3.5 w-3.5" />{lang === "en" ? "Download" : "डाउनलोड"}
                         </a>
                       )}
                       {notice.externalUrl && (
-                        <a
-                          href={notice.externalUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 rounded-lg bg-gray-50 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100"
-                        >
-                          <ExternalLink className="h-3.5 w-3.5" />
-                          {lang === "en" ? "View" : "हेर्नुहोस्"}
+                        <a href={notice.externalUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 rounded-lg bg-gray-50 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100">
+                          <ExternalLink className="h-3.5 w-3.5" />{lang === "en" ? "View" : "हेर्नुहोस्"}
                         </a>
                       )}
                     </div>

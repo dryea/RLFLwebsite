@@ -1,12 +1,14 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import PublicLayout from "@/components/layout/PublicLayout";
-import { serverFetchAPI } from "@/lib/server-api";
+import { getServices } from "@/lib/public-api";
 
-export const dynamic = "force-dynamic";
-
-export default async function ServicesPage() {
-  const services = await serverFetchAPI("/api/services");
+export default function ServicesPage() {
+  const [services, setServices] = useState<any[]>([]);
+  useEffect(() => { getServices().then(setServices).catch(() => {}); }, []);
 
   return (
     <PublicLayout>

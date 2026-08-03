@@ -1,11 +1,15 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import PublicLayout from "@/components/layout/PublicLayout";
-import { serverFetchAPI } from "@/lib/server-api";
+import { getFaqs } from "@/lib/public-api";
 import FaqAccordion from "@/components/shared/FaqAccordion";
 
-export const dynamic = "force-dynamic";
-
-export default async function FaqPage() {
-  const faqs = await serverFetchAPI("/api/faq");
+export default function FaqPage() {
+  const [faqs, setFaqs] = useState<any[]>([]);
+  useEffect(() => {
+    getFaqs().then((data) => setFaqs(data.map((f: any) => ({ id: f.id, question: f.question, answer: f.answer })))).catch(() => {});
+  }, []);
 
   return (
     <PublicLayout>

@@ -1,7 +1,9 @@
-import { Percent } from "lucide-react";
-import { serverFetchAPI } from "@/lib/server-api";
+"use client";
 
-export const dynamic = "force-dynamic";
+import { useEffect, useState } from "react";
+import { Percent } from "lucide-react";
+import { getRates } from "@/lib/public-api";
+import { useLang } from "@/contexts/LanguageContext";
 
 const categoryLabels: Record<string, { en: string; np: string }> = {
   savings: { en: "Savings Interest Rates", np: "बचत ब्याज दरहरू" },
@@ -13,17 +15,10 @@ const categoryLabels: Record<string, { en: string; np: string }> = {
 
 const categoryOrder = ["savings", "fixed", "loan", "tariff", "forex"];
 
-export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
-  const { lang } = await params;
-  return {
-    title: lang === "en" ? "Interest Rates | Reliance Finance Limited" : "ब्याज दरहरू | रिलायन्स फाइनान्स लिमिटेड",
-    description: lang === "en" ? "Current interest rates and service charges" : "हालको ब्याज दर र सेवा शुल्कहरू",
-  };
-}
-
-export default async function RatesPage({ params }: { params: Promise<{ lang: string }> }) {
-  const { lang } = await params;
-  const rates = await serverFetchAPI("/api/rates", { cache: "no-store" });
+export default function RatesPage() {
+  const lang = useLang();
+  const [rates, setRates] = useState<any[]>([]);
+  useEffect(() => { getRates().then(setRates).catch(() => {}); }, []);
 
   const grouped: Record<string, any[]> = {};
   rates.forEach((r: any) => {
@@ -39,9 +34,7 @@ export default async function RatesPage({ params }: { params: Promise<{ lang: st
       <section className="bg-gradient-to-br from-primary-800 to-primary-900 py-12 text-white">
         <div className="container-page">
           <h1 className="text-3xl font-bold">{lang === "en" ? "Interest Rates" : "ब्याज दरहरू"}</h1>
-          <p className="mt-2 text-primary-100">
-            {lang === "en" ? "Current interest rates and service charges" : "हालको ब्याज दर र सेवा शुल्कहरू"}
-          </p>
+          <p className="mt-2 text-primary-100">{lang === "en" ? "Current interest rates and service charges" : "हालको ब्याज दर र सेवा शुल्कहरू"}</p>
         </div>
       </section>
 

@@ -47,7 +47,7 @@ export default async function GrievancePage({ params }: { params: Promise<{ lang
   const l = lang as "en" | "np";
   let cms: any = null;
   try {
-    cms = await serverFetchAPI("/api/cms/pages?slug=grievance-handling-officer");
+    cms = await serverFetchAPI("/api/pages/grievance-handling-officer");
   } catch {}
   const content = cms?.data?.[0] || defaultContent;
 

@@ -16,7 +16,7 @@ export default async function IntroductionPage({ params }: { params: Promise<{ l
   const { lang } = await params;
   let page: any = null;
   try {
-    const res = await fetch(`${API}/api/cms/introduction`);
+    const res = await fetch(`${API}/api/pages/introduction`);
     if (res.ok) page = await res.json();
   } catch {}
 

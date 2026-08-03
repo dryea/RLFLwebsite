@@ -1,6 +1,10 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import { FileText, FileDown, ExternalLink, Calendar } from "lucide-react";
-import { notFound } from "next/navigation";
-import { serverFetchAPI } from "@/lib/server-api";
+import { getReports } from "@/lib/public-api";
+import { useLang } from "@/contexts/LanguageContext";
 
 const categoryMeta: Record<string, { en: string; np: string }> = {
   "annual-report": { en: "Annual Report", np: "वार्षिक प्रतिवेदन" },
@@ -10,29 +14,19 @@ const categoryMeta: Record<string, { en: string; np: string }> = {
   "sebon-report": { en: "SEBON Report", np: "सेबोन प्रतिवेदन" },
 };
 
-export const dynamic = "force-dynamic";
+export default function ReportsByCategoryPage() {
+  const lang = useLang();
+  const params = useParams();
+  const category = (params.category as string) || "";
+  const [reports, setReports] = useState<any[]>([]);
+  const meta = categoryMeta[category] || { en: "Reports", np: "प्रतिवेदनहरू" };
 
-export async function generateStaticParams() {
-  return Object.keys(categoryMeta).map((category) => ({ category }));
-}
-
-export async function generateMetadata({ params }: { params: Promise<{ lang: string; category: string }> }) {
-  const { lang, category } = await params;
-  const meta = categoryMeta[category];
-  if (!meta) return { title: "Not Found" };
-  return {
-    title: `${lang === "en" ? meta.en : meta.np} | Reliance Finance Limited`,
-    description: lang === "en" ? `${meta.en} from Reliance Finance` : `रिलायन्स फाइनान्सबाट ${meta.np}`,
-  };
-}
-
-export default async function ReportsByCategoryPage({ params }: { params: Promise<{ lang: string; category: string }> }) {
-  const { lang, category } = await params;
-  const meta = categoryMeta[category];
-  if (!meta) notFound();
-
-  const allReports: any[] = await serverFetchAPI("/api/reports", { next: { revalidate: 3600 } });
-  const reports = allReports.filter((r: any) => r.category?.toLowerCase().replace(/\s+/g, "-") === category);
+  useEffect(() => {
+    if (!category) return;
+    getReports().then((all: any[]) => {
+      setReports(all.filter((r: any) => r.category?.toLowerCase().replace(/\s+/g, "-") === category));
+    }).catch(() => {});
+  }, [category]);
 
   const formatDate = (d: string) => {
     if (!d) return "";
@@ -46,9 +40,7 @@ export default async function ReportsByCategoryPage({ params }: { params: Promis
       <section className="bg-gradient-to-br from-primary-800 via-primary-700 to-primary-900 py-14 text-white">
         <div className="container-page">
           <h1 className="text-3xl font-bold">{lang === "en" ? meta.en : meta.np}</h1>
-          <p className="mt-2 text-primary-100">
-            {lang === "en" ? `${meta.en} from Reliance Finance` : `रिलायन्स फाइनान्सबाट ${meta.np}`}
-          </p>
+          <p className="mt-2 text-primary-100">{lang === "en" ? `${meta.en} from Reliance Finance` : `रिलायन्स फाइनान्सबाट ${meta.np}`}</p>
         </div>
       </section>
 
@@ -57,12 +49,7 @@ export default async function ReportsByCategoryPage({ params }: { params: Promis
           {reports.length === 0 ? (
             <div className="rounded-xl border-2 border-dashed p-12 text-center text-gray-500">
               <FileText className="mx-auto mb-3 h-10 w-10 text-gray-300" />
-              <p className="text-lg font-medium">
-                {lang === "en" ? `No ${meta.en.toLowerCase()} available` : `${meta.np} उपलब्ध छैन`}
-              </p>
-              <p className="mt-1 text-sm">
-                {lang === "en" ? "Reports will appear here when published." : "प्रकाशित हुँदा प्रतिवेदनहरू यहाँ देखा पर्नेछन्।"}
-              </p>
+              <p className="text-lg font-medium">{lang === "en" ? `No ${meta.en.toLowerCase()} available` : `${meta.np} उपलब्ध छैन`}</p>
             </div>
           ) : (
             <div className="space-y-4">
@@ -71,37 +58,22 @@ export default async function ReportsByCategoryPage({ params }: { params: Promis
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1">
                       <h3 className="font-semibold text-gray-900">{report.title}</h3>
-                      {report.summary && <p className="mt-1 text-sm text-gray-600">{report.summary}</p>}
-                      <div className="mt-2 flex flex-wrap gap-3 text-xs text-gray-500">
-                        {report.publishedAt && (
-                          <span className="flex items-center gap-1">
-                            <Calendar className="h-3 w-3" /> {formatDate(report.publishedAt)}
-                          </span>
-                        )}
-                        {report.period && <span>Period: {report.period}</span>}
-                      </div>
+                      {report.description && <p className="mt-1 text-sm text-gray-600">{report.description}</p>}
+                      {report.publishedAt && (
+                        <p className="mt-2 flex items-center gap-1 text-xs text-gray-500">
+                          <Calendar className="h-3 w-3" /> {formatDate(report.publishedAt)}
+                        </p>
+                      )}
                     </div>
                     <div className="flex shrink-0 gap-2">
                       {report.fileUrl && (
-                        <a
-                          href={report.fileUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 rounded-lg bg-primary-50 px-3 py-1.5 text-xs font-medium text-primary-700 hover:bg-primary-100"
-                        >
-                          <FileDown className="h-3.5 w-3.5" />
-                          {lang === "en" ? "Download" : "डाउनलोड"}
+                        <a href={report.fileUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 rounded-lg bg-primary-50 px-3 py-1.5 text-xs font-medium text-primary-700 hover:bg-primary-100">
+                          <FileDown className="h-3.5 w-3.5" />{lang === "en" ? "Download" : "डाउनलोड"}
                         </a>
                       )}
                       {report.externalUrl && (
-                        <a
-                          href={report.externalUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 rounded-lg bg-gray-50 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100"
-                        >
-                          <ExternalLink className="h-3.5 w-3.5" />
-                          {lang === "en" ? "View" : "हेर्नुहोस्"}
+                        <a href={report.externalUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 rounded-lg bg-gray-50 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100">
+                          <ExternalLink className="h-3.5 w-3.5" />{lang === "en" ? "View" : "हेर्नुहोस्"}
                         </a>
                       )}
                     </div>

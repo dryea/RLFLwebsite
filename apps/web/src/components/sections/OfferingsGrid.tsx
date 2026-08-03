@@ -41,10 +41,12 @@ function SavingsWidget() {
   return (
     <div className="service-mini-widget rounded-lg bg-gray-50 p-3 mb-5 border border-gray-100">
       <div className="widget-title flex items-center justify-between mb-2">
-        <span className="text-[0.75rem] font-extrabold uppercase tracking-wider text-gray-400">Yield & Min Balance</span>
+        <span className="text-[0.75rem] font-extrabold uppercase tracking-wider text-gray-600">Yield & Min Balance</span>
         <span className="inline-block h-[6px] w-[6px] rounded-full bg-green-500 animate-pulse" />
       </div>
+      <label htmlFor={`yield-select-${product}`} className="sr-only">Select product for yield rate</label>
       <select
+        id={`yield-select-${product}`}
         value={product}
         onChange={(e) => setProduct(e.target.value)}
         className="widget-control-select w-full rounded border border-gray-200 px-2 py-1.5 text-xs bg-white mb-2 focus:border-primary-500 focus:outline-none"
@@ -72,11 +74,13 @@ function EMIWidget() {
   return (
     <div className="service-mini-widget rounded-lg bg-gray-50 p-3 mb-5 border border-gray-100">
       <div className="widget-title flex items-center justify-between mb-2">
-        <span className="text-[0.75rem] font-extrabold uppercase tracking-wider text-gray-400">EMI Estimator (5 Yrs)</span>
+        <span className="text-[0.75rem] font-extrabold uppercase tracking-wider text-gray-600">EMI Estimator (5 Yrs)</span>
         <span className="inline-block h-[6px] w-[6px] rounded-full bg-green-500 animate-pulse" />
       </div>
       <div className="flex gap-1 mb-2">
+        <label htmlFor="emi-amount" className="sr-only">EMI loan amount</label>
         <input
+          id="emi-amount"
           type="number"
           value={amount}
           onChange={(e) => setAmount(Number(e.target.value))}
@@ -84,7 +88,9 @@ function EMIWidget() {
           min={50000}
           step={50000}
         />
+        <label htmlFor="emi-rate" className="sr-only">EMI interest rate</label>
         <select
+          id="emi-rate"
           value={rate}
           onChange={(e) => setRate(Number(e.target.value))}
           className="widget-control-select flex-[0.8] rounded border border-gray-200 px-2 py-1.5 text-xs bg-white focus:border-primary-500 focus:outline-none"
@@ -112,13 +118,13 @@ function DigitalTabsWidget() {
   return (
     <div className="service-mini-widget rounded-lg bg-gray-50 p-3 mb-5 border border-gray-100">
       <div className="widget-title flex items-center justify-between mb-2">
-        <span className="text-[0.75rem] font-extrabold uppercase tracking-wider text-gray-400">Feature Benefits</span>
+        <span className="text-[0.75rem] font-extrabold uppercase tracking-wider text-gray-600">Feature Benefits</span>
         <span className="inline-block h-[6px] w-[6px] rounded-full bg-green-500 animate-pulse" />
       </div>
       <div className="widget-tabs flex gap-1 mb-2">
-        <button onClick={() => setTab("mobile")} className={`widget-tab-btn flex-1 rounded border px-1 py-1 text-[0.7rem] font-bold transition-colors ${tab === "mobile" ? "bg-primary-500 text-white border-primary-500" : "bg-white text-gray-500 border-gray-200 hover:bg-gray-100"}`}>Mobile</button>
-        <button onClick={() => setTab("ips")} className={`widget-tab-btn flex-1 rounded border px-1 py-1 text-[0.7rem] font-bold transition-colors ${tab === "ips" ? "bg-primary-500 text-white border-primary-500" : "bg-white text-gray-500 border-gray-200 hover:bg-gray-100"}`}>connectIPS</button>
-        <button onClick={() => setTab("qr")} className={`widget-tab-btn flex-1 rounded border px-1 py-1 text-[0.7rem] font-bold transition-colors ${tab === "qr" ? "bg-primary-500 text-white border-primary-500" : "bg-white text-gray-500 border-gray-200 hover:bg-gray-100"}`}>QR Pay</button>
+        <button type="button" onClick={() => setTab("mobile")} className={`widget-tab-btn flex-1 rounded border px-1 py-1 text-[0.7rem] font-bold transition-colors ${tab === "mobile" ? "bg-primary-500 text-white border-primary-500" : "bg-white text-gray-500 border-gray-200 hover:bg-gray-100"}`}>Mobile</button>
+        <button type="button" onClick={() => setTab("ips")} className={`widget-tab-btn flex-1 rounded border px-1 py-1 text-[0.7rem] font-bold transition-colors ${tab === "ips" ? "bg-primary-500 text-white border-primary-500" : "bg-white text-gray-500 border-gray-200 hover:bg-gray-100"}`}>connectIPS</button>
+        <button type="button" onClick={() => setTab("qr")} className={`widget-tab-btn flex-1 rounded border px-1 py-1 text-[0.7rem] font-bold transition-colors ${tab === "qr" ? "bg-primary-500 text-white border-primary-500" : "bg-white text-gray-500 border-gray-200 hover:bg-gray-100"}`}>QR Pay</button>
       </div>
       <div className="widget-result-panel rounded border border-gray-200 bg-white px-3 py-2 text-xs font-semibold text-primary-500 text-center">
         {features[tab]}
@@ -139,10 +145,12 @@ function BranchWidget() {
   return (
     <div className="service-mini-widget rounded-lg bg-gray-50 p-3 mb-5 border border-gray-100">
       <div className="widget-title flex items-center justify-between mb-2">
-        <span className="text-[0.75rem] font-extrabold uppercase tracking-wider text-gray-400">Quick Hub Directory</span>
+        <span className="text-[0.75rem] font-extrabold uppercase tracking-wider text-gray-600">Quick Hub Directory</span>
         <span className="inline-block h-[6px] w-[6px] rounded-full bg-green-500 animate-pulse" />
       </div>
+      <label htmlFor="branch-select" className="sr-only">Select branch</label>
       <select
+        id="branch-select"
         value={branch}
         onChange={(e) => setBranch(e.target.value)}
         className="widget-control-select w-full rounded border border-gray-200 px-2 py-1.5 text-xs bg-white mb-2 focus:border-primary-500 focus:outline-none"
@@ -229,7 +237,7 @@ export default function OfferingsGrid({ offerings, lang }: { offerings: Offering
             <h3 className="mb-3 font-heading text-xl font-extrabold text-primary-500 flex items-center justify-between">
               {lang === "np" && card.titleNp ? card.titleNp : card.title}
               {card.badge && (
-                <span className="service-card-counter ml-2 rounded-full bg-gray-100 px-2 py-0.5 text-[0.75rem] font-bold text-gray-500">
+                <span className="service-card-counter ml-2 rounded-full bg-gray-100 px-2 py-0.5 text-[0.75rem] font-bold text-gray-700">
                   {lang === "np" && card.badgeNp ? card.badgeNp : card.badge}
                 </span>
               )}
@@ -244,7 +252,7 @@ export default function OfferingsGrid({ offerings, lang }: { offerings: Offering
                 <li key={i}>
                   <Link href={link.url} className="flex items-center justify-between rounded-lg border border-gray-100 bg-gray-50 px-3 py-2 text-sm font-medium text-gray-500 transition-colors hover:bg-primary-50 hover:text-primary-500 hover:border-primary-500/20">
                     {link.label}
-                    <ChevronRight className="h-3 w-3 text-secondary-500 transition-transform group-hover:translate-x-0.5" />
+                    <ChevronRight className="h-3 w-3 text-secondary-700 transition-transform group-hover:translate-x-0.5" />
                   </Link>
                 </li>
               ))}

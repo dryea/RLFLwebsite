@@ -172,9 +172,9 @@ export default function Footer() {
         <div className="container-page flex flex-col items-center justify-between gap-2 py-4 text-xs text-gray-500 md:flex-row">
           <span>&copy; {new Date().getFullYear()} Reliance Finance Limited. {lang === "en" ? "All rights reserved." : "सर्वाधिकार सुरक्षित।"}</span>
           <div className="flex gap-4">
-            <Link href="/about/privacy-policy" className="transition-colors hover:text-white">{lang === "en" ? "Privacy Policy" : "गोपनीयता नीति"}</Link>
-            <Link href="/faq" className="transition-colors hover:text-white">{lang === "en" ? "FAQ" : "प्रायः सोधिने प्रश्न"}</Link>
-            <Link href="/sitemap" className="transition-colors hover:text-white">{lang === "en" ? "Sitemap" : "साइट नक्सा"}</Link>
+            <Link href={`/${lang}/about/privacy-policy`} className="transition-colors hover:text-white">{lang === "en" ? "Privacy Policy" : "गोपनीयता नीति"}</Link>
+            <Link href={`/${lang}/faq`} className="transition-colors hover:text-white">{lang === "en" ? "FAQ" : "प्रायः सोधिने प्रश्न"}</Link>
+            <Link href={`/${lang}/sitemap`} className="transition-colors hover:text-white">{lang === "en" ? "Sitemap" : "साइट नक्सा"}</Link>
           </div>
         </div>
       </div>

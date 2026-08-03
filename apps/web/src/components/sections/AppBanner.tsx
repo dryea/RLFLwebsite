@@ -20,7 +20,7 @@ export default function AppBanner({ data, lang }: { data: AppBannerData | null; 
     <div className="digital-banking-banner relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary-500 to-[#3e0c4e] px-10 py-12 text-white">
       <div className="digital-banner-grid relative z-10 grid items-center gap-6 md:grid-cols-[1.2fr_0.8fr]">
         <div className="digital-banner-text">
-          <span className="mb-2 block text-xs font-bold uppercase tracking-[0.1em] text-secondary-500">
+          <span className="mb-2 block text-xs font-bold uppercase tracking-[0.1em] text-secondary-700">
             {badgeText}
           </span>
           <h2 className="mb-4 text-3xl font-bold text-white md:text-4xl">

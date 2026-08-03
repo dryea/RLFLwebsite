@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       canonical: `https://reliancenepal.com.np/${lang}`,
       languages: {
         "en": "https://reliancenepal.com.np/en",
-        "np": "https://reliancenepal.com.np/np",
+        "ne": "https://reliancenepal.com.np/np",
         "x-default": "https://reliancenepal.com.np/en",
       } as Record<string, string>,
     },

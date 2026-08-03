@@ -44,7 +44,7 @@ export default function CSRGrid({ activities, lang }: { activities: CSRActivity[
             href={`/${lang}/csr`}
             className="inline-flex items-center gap-1 text-sm font-semibold text-primary-700 transition-colors hover:text-secondary-600"
           >
-            {lang === "en" ? "Learn More" : "थप जान्नुहोस्"}
+            {lang === "en" ? "Learn More About Our CSR Initiatives" : "हाम्रा CSR पहलहरूको बारेमा थप जान्नुहोस्"}
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>

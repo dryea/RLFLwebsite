@@ -84,6 +84,11 @@ const navItems = [
   },
 ];
 
+function localize(href: string, lang: string) {
+  if (href.startsWith("http") || href.startsWith("/") && href.startsWith("/api")) return href;
+  return `/${lang}${href}`;
+}
+
 export default function Header({ lang }: { lang: string }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -106,12 +111,12 @@ export default function Header({ lang }: { lang: string }) {
             <a href="mailto:info@reliancenepal.com.np" className="hidden items-center gap-1.5 text-white/85 hover:text-secondary-500 transition-colors md:flex">
               <Mail className="h-3.5 w-3.5" /> info@reliancenepal.com.np
             </a>
-            <Link href="/loan-enquiry" className="hidden items-center gap-1.5 font-semibold text-secondary-500 hover:text-secondary-400 transition-colors md:flex">
+            <Link href={localize("/loan-enquiry", lang)} className="hidden items-center gap-1.5 font-semibold text-secondary-500 hover:text-secondary-400 transition-colors md:flex">
               Loan Enquiry
             </Link>
           </div>
           <div className="flex items-center gap-4">
-            <Link href="/contact" className="text-white/85 hover:text-secondary-500 transition-colors">Grievance</Link>
+            <Link href={localize("/contact", lang)} className="text-white/85 hover:text-secondary-500 transition-colors">Grievance</Link>
             <div className="h-4 w-px bg-white/20" />
             <LanguageSwitcher />
             <SearchOverlay />
@@ -121,7 +126,7 @@ export default function Header({ lang }: { lang: string }) {
 
       <div className={`sticky top-0 z-50 transition-all duration-300 ${scrolled ? "bg-white/95 backdrop-blur-md shadow-sm" : "bg-white/85 backdrop-blur-md"}`}>
         <div className="container-page flex h-20 items-center justify-between">
-          <Link href="/" className="flex-shrink-0">
+          <Link href={`/${lang}`} className="flex-shrink-0">
             <img src="https://reliancenepal.com.np/assets/images/reliance/logo.png" alt="Reliance Finance" className="h-12 w-auto" />
           </Link>
 
@@ -134,7 +139,7 @@ export default function Header({ lang }: { lang: string }) {
                 onMouseLeave={() => setOpenDropdown(null)}
               >
                 <Link
-                  href={item.href}
+                  href={localize(item.href, lang)}
                   className={`flex items-center gap-1 rounded-md px-3 py-2.5 font-heading text-sm font-medium transition-colors ${
                     openDropdown === item.href ? "bg-primary-50 text-primary-500" : "text-text-primary hover:bg-primary-50 hover:text-primary-500"
                   }`}
@@ -147,7 +152,7 @@ export default function Header({ lang }: { lang: string }) {
                     {item.children.map((child) => (
                       <Link
                         key={child.href}
-                        href={child.href}
+                        href={localize(child.href, lang)}
                         className="block rounded-lg px-4 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:bg-primary-50 hover:text-primary-500"
                       >
                         {lang === "np" && child.label.np ? child.label.np : child.label.en}
@@ -169,7 +174,7 @@ export default function Header({ lang }: { lang: string }) {
             {navItems.map((item) => (
               <div key={item.href}>
                 <Link
-                  href={item.href}
+                  href={localize(item.href, lang)}
                   className="flex items-center justify-between rounded-lg px-4 py-3 font-heading font-medium text-text-primary hover:bg-primary-50 hover:text-primary-500"
                   onClick={() => !item.children && setMobileOpen(false)}
                 >
@@ -180,7 +185,7 @@ export default function Header({ lang }: { lang: string }) {
                     {item.children.map((child) => (
                       <Link
                         key={child.href}
-                        href={child.href}
+                        href={localize(child.href, lang)}
                         className="block rounded-lg px-4 py-2 text-sm text-text-secondary hover:bg-primary-50 hover:text-primary-500"
                         onClick={() => setMobileOpen(false)}
                       >

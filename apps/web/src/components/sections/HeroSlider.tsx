@@ -32,7 +32,7 @@ const defaultSlides: Slide[] = [
     title: "Individual Fixed Deposits",
     description: "Earn higher returns on your hard-earned savings. Open a fixed deposit with flexible tenures and lucrative rates.",
     imageUrl: "https://reliancenepal.com.np/assets/images/hero_fixed_deposits.png",
-    ctaPrimaryText: "Learn More",
+    ctaPrimaryText: "Explore Fixed Deposits",
     ctaPrimaryLink: "/products/fixed-deposits",
     ctaSecondaryText: "Calculate Earnings",
     ctaSecondaryLink: "/emi-calculator",
@@ -92,7 +92,7 @@ export default function HeroSlider({ slides, lang }: { slides: Slide[]; lang: st
           <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/40 to-transparent z-[2]" />
           <div className={`container-page relative z-[3] w-full transition-all duration-1000 ${i === current ? "translate-y-0" : "translate-y-8"}`}>
             <div className="max-w-[650px] text-white">
-              <h2 className="mb-4 text-[clamp(2.5rem,6vw,4rem)] font-extrabold leading-tight text-secondary-500">
+              <h2 className="mb-4 text-[clamp(2.5rem,6vw,4rem)] font-extrabold leading-tight text-secondary-700">
                 {lang === "np" && slide.titleNp ? slide.titleNp : slide.title}
               </h2>
               <p className="mb-8 text-[clamp(1rem,2vw,1.25rem)] text-white/90">

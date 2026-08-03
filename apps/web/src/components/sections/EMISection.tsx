@@ -24,11 +24,12 @@ export default function EMISection() {
       <div className="rounded-xl border bg-white p-6 shadow-sm">
         <div className="space-y-5">
           <div>
-            <label className="mb-1 flex justify-between text-sm font-medium text-gray-700">
+            <label htmlFor="emi-principal" className="mb-1 flex justify-between text-sm font-medium text-gray-700">
               <span>Loan Amount</span>
               <span className="font-semibold text-primary-700">Rs. {principal.toLocaleString()}</span>
             </label>
             <input
+              id="emi-principal"
               type="range"
               min={100000}
               max={10000000}
@@ -43,11 +44,12 @@ export default function EMISection() {
             </div>
           </div>
           <div>
-            <label className="mb-1 flex justify-between text-sm font-medium text-gray-700">
+            <label htmlFor="emi-rate" className="mb-1 flex justify-between text-sm font-medium text-gray-700">
               <span>Interest Rate</span>
               <span className="font-semibold text-primary-700">{rate}%</span>
             </label>
             <input
+              id="emi-rate"
               type="range"
               min={1}
               max={30}
@@ -62,11 +64,12 @@ export default function EMISection() {
             </div>
           </div>
           <div>
-            <label className="mb-1 flex justify-between text-sm font-medium text-gray-700">
+            <label htmlFor="emi-tenure" className="mb-1 flex justify-between text-sm font-medium text-gray-700">
               <span>Tenure</span>
               <span className="font-semibold text-primary-700">{tenure} months ({Math.floor(tenure / 12)}y {tenure % 12}m)</span>
             </label>
             <input
+              id="emi-tenure"
               type="range"
               min={6}
               max={360}

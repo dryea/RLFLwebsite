@@ -1,0 +1,33 @@
+{
+  "ci": {
+    "collect": {
+      "url": [
+        "https://rfil-web.sudeepdhakal.workers.dev/",
+        "https://rfil-web.sudeepdhakal.workers.dev/en/",
+        "https://rfil-web.sudeepdhakal.workers.dev/en/about/introduction",
+        "https://rfil-web.sudeepdhakal.workers.dev/en/products/savings",
+        "https://rfil-web.sudeepdhakal.workers.dev/en/services",
+        "https://rfil-web.sudeepdhakal.workers.dev/en/contact",
+        "https://rfil-web.sudeepdhakal.workers.dev/emi-calculator"
+      ],
+      "numberOfRuns": 1,
+      "settings": {
+        "chromeFlags": "--no-sandbox --headless --disable-gpu"
+      }
+    },
+    "assert": {
+      "assertions": {
+        "categories:performance": ["warn", { "minScore": 0.8 }],
+        "categories:accessibility": ["error", { "minScore": 0.95 }],
+        "categories:best-practices": ["error", { "minScore": 0.9 }],
+        "categories:seo": ["error", { "minScore": 0.95 }],
+        "largest-contentful-paint": ["warn", { "maxNumericValue": 3000 }],
+        "cumulative-layout-shift": ["warn", { "maxNumericValue": 0.1 }]
+      }
+    },
+    "upload": {
+      "target": "filesystem",
+      "outputDir": "./lighthouse-reports"
+    }
+  }
+}

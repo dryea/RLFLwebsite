@@ -29,7 +29,7 @@ export default function AboutSection({
       <div className="container-page">
         <div className="about-section-grid grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="about-text-content">
-            <h4 className="mb-2 text-xs font-bold uppercase tracking-[0.1em] text-secondary-500">
+            <h4 className="mb-2 text-xs font-bold uppercase tracking-[0.1em] text-secondary-700">
               {lang === "en" ? "Introduction" : "परिचय"}
             </h4>
             <h2 className="relative mb-6 pb-3 text-3xl font-bold text-primary-800 after:absolute after:bottom-0 after:left-0 after:h-1 after:w-16 after:rounded-full after:bg-secondary-500 md:text-4xl">
@@ -75,7 +75,7 @@ export default function AboutSection({
               className="w-full rounded-xl"
             />
             <div className="about-image-overlay-card absolute -bottom-4 -left-4 max-w-[220px] rounded-xl bg-primary-500 p-5 text-white shadow-lg">
-              <div className="text-3xl font-extrabold text-secondary-500 lg:text-4xl">
+              <div className="text-3xl font-extrabold text-secondary-700 lg:text-4xl">
                 {lang === "en" ? "B.S. 2066" : "वि.सं. २०६६"}
               </div>
               <p className="mt-1 text-xs leading-relaxed text-white">

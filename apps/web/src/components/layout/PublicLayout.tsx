@@ -10,7 +10,7 @@ export default function PublicLayout({ children, lang = "en" }: { children: Reac
   return (
     <LanguageProvider lang={lang as "en" | "np"}>
       <Header lang={lang} />
-      <main className="flex-1">{children}</main>
+      <main id="main-content" className="flex-1">{children}</main>
       <CookieConsent />
       <Footer />
       <AccessibilityToolbar />

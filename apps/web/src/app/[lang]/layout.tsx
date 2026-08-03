@@ -55,7 +55,7 @@ export default async function LangLayout({
         address: { "@type": "PostalAddress", addressCountry: "NP" },
       }} />
       <Header lang={lang} />
-      <main className="flex-1">{children}</main>
+      <main id="main-content" className="flex-1">{children}</main>
       <CookieConsent />
       <Footer />
       <AccessibilityToolbar />

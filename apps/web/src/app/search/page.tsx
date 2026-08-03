@@ -28,9 +28,10 @@ export default function SearchPage() {
       </section>
       <section className="py-12">
         <div className="container-page max-w-3xl">
-          <form onSubmit={handleSubmit} className="relative mb-8">
-            <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
-            <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search pages, products, news..." className="w-full rounded-xl border bg-white py-4 pl-12 pr-4 text-lg shadow-sm outline-none focus:border-primary-500" />
+          <form onSubmit={handleSubmit} className="relative mb-8" role="search">
+            <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+            <label htmlFor="site-search" className="sr-only">Search pages, products, news</label>
+            <input id="site-search" type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search pages, products, news..." className="w-full rounded-xl border bg-white py-4 pl-12 pr-4 text-lg shadow-sm outline-none focus:border-primary-500" />
           </form>
           {searched && (
             <p className="mb-4 text-sm text-gray-500">{results.length} result{results.length !== 1 ? "s" : ""} for &ldquo;{query}&rdquo;</p>

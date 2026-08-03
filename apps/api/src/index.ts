@@ -32,7 +32,32 @@ type Bindings = {
 
 const app = new Hono<{ Bindings: Bindings }>();
 
-app.use("/*", cors());
+app.use("/*", cors({
+  origin: ["https://reliancenepal.com.np", "https://www.reliancenepal.com.np", "https://rfil-web.sudeepdhakal.workers.dev", "http://localhost:3000"],
+  allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowHeaders: ["Content-Type", "Authorization"],
+  maxAge: 86400,
+}));
+
+// ── Simple rate limiter (per-IP, in-memory) ──
+const rateLimits = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT = 100; // requests per window per IP
+const RATE_WINDOW = 60_000; // 1 minute
+
+app.use("/api/*", async (c, next) => {
+  const ip = c.req.header("CF-Connecting-IP") || c.req.header("x-forwarded-for") || "unknown";
+  const now = Date.now();
+  const entry = rateLimits.get(ip);
+  if (!entry || entry.resetAt < now) {
+    rateLimits.set(ip, { count: 1, resetAt: now + RATE_WINDOW });
+  } else {
+    entry.count += 1;
+    if (entry.count > RATE_LIMIT) {
+      return c.json({ error: "Too many requests", retryAfter: Math.ceil((entry.resetAt - now) / 1000) }, 429);
+    }
+  }
+  await next();
+});
 
 // ── Health ──
 app.get("/api/health", (c) => c.json({ status: "ok", timestamp: new Date().toISOString() }));
@@ -899,6 +924,26 @@ export default {
       case "0 0 * * *":
         await db.update(pages).set({ status: "published", publishedAt: new Date().toISOString() })
           .where(and(eq(pages.status, "scheduled"), sql`scheduled_at <= ${new Date().toISOString()}`)).run();
+        break;
+      case "0 2 * * *":
+        // Daily backup of core content tables to R2
+        try {
+          const tables = ["pages", "products", "services", "news", "branches", "team_members",
+            "rates", "notices", "reports", "faqs", "downloads", "albums", "gallery_images",
+            "events", "job_listings", "contact_submissions", "loan_enquiries", "site_settings"];
+          const backup: Record<string, unknown[]> = {};
+          for (const table of tables) {
+            const result = await env.DB.prepare(`SELECT * FROM ${table}`).all().catch(() => null);
+            if (result && result.results) backup[table] = result.results;
+          }
+          const date = new Date().toISOString().slice(0, 10);
+          await env.R2.put(`backups/${date}.json`, JSON.stringify(backup, null, 2), {
+            httpMetadata: { contentType: "application/json" },
+          });
+          console.log(`Backup saved for ${date}`);
+        } catch (err) {
+          console.error("Backup failed:", err);
+        }
         break;
     }
   },

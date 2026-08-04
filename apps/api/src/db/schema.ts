@@ -122,6 +122,10 @@ export const products = sqliteTable("products", {
   metaTitle: text("meta_title"),
   metaDescription: text("meta_description"),
   status: text("status").default("draft"),
+  audience: text("audience").$type<"personal" | "business" | "digital">().default("personal"),
+  isFeatured: int("is_featured", { mode: "boolean" }).default(false),
+  isPopular: int("is_popular", { mode: "boolean" }).default(false),
+  details: text("details", { mode: "json" }).$type<Record<string, any>>(),
   sortOrder: int("sort_order").default(0),
   createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`),
   updatedAt: text("updated_at").default(sql`CURRENT_TIMESTAMP`),
@@ -220,6 +224,9 @@ export const branches = sqliteTable("branches", {
   nameNp: text("name_np"),
   address: text("address").notNull(),
   addressNp: text("address_np"),
+  province: text("province"),
+  district: text("district"),
+  localBody: text("local_body"),
   phone: text("phone"),
   email: text("email"),
   latitude: real("latitude"),
@@ -418,6 +425,9 @@ export const jobApplications = sqliteTable("job_applications", {
   email: text("email").notNull(),
   phone: text("phone").notNull(),
   address: text("address"),
+  province: text("province"),
+  district: text("district"),
+  localBody: text("local_body"),
   cvUrl: text("cv_url").notNull(),
   coverLetter: text("cover_letter"),
   status: text("status").default("new"),
@@ -441,6 +451,9 @@ export const loanEnquiries = sqliteTable("loan_enquiries", {
   id: int("id").primaryKey({ autoIncrement: true }),
   name: text("name").notNull(),
   address: text("address").notNull(),
+  province: text("province"),
+  district: text("district"),
+  localBody: text("local_body"),
   phone: text("phone").notNull(),
   email: text("email").notNull(),
   nationality: text("nationality").notNull(),
@@ -614,4 +627,47 @@ export const csrActivities = sqliteTable("csr_activities", {
   sortOrder: int("sort_order").default(0),
   isActive: int("is_active", { mode: "boolean" }).default(true),
   createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`),
+});
+
+// ── Reviews & Testimonials ──
+export const reviews = sqliteTable("reviews", {
+  id: int("id").primaryKey({ autoIncrement: true }),
+  name: text("name").notNull(),
+  email: text("email"),
+  rating: int("rating").notNull().default(5),
+  review: text("review").notNull(),
+  productId: int("product_id").references(() => products.id),
+  isApproved: int("is_approved", { mode: "boolean" }).default(false),
+  isFeatured: int("is_featured", { mode: "boolean" }).default(false),
+  createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`),
+});
+
+// ── Appointments ──
+export const appointments = sqliteTable("appointments", {
+  id: int("id").primaryKey({ autoIncrement: true }),
+  name: text("name").notNull(),
+  email: text("email").notNull(),
+  phone: text("phone").notNull(),
+  meetingType: text("meeting_type").$type<"in-person" | "by-phone">().default("in-person"),
+  branch: text("branch"),
+  service: text("service"),
+  reason: text("reason"),
+  preferredDate: text("preferred_date"),
+  preferredTime: text("preferred_time"),
+  status: text("status").default("pending"),
+  createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`),
+});
+
+// ── Staff Trainings (MIS) ──
+export const trainings = sqliteTable("trainings", {
+  id: int("id").primaryKey({ autoIncrement: true }),
+  year: text("year").notNull(),
+  date: text("date").notNull(),
+  name: text("name"),
+  position: text("position"),
+  branch: text("branch"),
+  program: text("program").notNull(),
+  organizer: text("organizer"),
+  resourcePerson: text("resource_person"),
+  duration: text("duration"),
 });

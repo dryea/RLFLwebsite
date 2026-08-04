@@ -1,5 +1,6 @@
 import { serverFetchAPI } from "@/lib/server-api";
 import HeroSlider from "@/components/sections/HeroSlider";
+import RatesTicker from "@/components/sections/RatesTicker";
 import OfferingsGrid from "@/components/sections/OfferingsGrid";
 import AboutSection from "@/components/sections/AboutSection";
 import EMISection from "@/components/sections/EMISection";
@@ -42,6 +43,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
   return (
     <>
       <HeroSlider slides={data.slides} lang={lang} />
+      <RatesTicker lang={lang} />
 
       <section className="section bg-white">
         <div className="container-page">

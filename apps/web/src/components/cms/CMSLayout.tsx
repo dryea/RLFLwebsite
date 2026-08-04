@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { FileText, Package, Newspaper, Image, Users, Settings, LogOut, LayoutDashboard, MapPin, HelpCircle, Briefcase, Download, ImageIcon, MessageSquare, Shield, UserCog } from "lucide-react";
+import { FileText, Package, Newspaper, Image, Users, Settings, LogOut, LayoutDashboard, MapPin, HelpCircle, Briefcase, Download, ImageIcon, MessageSquare, Shield, UserCog, GraduationCap } from "lucide-react";
 import { getCmsUser, cmsLogout, type CmsUser } from "@/lib/cms-auth";
 import OnboardingCoachMarks from "./OnboardingCoachMarks";
 
@@ -13,6 +13,7 @@ const navItems = [
   { label: "Products", icon: Package, href: "/cms/products" },
   { label: "Services", icon: Package, href: "/cms/services" },
   { label: "Team", icon: Users, href: "/cms/team" },
+  { label: "Team Categories", icon: Users, href: "/cms/team-categories" },
   { label: "Branches", icon: Users, href: "/cms/branches" },
   { label: "Rates", icon: FileText, href: "/cms/rates" },
   { label: "News", icon: Newspaper, href: "/cms/news" },
@@ -22,6 +23,7 @@ const navItems = [
   { label: "Downloads", icon: FileText, href: "/cms/downloads" },
   { label: "FAQ", icon: FileText, href: "/cms/faq" },
   { label: "Careers", icon: FileText, href: "/cms/careers" },
+  { label: "Trainings", icon: GraduationCap, href: "/cms/trainings" },
   { label: "Enquiries", icon: MessageSquare, href: "/cms/enquiries" },
   { label: "Media", icon: Image, href: "/cms/media" },
   { label: "Users", icon: UserCog, href: "/cms/users" },

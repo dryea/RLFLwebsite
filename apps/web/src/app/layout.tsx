@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Outfit, Inter } from "next/font/google";
 import "./globals.css";
 
-const outfit = Outfit({ subsets: ["latin"], variable: "--font-heading" });
-const inter = Inter({ subsets: ["latin"], variable: "--font-body" });
+const outfit = Outfit({ subsets: ["latin"], variable: "--font-heading", display: "swap", preload: false });
+const inter = Inter({ subsets: ["latin"], variable: "--font-body", display: "swap", preload: false });
 
 export const metadata: Metadata = {
   title: {

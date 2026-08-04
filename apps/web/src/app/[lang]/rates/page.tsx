@@ -14,18 +14,19 @@ export default function RatesPage() {
   useEffect(() => {
     getRates().then((all) => {
       // Only current categories, exclude base-rate (separate page)
-      setRates(all.filter((r: any) => r.category !== "base-rate-spread-rate"));
+      setRates(all.filter((r: any) => (r.categorySlug || r.category) !== "base-rate-spread-rate"));
     }).catch(() => {});
   }, []);
 
-  const savings = rates.filter((r: any) => r.category === "savings");
-  const fixed = rates.filter((r: any) => r.category === "fixed");
-  const loans = rates.filter((r: any) => r.category === "loan");
+  const catOf = (r: any) => r.categorySlug || r.category;
+  const savings = rates.filter((r: any) => catOf(r) === "savings");
+  const fixed = rates.filter((r: any) => catOf(r) === "fixed");
+  const loans = rates.filter((r: any) => catOf(r) === "loan");
 
   const rateValue = (r: any) => {
     if (r.singleRate != null) return `${r.singleRate}%`;
     if (r.rate != null) return `${r.rate}%`;
-    if (r.notes && r.notes.includes("+") && r.category === "loan") return r.notes;
+    if (r.notes && r.notes.includes("+") && catOf(r) === "loan") return r.notes;
     return r.value || r.notes || "-";
   };
 

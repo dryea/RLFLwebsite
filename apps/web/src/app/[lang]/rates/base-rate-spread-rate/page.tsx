@@ -66,23 +66,25 @@ export default function BaseRateSpreadRatePage() {
 
           {/* Line Chart */}
           {chartData.length > 0 && (
-            <div className="mb-12 rounded-xl border bg-white p-6 shadow-sm">
+            <div className="mb-12 rounded-xl border bg-white p-4 shadow-sm sm:p-6">
               <h2 className="mb-6 flex items-center gap-2 text-xl font-bold text-gray-900">
                 <TrendingUp className="h-5 w-5 text-primary-700" />
                 {isNp ? "पछिल्लो २४ महिनाको प्रवृत्ति" : "Last 24 Months Trend"}
               </h2>
-              <div className="h-80">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={chartData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="month" tick={{ fontSize: 11 }} interval={1} />
-                    <YAxis domain={["auto", "auto"]} tick={{ fontSize: 11 }} />
-                    <Tooltip />
-                    <Legend />
-                    <Line type="monotone" dataKey="base" name={isNp ? "आधार दर (%)" : "Base Rate (%)"} stroke="#2563eb" strokeWidth={2} dot={{ r: 3 }} />
-                    <Line type="monotone" dataKey="spread" name={isNp ? "स्प्रेड दर (%)" : "Spread Rate (%)"} stroke="#f59e0b" strokeWidth={2} dot={{ r: 3 }} />
-                  </LineChart>
-                </ResponsiveContainer>
+              <div className="h-64 w-full overflow-x-auto sm:h-80">
+                <div className="h-full min-w-[560px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={chartData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="month" tick={{ fontSize: 10 }} interval="preserveStartEnd" angle={-35} height={50} textAnchor="end" />
+                      <YAxis domain={["auto", "auto"]} tick={{ fontSize: 11 }} width={45} />
+                      <Tooltip />
+                      <Legend wrapperStyle={{ fontSize: 12 }} />
+                      <Line type="monotone" dataKey="base" name={isNp ? "आधार दर (%)" : "Base Rate (%)"} stroke="#2563eb" strokeWidth={2} dot={{ r: 2.5 }} />
+                      <Line type="monotone" dataKey="spread" name={isNp ? "स्प्रेड दर (%)" : "Spread Rate (%)"} stroke="#f59e0b" strokeWidth={2} dot={{ r: 2.5 }} />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
               </div>
             </div>
           )}
@@ -93,14 +95,14 @@ export default function BaseRateSpreadRatePage() {
               {isNp ? "आधार दर / स्प्रेड दर इतिहास" : "Base Rate / Spread Rate History"}
             </h2>
             <div className="overflow-hidden rounded-xl border bg-white shadow-sm">
-              <div className="max-h-[600px] overflow-y-auto">
+              <div className="max-h-[600px] overflow-auto">
                 <table className="w-full text-left text-sm">
                   <thead className="sticky top-0 bg-primary-50 text-gray-800">
                     <tr>
-                      <th className="px-5 py-3 font-semibold">{isNp ? "मिति" : "Date"}</th>
-                      <th className="px-5 py-3 font-semibold">{isNp ? "स्प्रेड दर (%)" : "Spread Rate (%)"}</th>
-                      <th className="px-5 py-3 font-semibold">{isNp ? "आधार दर (%)" : "Base Rate (%)"}</th>
-                      <th className="px-5 py-3 font-semibold">{isNp ? "लागू हुने आधार दर" : "Base Rate Applicable"}</th>
+                      <th className="whitespace-nowrap px-5 py-3 font-semibold">{isNp ? "मिति" : "Date"}</th>
+                      <th className="whitespace-nowrap px-5 py-3 font-semibold">{isNp ? "स्प्रेड दर (%)" : "Spread Rate (%)"}</th>
+                      <th className="whitespace-nowrap px-5 py-3 font-semibold">{isNp ? "आधार दर (%)" : "Base Rate (%)"}</th>
+                      <th className="whitespace-nowrap px-5 py-3 font-semibold">{isNp ? "लागू हुने आधार दर" : "Base Rate Applicable"}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100">

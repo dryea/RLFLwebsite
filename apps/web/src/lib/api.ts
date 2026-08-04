@@ -10,6 +10,12 @@ async function request(path: string, options?: RequestInit) {
   }
   if (token) headers["Authorization"] = `Bearer ${token}`;
   const res = await fetch(`${API}${path}`, { ...options, headers });
+  if (res.status === 401 && typeof window !== "undefined") {
+    localStorage.removeItem("cms_token");
+    localStorage.removeItem("cms_user");
+    window.location.href = "/cms/login";
+    throw new Error("Unauthorized");
+  }
   if (!res.ok) {
     const text = await res.text();
     throw new Error(`API ${res.status}: ${text}`);
@@ -19,10 +25,12 @@ async function request(path: string, options?: RequestInit) {
 
 // Build CRUD methods dynamically for each resource
 const resources = [
-  "products", "services", "product-categories", "team-members",
+  "products", "services", "product-categories", "rate-categories",
+  "team-members", "team-categories",
   "branches", "rates", "news", "events", "notices", "reports",
-  "albums", "faq", "careers", "auctions", "merchants", "settings",
-  "contact-submissions", "loan-enquiries",
+  "albums", "faq", "faq-categories", "careers", "auctions", "merchants", "settings",
+  "contact-submissions", "loan-enquiries", "newsletter", "reviews", "appointments",
+  "trainings",
 ];
 
 function resourceMethods(resource: string) {

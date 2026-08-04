@@ -22,7 +22,10 @@ export const topBarLinks = {
     label: { en: "Quick Links", np: "द्रुत लिङ्क" },
     items: [
       { en: "Introduction", np: "परिचय", href: "/about/introduction" },
-      { en: "EMI Calculator", np: "EMI क्याल्कुलेटर", href: "/emi-calculator" },
+      { en: "EMI Calculator", np: "EMI क्याल्कुलेटर", href: "/calculators" },
+      { en: "All Calculators", np: "सबै क्याल्कुलेटर", href: "/calculators" },
+      { en: "Loan Eligibility", np: "ऋण योग्यता", href: "/loan-eligibility" },
+      { en: "Product Compare", np: "उत्पादन तुलना", href: "/products/compare" },
       { en: "Gallery", np: "ग्यालरी", href: "/gallery" },
       { en: "Calendar", np: "पात्रो", href: "/calendar" },
       { en: "Interest Rates", np: "ब्याज दर", href: "/rates" },
@@ -68,6 +71,7 @@ export const mainNav: NavItem[] = [
       },
       { label: "Privacy Policy", labelNp: "गोपनीयता नीति", href: "/about/privacy-policy" },
       { label: "FAQ", labelNp: "प्रायः सोधिने प्रश्न", href: "/faq" },
+      { label: "Testimonials", labelNp: "ग्राहक अनुभव", href: "/testimonials" },
     ],
   },
   {
@@ -114,15 +118,25 @@ export const mainNav: NavItem[] = [
           { label: "Business Loan", labelNp: "व्यवसाय ऋण", href: "/products/loans/business-loan" },
         ],
       },
+      {
+        label: "Tools", labelNp: "उपकरणहरू",
+        children: [
+          { label: "Compare Products", labelNp: "उत्पादन तुलना", href: "/products/compare" },
+          { label: "All Calculators", labelNp: "सबै क्याल्कुलेटर", href: "/calculators" },
+          { label: "Loan Eligibility", labelNp: "ऋण योग्यता", href: "/loan-eligibility" },
+          { label: "EMI Calculator", labelNp: "EMI क्याल्कुलेटर", href: "/emi-calculator" },
+        ],
+      },
     ],
   },
   {
     label: "Rates", labelNp: "दरहरू",
     children: [
       { label: "Interest Rate", labelNp: "ब्याज दर", href: "/rates" },
-      { label: "Base Rate / Spread Rate", labelNp: "आधार दर / स्प्रेड दर", href: "/rates" },
-      { label: "Standard Tariff Charges", labelNp: "मापदण्ड शुल्क", href: "/rates" },
-      { label: "Forex Rates", labelNp: "विदेशी विनिमय दर", href: "/rates" },
+      { label: "Base Rate / Spread Rate", labelNp: "आधार दर / स्प्रेड दर", href: "/rates/base-rate-spread-rate" },
+      { label: "Standard Tariff Charges", labelNp: "मापदण्ड शुल्क", href: "/rates/standard-tariff-charges" },
+      { label: "Forex Rates", labelNp: "विदेशी विनिमय दर", href: "/rates/forex-rates" },
+      { label: "Gold / Silver Rates", labelNp: "सुन / चाँदीको दर", href: "/rates/gold-silver" },
     ],
   },
   {
@@ -184,6 +198,8 @@ export const mainNav: NavItem[] = [
       { label: "Contact Us", labelNp: "सम्पर्क", href: "/contact" },
       { label: "Merchant & Offers", labelNp: "व्यापारी र प्रस्ताव", href: "/merchant-offers" },
       { label: "RFL Loan Enquiry", labelNp: "RFL ऋण सोधपुछ", href: "/loan-enquiry" },
+      { label: "Book Appointment", labelNp: "भेटघाट बुक गर्नुहोस्", href: "/appointments" },
+      { label: "Testimonials", labelNp: "ग्राहक अनुभव", href: "/testimonials" },
     ],
   },
 ];
@@ -217,9 +233,9 @@ export const footerColumns: FooterSection[] = [
     title: { en: "Rates", np: "दरहरू" },
     links: [
       { en: "Interest Rate", np: "ब्याज दर", href: "/rates" },
-      { en: "Base Rate / Spread Rate", np: "आधार दर / स्प्रेड दर", href: "/rates" },
-      { en: "Standard Tariff Charges", np: "मापदण्ड शुल्क", href: "/rates" },
-      { en: "Forex Rates", np: "विदेशी विनिमय दर", href: "/rates" },
+      { en: "Base Rate / Spread Rate", np: "आधार दर / स्प्रेड दर", href: "/rates/base-rate-spread-rate" },
+      { en: "Standard Tariff Charges", np: "मापदण्ड शुल्क", href: "/rates/standard-tariff-charges" },
+      { en: "Forex Rates", np: "विदेशी विनिमय दर", href: "/rates/forex-rates" },
     ],
   },
   {

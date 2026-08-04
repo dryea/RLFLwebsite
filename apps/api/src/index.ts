@@ -17,6 +17,7 @@ import {
   contactSubmissions, loanEnquiries, newsletterSubscribers,
   auctionNotices, merchantOffers, siteSettings, calendarEvents,
   heroSlides, offeringCards, offeringLinks, siteStats, appBanner, csrActivities,
+  reviews, appointments, trainings,
 } from "./db/schema";
 
 type Bindings = {
@@ -292,8 +293,28 @@ app.get("/api/reports", async (c) => {
   const cat = c.req.query("category");
   const conditions = [eq(reports.status, "published")];
   if (cat) conditions.push(eq(reports.categoryId, parseInt(cat)));
-  const result = await db.select().from(reports).where(and(...conditions)).orderBy(desc(reports.publishedAt)).all();
-  return c.json(result);
+  const rows = await db
+    .select({
+      id: reports.id,
+      categoryId: reports.categoryId,
+      category: reportCategories.slug,
+      title: reports.title,
+      titleNp: reports.titleNp,
+      slug: reports.slug,
+      fiscalYear: reports.fiscalYear,
+      description: reports.description,
+      fileUrl: reports.fileUrl,
+      fileSize: reports.fileSize,
+      coverImage: reports.coverImage,
+      status: reports.status,
+      publishedAt: reports.publishedAt,
+    })
+    .from(reports)
+    .leftJoin(reportCategories, eq(reports.categoryId, reportCategories.id))
+    .where(and(...conditions))
+    .orderBy(desc(reports.publishedAt))
+    .all();
+  return c.json(rows);
 });
 
 app.get("/api/reports/categories", async (c) => {
@@ -320,10 +341,50 @@ app.get("/api/products", async (c) => {
   const db = createDb(c.env.DB);
   const cat = c.req.query("category");
   const type = c.req.query("type");
+  const audience = c.req.query("audience");
   const conditions = [eq(products.status, "published")];
   if (cat) conditions.push(eq(products.categoryId, parseInt(cat)));
   if (type) conditions.push(eq(productCategories.type, type as any));
-  const result = await db.select().from(products).where(and(...conditions)).orderBy(products.sortOrder).all();
+  if (audience) conditions.push(eq(products.audience, audience as any));
+  let result;
+  if (type || audience) {
+    result = await db
+      .select({
+        id: products.id,
+        categoryId: products.categoryId,
+        categorySlug: productCategories.slug,
+        categoryName: productCategories.name,
+        slug: products.slug,
+        title: products.title,
+        titleNp: products.titleNp,
+        summary: products.summary,
+        content: products.content,
+        icon: products.icon,
+        bannerImage: products.bannerImage,
+        features: products.features,
+        eligibility: products.eligibility,
+        documentsRequired: products.documentsRequired,
+        interestRateInfo: products.interestRateInfo,
+        minAmount: products.minAmount,
+        maxAmount: products.maxAmount,
+        maxTenure: products.maxTenure,
+        metaTitle: products.metaTitle,
+        metaDescription: products.metaDescription,
+        status: products.status,
+        audience: products.audience,
+        isFeatured: products.isFeatured,
+        isPopular: products.isPopular,
+        details: products.details,
+        sortOrder: products.sortOrder,
+      })
+      .from(products)
+      .leftJoin(productCategories, eq(products.categoryId, productCategories.id))
+      .where(and(...conditions))
+      .orderBy(products.sortOrder)
+      .all();
+  } else {
+    result = await db.select().from(products).where(and(...conditions)).orderBy(products.sortOrder).all();
+  }
   return c.json(result);
 });
 
@@ -339,6 +400,64 @@ app.get("/api/products/:slug", async (c) => {
   const result = await db.select().from(products).where(and(eq(products.slug, slug), eq(products.status, "published"))).get();
   if (!result) return c.json({ error: "Not found" }, 404);
   return c.json(result);
+});
+
+// ── Reviews ──
+app.get("/api/reviews", async (c) => {
+  const db = createDb(c.env.DB);
+  const productId = c.req.query("productId");
+  const conditions = [eq(reviews.isApproved, true)];
+  if (productId) conditions.push(eq(reviews.productId, parseInt(productId)));
+  const result = await db.select().from(reviews).where(and(...conditions)).orderBy(desc(reviews.createdAt)).all();
+  return c.json(result);
+});
+
+app.post("/api/reviews", async (c) => {
+  const db = createDb(c.env.DB);
+  const data = await c.req.json() as Record<string, any>;
+  if (!data.name || !data.review || !data.rating) return c.json({ error: "Name, rating and review required" }, 400);
+  const result = await db.insert(reviews).values({
+    name: data.name,
+    email: data.email || null,
+    rating: parseInt(data.rating),
+    review: data.review,
+    productId: data.productId ? parseInt(data.productId) : null,
+    isApproved: false,
+  }).returning().get();
+  return c.json(result, 201);
+});
+
+// ── Staff Trainings (MIS) ──
+app.get("/api/trainings", async (c) => {
+  const db = createDb(c.env.DB);
+  const year = c.req.query("year");
+  const branch = c.req.query("branch");
+  const program = c.req.query("program");
+  const name = c.req.query("name");
+  const conditions = [];
+  if (year) conditions.push(eq(trainings.year, year as string));
+  if (branch) conditions.push(eq(trainings.branch, branch as string));
+  if (program) conditions.push(like(trainings.program, `%${program}%`));
+  if (name) conditions.push(like(trainings.name, `%${name}%`));
+  const result = await db
+    .select()
+    .from(trainings)
+    .where(conditions.length ? and(...conditions) : undefined)
+    .orderBy(trainings.date)
+    .all();
+  return c.json(result);
+});
+
+app.get("/api/trainings/filters", async (c) => {
+  const db = createDb(c.env.DB);
+  const years = await db.select({ year: trainings.year }).from(trainings).groupBy(trainings.year).all();
+  const branches = await db.select({ branch: trainings.branch }).from(trainings).where(sql`${trainings.branch} IS NOT NULL`).groupBy(trainings.branch).all();
+  const programs = await db.select({ program: trainings.program }).from(trainings).where(sql`${trainings.program} IS NOT NULL`).groupBy(trainings.program).all();
+  return c.json({
+    years: years.map(r => r.year),
+    branches: branches.map(r => r.branch).filter(Boolean),
+    programs: programs.map(r => r.program).filter(Boolean),
+  });
 });
 
 app.get("/api/branches", async (c) => {
@@ -803,6 +922,7 @@ app.delete("/api/cms/media/:id", async (c) => {
 // ── CMS: CRUD Generator ──
 function crud(table: any, basePath: string, tableName?: string) {
   const name = tableName || basePath.split("/").pop()!;
+  const hasColumn = (col: string) => col in table;
   // List
   app.get(`/api/cms/${basePath}`, async (c) => {
     const db = createDb(c.env.DB);
@@ -826,7 +946,9 @@ function crud(table: any, basePath: string, tableName?: string) {
   app.post(`/api/cms/${basePath}`, async (c) => {
     const db = createDb(c.env.DB);
     const data = await c.req.json();
-    const result = await db.insert(table).values({ ...data, createdBy: 1 }).returning().get();
+    const values: Record<string, any> = { ...data };
+    if (hasColumn("createdBy")) values.createdBy = 1;
+    const result = await db.insert(table).values(values).returning().get();
     return c.json(result, 201);
   });
   // Update
@@ -834,7 +956,9 @@ function crud(table: any, basePath: string, tableName?: string) {
     const db = createDb(c.env.DB);
     const id = parseInt(c.req.param("id"));
     const data = await c.req.json();
-    await db.update(table).set({ ...data, updatedAt: new Date().toISOString() }).where(eq(table.id, id)).run();
+    const values: Record<string, any> = { ...data };
+    if (hasColumn("updatedAt")) values.updatedAt = new Date().toISOString();
+    await db.update(table).set(values).where(eq(table.id, id)).run();
     const updated = await db.select().from(table).where(eq(table.id, id)).get();
     return c.json(updated);
   });
@@ -902,6 +1026,9 @@ crud(offeringLinks, "offering-links");
 crud(siteStats, "site-stats");
 crud(appBanner, "app-banner");
 crud(csrActivities, "csr-activities");
+crud(reviews, "reviews");
+crud(appointments, "appointments");
+crud(trainings, "trainings");
 
 // ── Search ──
 app.get("/api/search", async (c) => {
@@ -940,11 +1067,27 @@ app.post("/api/contact", async (c) => {
   return c.json(result, 201);
 });
 
+app.post("/api/appointments", async (c) => {
+  const db = createDb(c.env.DB);
+  const data = await c.req.json() as Record<string, any>;
+  if (!data.name || !data.email || !data.phone) return c.json({ error: "Name, email and phone required" }, 400);
+  const result = await db.insert(appointments).values({
+    name: data.name, email: data.email, phone: data.phone,
+    meetingType: data.meetingType || "in-person",
+    branch: data.branch || null, service: data.service || null, reason: data.reason || null,
+    preferredDate: data.preferredDate || null, preferredTime: data.preferredTime || null,
+    status: "pending",
+  }).returning().get();
+  return c.json(result, 201);
+});
+
 app.post("/api/loan-enquiry", async (c) => {
   const db = createDb(c.env.DB);
   const data = await c.req.json() as Record<string, any>;
   const result = await db.insert(loanEnquiries).values({
-    name: data.name, address: data.address, phone: data.phone,
+    name: data.name, address: data.address,
+    province: data.province || null, district: data.district || null, localBody: data.localBody || null,
+    phone: data.phone,
     email: data.email, nationality: data.nationality,
     customerProfile: data.customerProfile || null,
     loanType: data.loanType, proposedAmount: data.proposedAmount || null,
@@ -971,6 +1114,9 @@ app.post("/api/careers/apply", async (c) => {
     email: formData.get("email") as string,
     phone: formData.get("phone") as string,
     address: formData.get("address") as string || null,
+    province: formData.get("province") as string || null,
+    district: formData.get("district") as string || null,
+    localBody: formData.get("localBody") as string || null,
     coverLetter: formData.get("coverLetter") as string || null,
   };
 
@@ -989,7 +1135,9 @@ app.post("/api/careers/apply", async (c) => {
     email: data.email,
     phone: data.phone,
     address: data.address || "",
-    coverLetter: data.coverLetter || "",
+    province: data.province || null,
+    district: data.district || null,
+    localBody: data.localBody || null,
     cvUrl,
   }).returning().get();
 

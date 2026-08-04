@@ -33,7 +33,11 @@ const MenuButton = ({ onClick, active, children }: any) => (
 export default function TipTapEditor({ content, onChange }: { content?: string; onChange: (html: string) => void }) {
   const editor = useEditor({
     extensions: [
-      StarterKit.configure({ heading: { levels: [1, 2, 3, 4] } }),
+      StarterKit.configure({
+        heading: { levels: [1, 2, 3, 4] },
+        link: false,
+        underline: false,
+      }),
       Link.configure({ openOnClick: false }),
       ImageExt,
       Table.configure({ resizable: true }),

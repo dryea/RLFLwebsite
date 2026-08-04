@@ -21,7 +21,6 @@ export const ProductGridExtension = Node.create({
     return [
       "div",
       { "data-type": "product-grid", class: "product-grid-embed", ...HTMLAttributes },
-      0,
     ];
   },
 

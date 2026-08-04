@@ -21,7 +21,6 @@ export const AccordionExtension = Node.create({
     return [
       "div",
       { "data-type": "accordion", class: "accordion-embed", ...HTMLAttributes },
-      0,
     ];
   },
 

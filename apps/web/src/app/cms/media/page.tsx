@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
-import { Upload, Trash2, Copy, FolderOpen } from "lucide-react";
+import { useEffect, useMemo, useState, useRef } from "react";
+import { Upload, Trash2, Copy, FolderOpen, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import CMSLayout from "@/components/cms/CMSLayout";
 import { api } from "@/lib/api";
 
@@ -15,15 +15,37 @@ interface MediaItem {
   createdAt: string;
 }
 
+const PAGE_SIZE = 20;
+
 export default function CmsMediaPage() {
   const [items, setItems] = useState<MediaItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
+  const [search, setSearch] = useState("");
+  const [typeFilter, setTypeFilter] = useState<string>("all");
+  const [page, setPage] = useState(1);
   const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     api.getMedia().then(setItems).catch(console.error).finally(() => setLoading(false));
   }, []);
+
+  useEffect(() => { setPage(1); }, [search, typeFilter]);
+
+  const filtered = useMemo(() => {
+    let result = items;
+    if (typeFilter === "images") result = result.filter((i) => i.mimeType.startsWith("image/"));
+    else if (typeFilter === "documents") result = result.filter((i) => !i.mimeType.startsWith("image/"));
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      result = result.filter((i) => i.originalName.toLowerCase().includes(q) || i.filename.toLowerCase().includes(q));
+    }
+    return result;
+  }, [items, search, typeFilter]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -61,8 +83,8 @@ export default function CmsMediaPage() {
 
   return (
     <CMSLayout>
-      <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-xl font-bold text-gray-900">Media Library</h2>
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+        <h2 className="text-xl font-bold text-gray-900">Media Library <span className="text-sm font-normal text-gray-400">({filtered.length})</span></h2>
         <div>
           <input ref={fileRef} type="file" onChange={handleUpload} className="hidden" />
           <button
@@ -75,25 +97,52 @@ export default function CmsMediaPage() {
         </div>
       </div>
 
+      {/* Search + Type filter */}
+      <div className="mb-4 flex flex-wrap items-center gap-3">
+        <div className="flex flex-1 min-w-[200px] items-center gap-2 rounded-lg border bg-white px-3 py-2">
+          <Search className="h-4 w-4 text-gray-400" />
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search files..."
+            className="w-full text-sm outline-none"
+          />
+          {search && <button onClick={() => setSearch("")} className="text-xs text-gray-400 hover:text-gray-600">Clear</button>}
+        </div>
+        <div className="flex gap-2">
+          {["all", "images", "documents"].map((f) => (
+            <button
+              key={f}
+              onClick={() => setTypeFilter(f)}
+              className={`rounded-full px-3 py-1 text-xs font-medium capitalize transition-colors ${
+                typeFilter === f ? "bg-primary-700 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+              }`}
+            >
+              {f}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {loading ? (
-        <div className="grid grid-cols-4 gap-4">
-          {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
             <div key={i} className="aspect-square animate-pulse rounded-lg bg-gray-200" />
           ))}
         </div>
-      ) : items.length === 0 ? (
+      ) : paginated.length === 0 ? (
         <div className="rounded-lg border-2 border-dashed p-12 text-center text-gray-500">
           <FolderOpen className="mx-auto mb-2 h-10 w-10 text-gray-300" />
-          <p className="text-lg font-medium">No files yet</p>
+          <p className="text-lg font-medium">{filtered.length === 0 && !search ? "No files yet" : "No files match your search"}</p>
           <p className="mt-1 text-sm">Upload images, PDFs, and documents here.</p>
         </div>
       ) : (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-          {items.map((item) => (
+          {paginated.map((item) => (
             <div key={item.id} className="group relative overflow-hidden rounded-lg border bg-white">
               <div className="aspect-square overflow-hidden bg-gray-100">
                 {isImage(item.mimeType) ? (
-                  <img src={item.url} alt={item.originalName} className="h-full w-full object-cover" />
+                  <img src={item.url} alt={item.originalName} className="h-full w-full object-cover" loading="lazy" />
                 ) : (
                   <div className="flex h-full items-center justify-center text-gray-400">
                     <span className="text-xs font-medium uppercase">{item.mimeType.split("/")[1]}</span>
@@ -116,7 +165,48 @@ export default function CmsMediaPage() {
           ))}
         </div>
       )}
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="mt-4 flex items-center justify-between">
+          <p className="text-xs text-gray-500">
+            Showing {(currentPage - 1) * PAGE_SIZE + 1}–{Math.min(currentPage * PAGE_SIZE, filtered.length)} of {filtered.length}
+          </p>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              className="rounded border p-1.5 text-gray-500 transition-colors hover:bg-gray-100 disabled:opacity-40"
+              aria-label="Previous page"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            {Array.from({ length: totalPages }, (_, i) => i + 1)
+              .filter((p) => p === 1 || p === totalPages || Math.abs(p - currentPage) <= 2)
+              .map((p, idx, arr) => (
+                <span key={p} className="flex items-center">
+                  {idx > 0 && arr[idx - 1] !== p - 1 && <span className="px-1 text-gray-400">…</span>}
+                  <button
+                    onClick={() => setPage(p)}
+                    className={`h-8 w-8 rounded text-sm transition-colors ${
+                      currentPage === p ? "bg-primary-700 text-white" : "text-gray-600 hover:bg-gray-100"
+                    }`}
+                  >
+                    {p}
+                  </button>
+                </span>
+              ))}
+            <button
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+              className="rounded border p-1.5 text-gray-500 transition-colors hover:bg-gray-100 disabled:opacity-40"
+              aria-label="Next page"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      )}
     </CMSLayout>
   );
 }
-

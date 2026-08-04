@@ -2,15 +2,17 @@
 
 import { useState } from "react";
 import PublicLayout from "@/components/layout/PublicLayout";
+import AddressFields from "@/components/shared/AddressFields";
 
 export default function LoanEnquiryPage() {
-  const [form, setForm] = useState({ name: "", address: "", phone: "", email: "", nationality: "Nepali", customerProfile: "individual", loanType: "", proposedAmount: "", preferredBranch: "", remarks: "", consent: false });
+  const [form, setForm] = useState({ name: "", address: "", province: "", district: "", localBody: "", phone: "", email: "", nationality: "Nepali", customerProfile: "individual", loanType: "", proposedAmount: "", preferredBranch: "", remarks: "", consent: false });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!form.consent) return alert("Please accept the terms");
+    if (!form.province || !form.district || !form.localBody) return alert("Please select province, district, and local body");
     setLoading(true);
     try {
       const res = await fetch("/api/loan-enquiry", {
@@ -65,9 +67,15 @@ export default function LoanEnquiryPage() {
                 <label className="mb-1 block text-sm font-medium text-gray-700">Phone *</label>
                 <input required value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="w-full rounded-lg border px-4 py-2 outline-none focus:border-primary-500" />
               </div>
-              <div>
+              <div className="md:col-span-2">
                 <label className="mb-1 block text-sm font-medium text-gray-700">Address *</label>
-                <input required value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} className="w-full rounded-lg border px-4 py-2 outline-none focus:border-primary-500" />
+                <AddressFields
+                  value={{ province: form.province, district: form.district, localBody: form.localBody, address: form.address }}
+                  onChange={(v) => setForm((prev) => ({ ...prev, province: v.province, district: v.district, localBody: v.localBody, address: v.address }))}
+                  lang="en"
+                  showAddress
+                  required
+                />
               </div>
               <div>
                 <label className="mb-1 block text-sm font-medium text-gray-700">Nationality</label>

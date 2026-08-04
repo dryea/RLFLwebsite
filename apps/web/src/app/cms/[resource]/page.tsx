@@ -22,20 +22,24 @@ export default function CmsResourceListPage({ params }: { params: Promise<{ reso
 
   if (!config) return <CMSLayout><div className="text-red-600">Resource not found</div></CMSLayout>;
 
+  const columns = config.columns;
+
+  const hasStatusFilter = columns.some((c) => c.key === "status");
+
   return (
     <CMSLayout>
       <CMSResourceList
         title={config.title}
         newLabel={config.newLabel}
         basePath={config.basePath}
-        columns={[
-          { key: "title" as string, label: "Title" },
-          { key: "status", label: "Status", render: (v: string) => (
-            <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${
-              v === "published" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"
-            }`}>{v}</span>
-          )},
-        ]}
+        columns={columns}
+        filters={hasStatusFilter ? [
+          { key: "all", label: "All" },
+          { key: "published", label: "Published" },
+          { key: "draft", label: "Draft" },
+          { key: "active", label: "Active" },
+          { key: "pending", label: "Pending" },
+        ] : undefined}
         fetchItems={fetchItems}
         onDelete={handleDelete}
       />

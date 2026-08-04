@@ -20,7 +20,6 @@ export const RateTableExtension = Node.create({
     return [
       "div",
       { "data-type": "rate-table", class: "rate-table-embed", ...HTMLAttributes },
-      0,
     ];
   },
 

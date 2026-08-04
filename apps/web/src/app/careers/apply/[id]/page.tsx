@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import PublicLayout from "@/components/layout/PublicLayout";
+import AddressFields from "@/components/shared/AddressFields";
 import { getCareers } from "@/lib/public-api";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "https://rfil-api.sudeepdhakal.workers.dev";
@@ -10,7 +11,7 @@ const API = process.env.NEXT_PUBLIC_API_URL || "https://rfil-api.sudeepdhakal.wo
 export default function ApplyPage() {
   const { id } = useParams<{ id: string }>();
   const [job, setJob] = useState<any>(null);
-  const [form, setForm] = useState({ name: "", email: "", phone: "", address: "", coverLetter: "" });
+  const [form, setForm] = useState({ name: "", email: "", phone: "", address: "", province: "", district: "", localBody: "", coverLetter: "" });
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -32,6 +33,9 @@ export default function ApplyPage() {
       fd.append("email", form.email);
       fd.append("phone", form.phone);
       fd.append("address", form.address);
+      fd.append("province", form.province);
+      fd.append("district", form.district);
+      fd.append("localBody", form.localBody);
       fd.append("coverLetter", form.coverLetter);
       if (file) fd.append("cv", file);
 
@@ -97,7 +101,12 @@ export default function ApplyPage() {
                 </div>
                 <div>
                   <label className="mb-1 block text-sm font-medium text-gray-700">Address</label>
-                  <textarea rows={2} value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} className="w-full rounded-lg border px-4 py-2 outline-none focus:border-primary-500" />
+                  <AddressFields
+                    value={{ province: form.province, district: form.district, localBody: form.localBody, address: form.address }}
+                    onChange={(v) => setForm((prev) => ({ ...prev, province: v.province, district: v.district, localBody: v.localBody, address: v.address }))}
+                    lang="en"
+                    showAddress
+                  />
                 </div>
                 <div>
                   <label className="mb-1 block text-sm font-medium text-gray-700">CV / Resume *</label>

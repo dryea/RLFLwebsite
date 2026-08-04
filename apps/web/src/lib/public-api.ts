@@ -16,12 +16,14 @@ export function getDownloadCategories() { return fetchAPI("/api/downloads/catego
 export function getNews() { return fetchAPI("/api/news"); }
 export function getEvents() { return fetchAPI("/api/events"); }
 export function getProducts() { return fetchAPI("/api/products"); }
+export function getProductsByType(type: string) { return fetchAPI(`/api/products?type=${type}`); }
 export function getProductCategories() { return fetchAPI("/api/products/categories"); }
 export function getNotices() { return fetchAPI("/api/notices"); }
 export function getRates() { return fetchAPI("/api/rates"); }
 export function getNoticeCategories() { return fetchAPI("/api/notices/categories"); }
 export function getReportCategories() { return fetchAPI("/api/reports/categories"); }
 export function getReports() { return fetchAPI("/api/reports"); }
+export function getTrainings() { return fetchAPI("/api/trainings"); }
 export function getTeamCategories() { return fetchAPI("/api/team/categories"); }
 export function getTeamMembers(categorySlug: string) { return fetchAPI(`/api/team/${categorySlug}`); }
 export function search(q: string) { return fetchAPI(`/api/search?q=${encodeURIComponent(q)}`); }

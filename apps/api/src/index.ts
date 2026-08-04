@@ -580,6 +580,12 @@ app.get("/api/auctions", async (c) => {
   return c.json(result);
 });
 
+app.get("/api/merchants", async (c) => {
+  const db = createDb(c.env.DB);
+  const result = await db.select().from(merchantOffers).where(eq(merchantOffers.isActive, true)).orderBy(merchantOffers.sortOrder).all();
+  return c.json(result);
+});
+
 app.get("/api/calendar/events", async (c) => {
   const db = createDb(c.env.DB);
   const result = await db.select().from(calendarEvents).orderBy(calendarEvents.adDate).limit(100).all();

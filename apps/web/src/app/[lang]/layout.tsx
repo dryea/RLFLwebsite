@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { LanguageProvider, type Lang } from "@/contexts/LanguageContext";
+import { getMessages } from "next-intl/server";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import JsonLd from "@/components/shared/JsonLd";
 import CookieConsent from "@/components/shared/CookieConsent";
 import AccessibilityToolbar from "@/components/shared/AccessibilityToolbar";
+import IntlProvider from "@/components/providers/IntlProvider";
 
 export async function generateStaticParams() {
   return [{ lang: "en" }, { lang: "np" }];
@@ -42,9 +43,10 @@ export default async function LangLayout({
   params: Promise<{ lang: string }>;
 }) {
   const { lang } = await params;
+  const messages = await getMessages();
 
   return (
-    <LanguageProvider lang={lang as Lang}>
+    <IntlProvider locale={lang as "en" | "np"} messages={messages}>
       <JsonLd data={{
         "@context": "https://schema.org",
         "@type": "Organization",
@@ -59,6 +61,6 @@ export default async function LangLayout({
       <CookieConsent />
       <Footer />
       <AccessibilityToolbar />
-    </LanguageProvider>
+    </IntlProvider>
   );
 }

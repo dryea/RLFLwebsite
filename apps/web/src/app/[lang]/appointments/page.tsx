@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { CalendarClock, Phone, Building2, CheckCircle2 } from "lucide-react";
 import { useLang } from "@/contexts/LanguageContext";
 import { getBranches } from "@/lib/public-api";
+import { API } from "@/lib/api";
 
 export default function AppointmentPage() {
   const lang = useLang();
@@ -21,7 +22,7 @@ export default function AppointmentPage() {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await fetch("https://rfil-api.sudeepdhakal.workers.dev/api/appointments", {
+      const res = await fetch(`${API}/api/appointments`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),

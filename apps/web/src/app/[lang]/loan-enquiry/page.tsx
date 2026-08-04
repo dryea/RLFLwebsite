@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useLang } from "@/contexts/LanguageContext";
+import { API } from "@/lib/api";
 import AddressFields from "@/components/shared/AddressFields";
 
 export default function LangLoanEnquiryPage() {
@@ -17,7 +18,7 @@ export default function LangLoanEnquiryPage() {
     if (!form.province || !form.district || !form.localBody) return alert(isNp ? "कृपया प्रदेश, जिल्ला र स्थानीय तह चयन गर्नुहोस्" : "Please select province, district, and local body");
     setLoading(true);
     try {
-      const res = await fetch("https://rfil-api.sudeepdhakal.workers.dev/api/cms/loan-enquiries", {
+      const res = await fetch(`${API}/api/cms/loan-enquiries`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...form, proposedAmount: form.proposedAmount ? Number(form.proposedAmount) : null }),

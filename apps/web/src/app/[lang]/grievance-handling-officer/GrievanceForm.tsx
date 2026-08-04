@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
-
-const API = process.env.NEXT_PUBLIC_API_URL || "https://rfil-api.sudeepdhakal.workers.dev";
+import { API } from "@/lib/api";
 
 // Service cascade: category -> types -> sub-types
 const SERVICE_CASCADE: Record<string, { types: Record<string, string[]> }> = {

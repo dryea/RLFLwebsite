@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Star, Quote, Send } from "lucide-react";
 import { useLang } from "@/contexts/LanguageContext";
+import { API } from "@/lib/api";
 
 export default function TestimonialsPage() {
   const lang = useLang();
@@ -12,7 +13,7 @@ export default function TestimonialsPage() {
   const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
-    fetch("https://rfil-api.sudeepdhakal.workers.dev/api/reviews")
+    fetch(`${API}/api/reviews`)
       .then((r) => r.json())
       .then((j) => setReviews(Array.isArray(j) ? j : []))
       .catch(() => {});
@@ -21,7 +22,7 @@ export default function TestimonialsPage() {
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     if (!form.name.trim() || !form.review.trim()) return;
-    const res = await fetch("https://rfil-api.sudeepdhakal.workers.dev/api/reviews", {
+    const res = await fetch(`${API}/api/reviews`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form),

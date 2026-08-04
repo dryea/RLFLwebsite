@@ -1,6 +1,10 @@
+import createMiddleware from "next-intl/middleware";
+import { redirects } from "@/lib/redirects";
+import { routing } from "@/i18n/routing";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { redirects } from "@/lib/redirects";
+
+const handleI18nRouting = createMiddleware(routing);
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -22,7 +26,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(url, 301);
   }
 
-  return NextResponse.next();
+  return handleI18nRouting(request as any as Parameters<typeof handleI18nRouting>[0]);
 }
 
 export const config = {

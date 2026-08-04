@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { getCareers } from "@/lib/public-api";
+import { API } from "@/lib/api";
 import { useLang } from "@/contexts/LanguageContext";
 import AddressFields from "@/components/shared/AddressFields";
 
@@ -38,7 +39,7 @@ export default function ApplyPage() {
       fd.append("localBody", form.localBody);
       fd.append("coverLetter", form.coverLetter);
       if (file) fd.append("cv", file);
-      await fetch("https://rfil-api.sudeepdhakal.workers.dev/api/careers/apply", {
+      await fetch(`${API}/api/careers/apply`, {
         method: "POST",
         body: fd,
       });

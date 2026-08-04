@@ -5,8 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import PublicLayout from "@/components/layout/PublicLayout";
 import AddressFields from "@/components/shared/AddressFields";
 import { getCareers } from "@/lib/public-api";
-
-const API = process.env.NEXT_PUBLIC_API_URL || "https://rfil-api.sudeepdhakal.workers.dev";
+import { API } from "@/lib/api";
 
 export default function ApplyPage() {
   const { id } = useParams<{ id: string }>();

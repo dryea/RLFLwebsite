@@ -2,8 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Calendar, ArrowRight, ExternalLink } from "lucide-react";
-
-const API = process.env.NEXT_PUBLIC_API_URL || "https://rfil-api.sudeepdhakal.workers.dev";
+import { API } from "@/lib/api";
 
 interface NewsItem {
   id: number;

@@ -1,0 +1,259 @@
+{
+  "common": {
+    "home": "Home",
+    "about": "About",
+    "products": "Products",
+    "rates": "Rates",
+    "publications": "Publications",
+    "services": "Services",
+    "contact": "Contact",
+    "search": "Search",
+    "readMore": "Read More",
+    "viewAll": "View All",
+    "viewDetails": "View Details",
+    "learnMore": "Learn More",
+    "loading": "Loading...",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "all": "All",
+    "none": "None",
+    "yes": "Yes",
+    "no": "No",
+    "close": "Close",
+    "open": "Open",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "message": "Message",
+    "subject": "Subject",
+    "required": "Required",
+    "optional": "Optional",
+    "submitting": "Submitting...",
+    "sending": "Sending...",
+    "backTo": "Back to"
+  },
+  "nav": {
+    "aboutUs": "About Us",
+    "introduction": "Introduction",
+    "missionGoals": "Mission & Goals",
+    "strategicFramework": "Strategic Framework",
+    "milestones": "Milestones",
+    "capitalStructure": "Capital Structure",
+    "boardOfDirectors": "Board of Directors",
+    "governance": "Governance",
+    "privacyPolicy": "Privacy Policy",
+    "faq": "FAQ",
+    "testimonials": "Testimonials",
+    "savings": "Savings",
+    "fixedDeposits": "Fixed Deposits",
+    "loans": "Loans",
+    "tools": "Tools",
+    "interestRates": "Interest Rates",
+    "baseRateSpreadRate": "Base Rate / Spread Rate",
+    "tariffCharges": "Tariff Charges",
+    "forexRates": "Forex Rates",
+    "goldSilverRates": "Gold / Silver Rates",
+    "news": "News",
+    "events": "Events",
+    "notices": "Notices",
+    "reports": "Reports",
+    "trainingList": "Training List",
+    "auctionNotice": "Auction Notice",
+    "mobileBanking": "Mobile Banking",
+    "ourNetwork": "Our Network",
+    "ourPartners": "Our Partners",
+    "branches": "Branches",
+    "contactUs": "Contact Us",
+    "merchantOffers": "Merchant & Offers",
+    "loanEnquiry": "Loan Enquiry",
+    "bookAppointment": "Book Appointment"
+  },
+  "home": {
+    "heroSubtitle": "Digital banking services at your fingertips",
+    "aboutTitle": "About Reliance Finance",
+    "aboutSubtitle": "A trusted financial partner since 1993",
+    "servicesTitle": "Our Services",
+    "servicesSubtitle": "Explore our range of financial services",
+    "newsTitle": "News & Events",
+    "newsSubtitle": "Stay updated with the latest from Reliance Finance",
+    "ctaTitle": "Ready to get started?",
+    "ctaSubtitle": "Open an account or explore our products today"
+  },
+  "about": {
+    "title": "About Us",
+    "subtitle": "Learn more about Reliance Finance Limited",
+    "introduction": "Introduction",
+    "missionGoals": "Mission & Goals",
+    "strategicFramework": "Strategic Framework",
+    "milestones": "Milestones",
+    "capitalStructure": "Capital Structure"
+  },
+  "products": {
+    "title": "Products",
+    "subtitle": "Explore our financial products",
+    "savings": "Savings",
+    "fixedDeposits": "Fixed Deposits",
+    "loans": "Loans",
+    "compare": "Compare Products",
+    "viewProduct": "View Product",
+    "features": "Features",
+    "eligibility": "Eligibility",
+    "documents": "Documents Required",
+    "interestRate": "Interest Rate"
+  },
+  "rates": {
+    "title": "Rates",
+    "subtitle": "Current interest and exchange rates",
+    "interestRates": "Interest Rates",
+    "baseRateSpreadRate": "Base Rate / Spread Rate",
+    "standardTariffCharges": "Standard Tariff Charges",
+    "forexRates": "Forex Rates",
+    "goldSilverRates": "Gold / Silver Rates",
+    "lastUpdated": "Last Updated"
+  },
+  "publications": {
+    "title": "Publications",
+    "subtitle": "News, events, notices and reports",
+    "news": "News",
+    "events": "Events",
+    "notices": "Notices",
+    "reports": "Reports",
+    "trainingList": "Training List"
+  },
+  "services": {
+    "title": "Services",
+    "subtitle": "Digital banking services at your fingertips"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "Get in touch with Reliance Finance",
+    "ourOffice": "Our Office",
+    "sendMessage": "Send a Message",
+    "messageSent": "Message Sent!",
+    "messageSentDesc": "We'll get back to you soon.",
+    "failedToSend": "Failed to send. Try again."
+  },
+  "careers": {
+    "title": "Careers",
+    "subtitle": "Join the Reliance Finance team",
+    "noOpenings": "No openings right now",
+    "checkBackLater": "Check back later or drop your CV.",
+    "apply": "Apply",
+    "department": "Department",
+    "location": "Location",
+    "type": "Type"
+  },
+  "branches": {
+    "title": "Branches",
+    "subtitle": "Find a branch near you",
+    "searchPlaceholder": "Search branches...",
+    "allRegions": "All Regions"
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Find answers to common questions"
+  },
+  "gallery": {
+    "title": "Gallery",
+    "subtitle": "Photo gallery of events and activities"
+  },
+  "downloads": {
+    "title": "Downloads",
+    "subtitle": "Download forms, brochures and documents"
+  },
+  "search_page": {
+    "title": "Search",
+    "subtitle": "Search our website",
+    "placeholder": "Type to search...",
+    "noResults": "No results found"
+  },
+  "loanEnquiry": {
+    "title": "Loan Enquiry Form",
+    "subtitle": "Submit your enquiry and we'll get back to you",
+    "fullName": "Full Name",
+    "loanType": "Loan Type",
+    "proposedAmount": "Proposed Amount (Rs.)",
+    "preferredBranch": "Preferred Branch",
+    "remarks": "Remarks",
+    "consent": "I consent to Reliance Finance processing my personal data for this enquiry",
+    "submitEnquiry": "Submit Enquiry",
+    "submitted": "Enquiry Submitted",
+    "submittedDesc": "We will contact you shortly."
+  },
+  "appointments": {
+    "title": "Book an Appointment",
+    "subtitle": "Schedule a meeting at our branch or by phone",
+    "meetingType": "Meeting Type",
+    "inPerson": "In Person",
+    "byPhone": "By Phone",
+    "preferredBranch": "Preferred Branch",
+    "service": "Service",
+    "date": "Date",
+    "time": "Time",
+    "reason": "Reason",
+    "bookAppointment": "Book Appointment",
+    "booked": "Appointment Booked",
+    "bookedDesc": "We will contact you shortly to confirm."
+  },
+  "writeToUs": {
+    "title": "Write to Us",
+    "subtitle": "Submit your grievance or inquiry",
+    "grievanceForm": "Grievance / Inquiry Form",
+    "thankYou": "Thank you!",
+    "thankYouDesc": "Your message has been received. We will get back to you shortly.",
+    "sendAnother": "Send Another Message"
+  },
+  "partner": {
+    "title": "Our Partners",
+    "subtitle": "Our trusted collaborators",
+    "comingSoon": "Content coming soon"
+  },
+  "merchantOffers": {
+    "title": "Merchant & Offers",
+    "subtitle": "Our merchant partners and special offers",
+    "comingSoon": "Content coming soon"
+  },
+  "committeeOfDirectors": {
+    "title": "Committee of Directors",
+    "subtitle": "Meet our committee members",
+    "comingSoon": "Content coming soon"
+  },
+  "sitemap": {
+    "title": "Sitemap",
+    "subtitle": "A complete list of all pages"
+  },
+  "testimonials": {
+    "title": "Customer Testimonials",
+    "subtitle": "What our customers say about us",
+    "writeReview": "Write a Review",
+    "submitReview": "Submit Review",
+    "noReviews": "No reviews yet — be the first!",
+    "reviews": "reviews"
+  },
+  "footer": {
+    "followUs": "Follow Us",
+    "mobileApp": "Mobile App",
+    "mobileAppDesc": "Download the RFL Smart app for convenient mobile banking.",
+    "downloadAndroid": "Download for Android",
+    "allRightsReserved": "All rights reserved."
+  },
+  "cookie": {
+    "title": "Cookie Consent",
+    "description": "We use cookies to improve your experience.",
+    "accept": "Accept",
+    "reject": "Reject",
+    "learnMore": "Learn more"
+  },
+  "accessibility": {
+    "title": "Accessibility",
+    "highContrast": "High Contrast",
+    "largeText": "Large Text",
+    "pauseAnimations": "Pause Animations",
+    "readingGuide": "Reading Guide"
+  }
+}

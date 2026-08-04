@@ -1,0 +1,259 @@
+{
+  "common": {
+    "home": "गृहपृष्ठ",
+    "about": "बारे",
+    "products": "उत्पादनहरू",
+    "rates": "दरहरू",
+    "publications": "प्रकाशनहरू",
+    "services": "सेवाहरू",
+    "contact": "सम्पर्क",
+    "search": "खोज्नुहोस्",
+    "readMore": "थप पढ्नुहोस्",
+    "viewAll": "सबै हेर्नुहोस्",
+    "viewDetails": "विवरण हेर्नुहोस्",
+    "learnMore": "थप जान्नुहोस्",
+    "loading": "लोड हुँदैछ...",
+    "submit": "पेश गर्नुहोस्",
+    "cancel": "रद्द गर्नुहोस्",
+    "save": "सेव गर्नुहोस्",
+    "back": "फर्कनुहोस्",
+    "next": "अर्को",
+    "previous": "अघिल्लो",
+    "all": "सबै",
+    "none": "कुनै पनि होइन",
+    "yes": "हो",
+    "no": "होइन",
+    "close": "बन्द गर्नुहोस्",
+    "open": "खोल्नुहोस्",
+    "name": "नाम",
+    "email": "इमेल",
+    "phone": "फोन",
+    "address": "ठेगाना",
+    "message": "सन्देश",
+    "subject": "विषय",
+    "required": "आवश्यक",
+    "optional": "ऐच्छिक",
+    "submitting": "पेश गर्दै...",
+    "sending": "पठाउँदै...",
+    "backTo": "फर्कनुहोस्"
+  },
+  "nav": {
+    "aboutUs": "हाम्रो बारे",
+    "introduction": "परिचय",
+    "missionGoals": "लक्ष्य र उद्देश्य",
+    "strategicFramework": "रणनीतिक ढाँचा",
+    "milestones": "उपलब्धिहरू",
+    "capitalStructure": "पुँजी संरचना",
+    "boardOfDirectors": "संचालक समिति",
+    "governance": "सुशासन",
+    "privacyPolicy": "गोपनीयता नीति",
+    "faq": "प्रायः सोधिने प्रश्न",
+    "testimonials": "ग्राहक अनुभव",
+    "savings": "बचत",
+    "fixedDeposits": "मुद्दती निक्षेप",
+    "loans": "ऋण",
+    "tools": "उपकरणहरू",
+    "interestRates": "ब्याज दर",
+    "baseRateSpreadRate": "आधार दर / स्प्रेड दर",
+    "tariffCharges": "मापदण्ड शुल्क",
+    "forexRates": "विदेशी विनिमय दर",
+    "goldSilverRates": "सुन / चाँदीको दर",
+    "news": "समाचार",
+    "events": "कार्यक्रम",
+    "notices": "सूचना",
+    "reports": "प्रतिवेदन",
+    "trainingList": "प्रशिक्षण सूची",
+    "auctionNotice": "लिलाम सूचना",
+    "mobileBanking": "मोबाइल बैंकिङ",
+    "ourNetwork": "हाम्रो सञ्जाल",
+    "ourPartners": "हाम्रा साझेदार",
+    "branches": "शाखाहरू",
+    "contactUs": "सम्पर्क",
+    "merchantOffers": "व्यापारी र प्रस्ताव",
+    "loanEnquiry": "ऋण सोधपुछ",
+    "bookAppointment": "भेटघाट बुक गर्नुहोस्"
+  },
+  "home": {
+    "heroSubtitle": "डिजिटल बैंकिङ सेवाहरू तपाईंको हातमा",
+    "aboutTitle": "रिलायन्स फाइनान्स बारे",
+    "aboutSubtitle": "१९९३ देखि विश्वसनीय वित्तीय साझेदार",
+    "servicesTitle": "हाम्रा सेवाहरू",
+    "servicesSubtitle": "हाम्रो वित्तीय सेवाहरूको श्रृंखला अन्वेषण गर्नुहोस्",
+    "newsTitle": "समाचार र कार्यक्रम",
+    "newsSubtitle": "रिलायन्स फाइनान्सबाट नवीनतम जानकारी पाउनुहोस्",
+    "ctaTitle": "सुरु गर्न तयार हुनुहुन्छ?",
+    "ctaSubtitle": "आज नै खाता खोल्नुहोस् वा हाम्रा उत्पादनहरू अन्वेषण गर्नुहोस्"
+  },
+  "about": {
+    "title": "बारे",
+    "subtitle": "रिलायन्स फाइनान्स लिमिटेडबारे थप जान्नुहोस्",
+    "introduction": "परिचय",
+    "missionGoals": "लक्ष्य र उद्देश्य",
+    "strategicFramework": "रणनीतिक ढाँचा",
+    "milestones": "उपलब्धिहरू",
+    "capitalStructure": "पुँजी संरचना"
+  },
+  "products": {
+    "title": "उत्पादनहरू",
+    "subtitle": "हाम्रा वित्तीय उत्पादनहरू अन्वेषण गर्नुहोस्",
+    "savings": "बचत",
+    "fixedDeposits": "मुद्दती निक्षेप",
+    "loans": "ऋण",
+    "compare": "उत्पादन तुलना",
+    "viewProduct": "उत्पादन हेर्नुहोस्",
+    "features": "विशेषताहरू",
+    "eligibility": "योग्यता",
+    "documents": "आवश्यक कागजात",
+    "interestRate": "ब्याज दर"
+  },
+  "rates": {
+    "title": "दरहरू",
+    "subtitle": "हालको ब्याज र विनिमय दरहरू",
+    "interestRates": "ब्याज दर",
+    "baseRateSpreadRate": "आधार दर / स्प्रेड दर",
+    "standardTariffCharges": "मापदण्ड शुल्क",
+    "forexRates": "विदेशी विनिमय दर",
+    "goldSilverRates": "सुन / चाँदीको दर",
+    "lastUpdated": "अन्तिम अपडेट"
+  },
+  "publications": {
+    "title": "प्रकाशनहरू",
+    "subtitle": "समाचार, कार्यक्रम, सूचना र प्रतिवेदन",
+    "news": "समाचार",
+    "events": "कार्यक्रम",
+    "notices": "सूचना",
+    "reports": "प्रतिवेदन",
+    "trainingList": "प्रशिक्षण सूची"
+  },
+  "services": {
+    "title": "सेवाहरू",
+    "subtitle": "डिजिटल बैंकिङ सेवाहरू तपाईंको हातमा"
+  },
+  "contact": {
+    "title": "सम्पर्क गर्नुहोस्",
+    "subtitle": "रिलायन्स फाइनान्ससँग सम्पर्क गर्नुहोस्",
+    "ourOffice": "हाम्रो कार्यालय",
+    "sendMessage": "सन्देश पठाउनुहोस्",
+    "messageSent": "सन्देश पठाइयो!",
+    "messageSentDesc": "हामी चाँडै सम्पर्क गर्नेछौं।",
+    "failedToSend": "पठाउन सकिएन। फेरि प्रयास गर्नुहोस्।"
+  },
+  "careers": {
+    "title": "करियर",
+    "subtitle": "रिलायन्स फाइनान्स टोलीमा सामेल हुनुहोस्",
+    "noOpenings": "अहिले कुनै रिक्त पद छैन",
+    "checkBackLater": "पछि जाँच गर्नुहोस् वा CV छोड्नुहोस्।",
+    "apply": "आवेदन गर्नुहोस्",
+    "department": "विभाग",
+    "location": "स्थान",
+    "type": "प्रकार"
+  },
+  "branches": {
+    "title": "शाखाहरू",
+    "subtitle": "तपाईं नजिकको शाखा खोज्नुहोस्",
+    "searchPlaceholder": "शाखा खोज्नुहोस्...",
+    "allRegions": "सबै क्षेत्र"
+  },
+  "faq": {
+    "title": "प्रायः सोधिने प्रश्न",
+    "subtitle": "सामान्य प्रश्नहरूको जवाफ पाउनुहोस्"
+  },
+  "gallery": {
+    "title": "ग्यालरी",
+    "subtitle": "कार्यक्रम र गतिविधिहरूको फोटो ग्यालरी"
+  },
+  "downloads": {
+    "title": "डाउनलोड",
+    "subtitle": "फारम, ब्रोसर र कागजात डाउनलोड गर्नुहोस्"
+  },
+  "search_page": {
+    "title": "खोज्नुहोस्",
+    "subtitle": "हाम्रो वेबसाइट खोज्नुहोस्",
+    "placeholder": "खोज्न टाइप गर्नुहोस्...",
+    "noResults": "कुनै परिणाम भेटिएन"
+  },
+  "loanEnquiry": {
+    "title": "ऋण सोधपुछ फारम",
+    "subtitle": "आफ्नो सोधपुछ पेश गर्नुहोस् र हामी सम्पर्क गर्नेछौं",
+    "fullName": "पूरा नाम",
+    "loanType": "ऋण प्रकार",
+    "proposedAmount": "प्रस्तावित रकम (रु.)",
+    "preferredBranch": "रुचाइएको शाखा",
+    "remarks": "टिप्पणी",
+    "consent": "म यो सोधपुछको लागि रिलायन्स फाइनान्सलाई मेरो व्यक्तिगत डाटा प्रशोधन गर्न अनुमति दिन्छु",
+    "submitEnquiry": "सोधपुछ पेश गर्नुहोस्",
+    "submitted": "सोधपुछ पेश भयो",
+    "submittedDesc": "हामी चाँडै सम्पर्क गर्नेछौं।"
+  },
+  "appointments": {
+    "title": "भेटघाट बुक गर्नुहोस्",
+    "subtitle": "हाम्रो शाखामा वा फोनमा भेटघाट तय गर्नुहोस्",
+    "meetingType": "भेटघाट तरिका",
+    "inPerson": "प्रत्यक्ष",
+    "byPhone": "फोनबाट",
+    "preferredBranch": "रुचाइएको शाखा",
+    "service": "सेवा",
+    "date": "मिति",
+    "time": "समय",
+    "reason": "कारण",
+    "bookAppointment": "भेटघाट बुक गर्नुहोस्",
+    "booked": "भेटघाट बुक भयो",
+    "bookedDesc": "हामी पुष्टिको लागि चाँडै सम्पर्क गर्नेछौं।"
+  },
+  "writeToUs": {
+    "title": "हामीलाई लेख्नुहोस्",
+    "subtitle": "तपाईंको गुनासो वा प्रश्न पठाउनुहोस्",
+    "grievanceForm": "गुनासो / प्रश्न फारम",
+    "thankYou": "धन्यवाद!",
+    "thankYouDesc": "तपाईंको सन्देश प्राप्त भयो। हामी छिट्टै सम्पर्क गर्नेछौं।",
+    "sendAnother": "अर्को सन्देश पठाउनुहोस्"
+  },
+  "partner": {
+    "title": "हाम्रा साझेदार",
+    "subtitle": "हाम्रा विश्वसनीय सहकार्यकर्ता",
+    "comingSoon": "सामग्री छिट्टै आउँदैछ"
+  },
+  "merchantOffers": {
+    "title": "व्यापारी र प्रस्ताव",
+    "subtitle": "हाम्रा व्यापारी साझेदार र विशेष प्रस्तावहरू",
+    "comingSoon": "सामग्री छिट्टै आउँदैछ"
+  },
+  "committeeOfDirectors": {
+    "title": "संचालक समिति",
+    "subtitle": "हाम्रा समिति सदस्यहरूसँग भेट्नुहोस्",
+    "comingSoon": "सामग्री छिट्टै आउँदैछ"
+  },
+  "sitemap": {
+    "title": "साइटम्याप",
+    "subtitle": "सबै पृष्ठहरूको सूची"
+  },
+  "testimonials": {
+    "title": "ग्राहक अनुभव",
+    "subtitle": "हाम्रा ग्राहकहरूको अनुभव",
+    "writeReview": "समीक्षा लेख्नुहोस्",
+    "submitReview": "समीक्षा पेश गर्नुहोस्",
+    "noReviews": "अहिले सम्म कुनै समीक्षा छैन — पहिलो बन्नुहोस्!",
+    "reviews": "समीक्षाहरू"
+  },
+  "footer": {
+    "followUs": "हामीलाई पछ्याउनुहोस्",
+    "mobileApp": "मोबाइल एप",
+    "mobileAppDesc": "सुविधाजनक मोबाइल बैंकिङको लागि RFL Smart एप डाउनलोड गर्नुहोस्।",
+    "downloadAndroid": "एन्ड्रोइडको लागि डाउनलोड गर्नुहोस्",
+    "allRightsReserved": "सर्वाधिकार सुरक्षित।"
+  },
+  "cookie": {
+    "title": "कुकी सहमति",
+    "description": "हामीले तपाईंको अनुभव सुधार गर्न कुकीहरू प्रयोग गर्छौं।",
+    "accept": "स्वीकार गर्नुहोस्",
+    "reject": "अस्वीकार गर्नुहोस्",
+    "learnMore": "थप जान्नुहोस्"
+  },
+  "accessibility": {
+    "title": "पहुँच",
+    "highContrast": "उच्च कन्ट्रास्ट",
+    "largeText": "ठूलो पाठ",
+    "pauseAnimations": "एनिमेसन रोक्नुहोस्",
+    "readingGuide": "पढ्ने गाइड"
+  }
+}

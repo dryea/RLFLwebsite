@@ -1,4 +1,4 @@
-const API = process.env.NEXT_PUBLIC_API_URL || "https://rfil-api.sudeepdhakal.workers.dev";
+import { API } from "@/lib/api";
 
 export const revalidate = 300;
 

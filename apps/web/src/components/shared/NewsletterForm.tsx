@@ -2,8 +2,7 @@
 import { useState } from "react";
 import { useLang } from "@/contexts/LanguageContext";
 import { Mail } from "lucide-react";
-
-const API = process.env.NEXT_PUBLIC_API_URL || "https://rfil-api.sudeepdhakal.workers.dev";
+import { API } from "@/lib/api";
 
 export default function NewsletterForm() {
   const lang = useLang();

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Hammer, MapPin, Calendar, IndianRupee, Search, ChevronRight } from "lucide-react";
 import { useLang } from "@/contexts/LanguageContext";
+import { API } from "@/lib/api";
 import { nepalProvinces } from "@/lib/nepal-admin";
 
 const PROPERTY_TYPES = ["land", "building", "vehicle", "other"];
@@ -17,7 +18,7 @@ export default function AuctionPage() {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    fetch("https://rfil-api.sudeepdhakal.workers.dev/api/auctions")
+    fetch(`${API}/api/auctions`)
       .then((r) => r.json())
       .then((j) => setAuctions(Array.isArray(j) ? j : []))
       .catch(() => {});

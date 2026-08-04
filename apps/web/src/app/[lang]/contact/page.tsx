@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Phone, Mail, MapPin } from "lucide-react";
 import { useLang } from "@/contexts/LanguageContext";
+import { API } from "@/lib/api";
 
 export default function LangContactPage() {
   const lang = useLang();
@@ -15,7 +16,7 @@ export default function LangContactPage() {
     e.preventDefault();
     setLoading(true);
     try {
-      await fetch("https://rfil-api.sudeepdhakal.workers.dev/api/cms/contact-submissions", {
+      await fetch(`${API}/api/cms/contact-submissions`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),

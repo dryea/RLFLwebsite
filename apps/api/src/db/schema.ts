@@ -671,3 +671,28 @@ export const trainings = sqliteTable("trainings", {
   resourcePerson: text("resource_person"),
   duration: text("duration"),
 });
+
+// ── Navigation ──
+
+export const navigation = sqliteTable("navigation", {
+  id: int("id").primaryKey({ autoIncrement: true }),
+  name: text("name").notNull(),
+  slug: text("slug").notNull().unique(),
+  locale: text("locale").notNull().default("en"),
+  createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`),
+});
+
+export const navigationItems = sqliteTable("navigation_items", {
+  id: int("id").primaryKey({ autoIncrement: true }),
+  navigationId: int("navigation_id").notNull().references(() => navigation.id, { onDelete: "cascade" }),
+  parentId: int("parent_id").references((): any => navigationItems.id, { onDelete: "cascade" }),
+  label: text("label").notNull(),
+  href: text("href"),
+  imageUrl: text("image_url"),
+  imageAlt: text("image_alt"),
+  description: text("description"),
+  sortOrder: int("sort_order").default(0),
+  isOpenInNewTab: int("is_open_in_new_tab", { mode: "boolean" }).default(false),
+  isActive: int("is_active", { mode: "boolean" }).default(true),
+  createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`),
+});

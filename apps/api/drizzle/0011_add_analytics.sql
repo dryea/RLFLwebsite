@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS analytics_events (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  event_type TEXT NOT NULL,
+  path TEXT,
+  referrer TEXT,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);

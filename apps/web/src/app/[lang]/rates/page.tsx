@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Percent, Download, ArrowRight, FileText } from "lucide-react";
 import { getRates } from "@/lib/public-api";
 import { useLang } from "@/contexts/LanguageContext";
+import MarketRatesWidget from "@/components/sections/MarketRatesWidget";
 
 export default function RatesPage() {
   const lang = useLang();
@@ -44,6 +45,9 @@ export default function RatesPage() {
 
       <section className="py-12">
         <div className="container-page space-y-14">
+          <div className="mx-auto max-w-3xl">
+            <MarketRatesWidget lang={lang} />
+          </div>
           {/* Download link */}
           <div className="flex flex-wrap gap-4">
             <a href="https://reliancenepal.com.np/uploads/document/aa72ec286ce3a90b8e335685a3f214490e82b3b5.jpg" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-800">

@@ -7,6 +7,8 @@ import EMISection from "@/components/sections/EMISection";
 import NewsEventsSection from "@/components/sections/NewsEventsSection";
 import CSRGrid from "@/components/sections/CSRGrid";
 import AppBanner from "@/components/sections/AppBanner";
+import TrustBar from "@/components/sections/TrustBar";
+import HeroQuickActions from "@/components/sections/HeroQuickActions";
 import HomepageSections from "@/components/sections/HomepageSections";
 
 export const revalidate = 60;
@@ -46,6 +48,10 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
   return (
     <>
       <HeroSlider slides={data.slides} lang={lang} />
+      <div className="-mt-24 relative z-20">
+        <HeroQuickActions lang={lang} />
+      </div>
+      <TrustBar lang={lang} />
       <RatesTicker lang={lang} />
 
       <HomepageSections

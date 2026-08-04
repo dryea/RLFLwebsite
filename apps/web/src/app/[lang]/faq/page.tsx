@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { getFaqs } from "@/lib/public-api";
 import FaqAccordion from "@/components/shared/FaqAccordion";
+import JsonLdScript from "@/components/shared/JsonLdScript";
 import { useLang } from "@/contexts/LanguageContext";
 
 export default function LangFaqPage() {
@@ -22,6 +23,17 @@ export default function LangFaqPage() {
 
   return (
     <>
+      {faqs.length > 0 && (
+        <JsonLdScript data={{
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: faqs.map((f) => ({
+            "@type": "Question",
+            name: f.question,
+            acceptedAnswer: { "@type": "Answer", text: f.answer },
+          })),
+        }} />
+      )}
       <section className="bg-gradient-to-br from-primary-800 to-primary-900 py-12 text-white">
         <div className="container-page">
           <h1 className="text-3xl font-bold">{isNp ? "प्रायः सोधिने प्रश्नहरू" : "Frequently Asked Questions"}</h1>

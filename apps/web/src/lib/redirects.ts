@@ -93,6 +93,8 @@ export const redirects: Record<string, string> = {
   "/download-form": "/en/downloads",
   "/beware-of-digital-fraud": "/en/beware-of-digital-fraud",
   "/information-officer": "/en/information-officer",
+  "/open-account": "/en/open-account",
+  "/application-status": "/en/application-status",
 
   "/interest-rate": "/en/rates",
   "/interest-rates": "/en/rates",

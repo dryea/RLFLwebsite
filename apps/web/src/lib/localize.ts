@@ -2,6 +2,7 @@ export const ROOT_ROUTES = [
   "/services", "/branches", "/careers", "/contact", "/faq", "/gallery",
   "/downloads", "/emi-calculator", "/loan-enquiry", "/calendar", "/search",
   "/banking-hours", "/auction-notice", "/merchant-offers", "/partner", "/write-to-us",
+  "/open-account", "/application-status",
 ];
 
 export function localize(href: string, lang: string): string {

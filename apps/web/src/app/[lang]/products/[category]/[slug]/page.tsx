@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ArrowLeft, CheckCircle, FileText, Users, Percent, Banknote } from "lucide-react";
 import { useLang } from "@/contexts/LanguageContext";
 import { getProducts } from "@/lib/public-api";
+import JsonLdScript from "@/components/shared/JsonLdScript";
 
 const categoryLabels: Record<string, { en: string; np: string; href: string }> = {
   savings: { en: "Savings", np: "बचत", href: "/products/savings" },
@@ -65,6 +66,21 @@ export default function ProductDetailPage() {
 
   return (
     <>
+      <JsonLdScript data={{
+        "@context": "https://schema.org",
+        "@type": "Product",
+        name: product.title,
+        description: product.summary || product.interestRateInfo || "",
+        ...(product.bannerImage ? { image: product.bannerImage } : {}),
+        url: `https://rfil-web.sudeepdhakal.workers.dev${cat?.href || "/products"}/${product.slug}`,
+        brand: { "@type": "Brand", name: "Reliance Finance Limited" },
+        offers: {
+          "@type": "Offer",
+          priceCurrency: "NPR",
+          availability: "https://schema.org/InStock",
+          seller: { "@type": "Organization", name: "Reliance Finance Limited" },
+        },
+      }} />
       <section className="bg-gradient-to-br from-primary-800 via-primary-700 to-primary-900 py-14 text-white">
         <div className="container-page">
           <Link href={`/${lang}${cat?.href || "/products"}`} className="mb-4 inline-flex items-center gap-1 text-sm text-primary-200 transition-colors hover:text-white">

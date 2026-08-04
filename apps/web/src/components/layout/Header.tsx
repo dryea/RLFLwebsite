@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Phone, Mail, Menu, X } from "lucide-react";
+import { Phone, Mail, Menu, X, UserPlus } from "lucide-react";
 import LanguageSwitcher from "@/components/shared/LanguageSwitcher";
 import SearchOverlay from "@/components/shared/SearchOverlay";
 import MegaMenu from "./MegaMenu";
@@ -97,13 +97,21 @@ export default function Header({ lang }: { lang: string }) {
           )}
 
           {/* Mobile Menu Button */}
-          <button
-            onClick={() => setMobileOpen(true)}
-            className="flex items-center justify-center rounded-lg p-2 text-gray-700 transition-colors hover:bg-gray-100 lg:hidden"
-            aria-label="Open menu"
-          >
-            <Menu className="h-6 w-6" />
-          </button>
+          <div className="flex items-center gap-2">
+            <Link
+              href={localize("/open-account", lang)}
+              className="hidden items-center gap-1.5 rounded-lg bg-secondary-500 px-4 py-2.5 text-sm font-semibold text-gray-900 shadow-sm transition-all hover:bg-secondary-400 hover:-translate-y-0.5 lg:inline-flex"
+            >
+              <UserPlus className="h-4 w-4" /> {lang === "np" ? "खाता खोल्नुहोस्" : "Open Account"}
+            </Link>
+            <button
+              onClick={() => setMobileOpen(true)}
+              className="flex items-center justify-center rounded-lg p-2 text-gray-700 transition-colors hover:bg-gray-100 lg:hidden"
+              aria-label="Open menu"
+            >
+              <Menu className="h-6 w-6" />
+            </button>
+          </div>
         </div>
       </div>
 

@@ -6,6 +6,7 @@ import JsonLd from "@/components/shared/JsonLd";
 import CookieConsent from "@/components/shared/CookieConsent";
 import AccessibilityToolbar from "@/components/shared/AccessibilityToolbar";
 import IntlProvider from "@/components/providers/IntlProvider";
+import Analytics from "@/components/shared/Analytics";
 import { getSeoSettings } from "@/lib/seo";
 
 export async function generateStaticParams() {
@@ -82,6 +83,7 @@ export default async function LangLayout({
       <CookieConsent />
       <Footer />
       <AccessibilityToolbar />
+      <Analytics />
     </IntlProvider>
   );
 }

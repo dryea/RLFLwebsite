@@ -58,8 +58,16 @@ const config: Config = {
         },
       },
       fontFamily: {
-        heading: ["Outfit", "sans-serif"],
-        body: ["Inter", "sans-serif"],
+        heading: ["var(--font-heading)", "var(--font-devanagari)", "sans-serif"],
+        body: ["var(--font-body)", "var(--font-devanagari)", "sans-serif"],
+      },
+      boxShadow: {
+        sm: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+        DEFAULT: "0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.06)",
+        md: "0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.06)",
+        lg: "0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.05)",
+        xl: "0 20px 25px -5px rgb(0 0 0 / 0.09), 0 8px 10px -6px rgb(0 0 0 / 0.05)",
+        "brand": "0 8px 30px rgb(112 43 134 / 0.18)",
       },
       borderRadius: {
         sm: "8px",
@@ -67,14 +75,27 @@ const config: Config = {
         lg: "20px",
         full: "9999px",
       },
+      transitionTimingFunction: {
+        brand: "cubic-bezier(0.25, 0.1, 0.25, 1)",
+      },
       keyframes: {
         marquee: {
           "0%": { transform: "translateX(0)" },
           "100%": { transform: "translateX(-50%)" },
         },
+        "fade-up": {
+          "0%": { opacity: "0", transform: "translateY(16px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        shimmer: {
+          "0%": { backgroundPosition: "-200% 0" },
+          "100%": { backgroundPosition: "200% 0" },
+        },
       },
       animation: {
         marquee: "marquee 30s linear infinite",
+        "fade-up": "fade-up 0.5s cubic-bezier(0.25, 0.1, 0.25, 1) both",
+        shimmer: "shimmer 1.5s infinite",
       },
     },
   },

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowRight, ImageIcon, Flame, Star, X, Eye, Scale } from "lucide-react";
 import { getProductsByType } from "@/lib/public-api";
 import StaggerChildren, { StaggerItem } from "@/components/motion/StaggerChildren";
+import OptimizedImage from "@/components/ui/OptimizedImage";
 
 export default function ProductGrid({
   type,
@@ -70,7 +71,7 @@ export default function ProductGrid({
 
             <Link href={`/${lang}${basePath}/${p.slug}`} className="block overflow-hidden bg-gray-50">
               {p.bannerImage ? (
-                <img
+                <OptimizedImage
                   src={p.bannerImage}
                   alt={isNp && p.titleNp ? `${p.titleNp} — Reliance Finance Limited` : `${p.title} — Reliance Finance Limited`}
                   width={600}

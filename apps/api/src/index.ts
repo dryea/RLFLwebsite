@@ -20,6 +20,7 @@ import {
   reviews, appointments, trainings,
   navigation, navigationItems,
   seoSettings, seoAnalysis, rankTracker, seoRedirects, schemaMarkup,
+  analyticsEvents, accountApplications, loanApplications,
 } from "./db/schema";
 import { analyzeSeo, type SeoAnalyzerInput } from "./lib/seo";
 
@@ -1424,6 +1425,54 @@ app.delete("/api/cms/seo/schema/:type/:id", async (c) => {
 
 // ── Public SEO ──
 
+// Lightweight privacy-first page view analytics (no cookies, IP only for geo)
+app.post("/api/analytics/view", async (c) => {
+  const db = createDb(c.env.DB);
+  const { path, referrer } = await c.req.json().catch(() => ({ path: "", referrer: "" }));
+  if (!path) return c.json({ ok: false });
+  await db.insert(analyticsEvents).values({
+    eventType: "page_view",
+    path: String(path).slice(0, 255),
+    referrer: referrer ? String(referrer).slice(0, 255) : null,
+  }).run();
+  return c.json({ ok: true });
+});
+
+app.post("/api/analytics/event", async (c) => {
+  const db = createDb(c.env.DB);
+  const { event, path, label } = await c.req.json().catch(() => ({}));
+  if (!event) return c.json({ ok: false });
+  await db.insert(analyticsEvents).values({
+    eventType: String(event).slice(0, 50),
+    path: path ? String(path).slice(0, 255) : null,
+    referrer: label ? String(label).slice(0, 255) : null,
+  }).run();
+  return c.json({ ok: true });
+});
+
+// CMS: analytics dashboard stats
+app.get("/api/cms/analytics", async (c) => {
+  const db = createDb(c.env.DB);
+  const views = await db.select().from(analyticsEvents).where(eq(analyticsEvents.eventType, "page_view")).all();
+  const events = await db.select().from(analyticsEvents).all();
+  const byPath: Record<string, number> = {};
+  for (const v of views) {
+    const p = v.path || "(none)";
+    byPath[p] = (byPath[p] || 0) + 1;
+  }
+  const topPaths = Object.entries(byPath).sort((a, b) => b[1] - a[1]).slice(0, 20);
+  const byEvent: Record<string, number> = {};
+  for (const e of events) {
+    byEvent[e.eventType] = (byEvent[e.eventType] || 0) + 1;
+  }
+  return c.json({
+    totalViews: views.length,
+    totalEvents: events.length,
+    topPaths,
+    byEvent,
+  });
+});
+
 // Public: get SEO settings (safe subset for meta/schema/sitemap generation)
 app.get("/api/seo/settings", async (c) => {
   const db = createDb(c.env.DB);
@@ -1602,6 +1651,128 @@ app.post("/api/careers/apply", async (c) => {
   } catch (e) { console.error("Email queue error:", e); }
 
   return c.json(result, 201);
+});
+
+// ── Account Opening & Loan Applications ──
+
+function generateReference(prefix: string) {
+  const ts = Date.now().toString(36).toUpperCase().slice(-5);
+  const rand = Math.random().toString(36).toUpperCase().slice(2, 6);
+  return `${prefix}-${ts}${rand}`;
+}
+
+app.post("/api/account-applications", async (c) => {
+  const db = createDb(c.env.DB);
+  const data = await c.req.json() as Record<string, any>;
+  if (!data.fullName || !data.email || !data.phone || !data.accountType) {
+    return c.json({ error: "fullName, email, phone and accountType required" }, 400);
+  }
+  const referenceNo = generateReference("ACC");
+  const result = await db.insert(accountApplications).values({
+    referenceNo,
+    fullName: data.fullName,
+    email: data.email,
+    phone: data.phone,
+    dateOfBirth: data.dateOfBirth || null,
+    citizenshipNo: data.citizenshipNo || null,
+    accountType: data.accountType,
+    province: data.province || null,
+    district: data.district || null,
+    localBody: data.localBody || null,
+    address: data.address || null,
+    preferredBranch: data.preferredBranch || null,
+    occupation: data.occupation || null,
+    initialDeposit: data.initialDeposit ? parseFloat(data.initialDeposit) : null,
+    documents: data.documents || null,
+  }).returning().get();
+
+  try {
+    await c.env.EMAIL_QUEUE.send([
+      { to: data.email, subject: "Account Application Received - Reliance Finance", html: `<p>Dear ${data.fullName},<br/>Your account application has been received. Your reference number is <strong>${referenceNo}</strong>. Our team will contact you to complete the process.</p>` },
+      { to: c.env.ADMIN_EMAIL, subject: `New Account Application: ${data.accountType}`, html: `<p>New account application from ${data.fullName} (${data.email}, ${data.phone}). Reference: ${referenceNo}</p>` },
+    ]);
+  } catch (e) { console.error("Email queue error:", e); }
+
+  return c.json({ ...result, referenceNo }, 201);
+});
+
+app.post("/api/loan-applications", async (c) => {
+  const db = createDb(c.env.DB);
+  const data = await c.req.json() as Record<string, any>;
+  if (!data.fullName || !data.email || !data.phone || !data.loanType) {
+    return c.json({ error: "fullName, email, phone and loanType required" }, 400);
+  }
+  const referenceNo = generateReference("LON");
+  const timeline = [{ status: "submitted", date: new Date().toISOString(), note: "Application submitted" }];
+  const result = await db.insert(loanApplications).values({
+    referenceNo,
+    fullName: data.fullName,
+    email: data.email,
+    phone: data.phone,
+    loanType: data.loanType,
+    requestedAmount: data.requestedAmount ? parseFloat(data.requestedAmount) : null,
+    tenureMonths: data.tenureMonths ? parseInt(data.tenureMonths) : null,
+    occupation: data.occupation || null,
+    monthlyIncome: data.monthlyIncome ? parseFloat(data.monthlyIncome) : null,
+    preferredBranch: data.preferredBranch || null,
+    timeline,
+  }).returning().get();
+
+  try {
+    await c.env.EMAIL_QUEUE.send([
+      { to: data.email, subject: "Loan Application Received - Reliance Finance", html: `<p>Dear ${data.fullName},<br/>Your ${data.loanType} loan application has been received. Your reference number is <strong>${referenceNo}</strong>. Track your status anytime.</p>` },
+      { to: c.env.ADMIN_EMAIL, subject: `New Loan Application: ${data.loanType}`, html: `<p>New loan application from ${data.fullName} (${data.email}, ${data.phone}). Reference: ${referenceNo}. Amount: ${data.requestedAmount || "N/A"}</p>` },
+    ]);
+  } catch (e) { console.error("Email queue error:", e); }
+
+  return c.json({ ...result, referenceNo }, 201);
+});
+
+// Public status lookup by reference number
+app.get("/api/applications/status", async (c) => {
+  const db = createDb(c.env.DB);
+  const ref = c.req.query("ref");
+  const type = c.req.query("type") || "account";
+  if (!ref) return c.json({ error: "ref required" }, 400);
+  if (type === "loan") {
+    const result = await db.select().from(loanApplications).where(eq(loanApplications.referenceNo, String(ref).toUpperCase())).get();
+    if (!result) return c.json({ error: "Not found" }, 404);
+    return c.json({ referenceNo: result.referenceNo, status: result.status, timeline: result.timeline || [], createdAt: result.createdAt, loanType: result.loanType });
+  }
+  const result = await db.select().from(accountApplications).where(eq(accountApplications.referenceNo, String(ref).toUpperCase())).get();
+  if (!result) return c.json({ error: "Not found" }, 404);
+  return c.json({ referenceNo: result.referenceNo, status: result.status, createdAt: result.createdAt, accountType: result.accountType });
+});
+
+// CMS: list applications
+app.get("/api/cms/applications/accounts", async (c) => {
+  const db = createDb(c.env.DB);
+  return c.json(await db.select().from(accountApplications).orderBy(desc(accountApplications.createdAt)).all());
+});
+
+app.get("/api/cms/applications/loans", async (c) => {
+  const db = createDb(c.env.DB);
+  return c.json(await db.select().from(loanApplications).orderBy(desc(loanApplications.createdAt)).all());
+});
+
+// CMS: update application status (adds to timeline)
+app.put("/api/cms/applications/status", async (c) => {
+  const db = createDb(c.env.DB);
+  const { type, id, status, note } = await c.req.json() as { type: string; id: number; status: string; note?: string };
+  if (!type || !id || !status) return c.json({ error: "type, id, status required" }, 400);
+  const now = new Date().toISOString();
+  if (type === "loan") {
+    const existing = await db.select().from(loanApplications).where(eq(loanApplications.id, id)).get();
+    if (!existing) return c.json({ error: "Not found" }, 404);
+    const timeline = Array.isArray(existing.timeline) ? [...existing.timeline] : [];
+    timeline.push({ status, date: now, note: note || null });
+    await db.update(loanApplications).set({ status, timeline, updatedAt: now }).where(eq(loanApplications.id, id)).run();
+  } else {
+    const existing = await db.select().from(accountApplications).where(eq(accountApplications.id, id)).get();
+    if (!existing) return c.json({ error: "Not found" }, 404);
+    await db.update(accountApplications).set({ status, updatedAt: now }).where(eq(accountApplications.id, id)).run();
+  }
+  return c.json({ success: true });
 });
 
 // ── Cron Jobs ──

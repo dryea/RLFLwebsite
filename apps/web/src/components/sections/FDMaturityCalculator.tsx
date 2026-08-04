@@ -4,9 +4,9 @@ import { IndianRupee, Percent, CalendarDays, Calculator, HandCoins, ArrowRight }
 import Link from "next/link";
 
 const RATES: Record<string, Record<number, number>> = {
-  individual: { 3: 5.50, 6: 5.75, 12: 6.00, 24: 6.25, 36: 6.25, 60: 6.25 },
-  corporate: { 3: 5.00, 6: 5.25, 12: 5.50, 24: 5.75, 36: 5.75, 60: 5.75 },
-  remittance: { 3: 6.50, 6: 6.75, 12: 7.00, 24: 7.25, 36: 7.25, 60: 7.25 },
+  individual: { 3: 3.50, 6: 3.50, 12: 4.00, 24: 4.25, 36: 4.25, 60: 6.25 },
+  corporate: { 3: 3.00, 6: 3.00, 12: 3.00, 24: 3.25, 36: 3.25, 60: 5.25 },
+  remittance: { 3: 4.50, 6: 4.50, 12: 5.00, 24: 5.25, 36: 5.25, 60: 7.25 },
 };
 
 const TENURE_OPTIONS = [

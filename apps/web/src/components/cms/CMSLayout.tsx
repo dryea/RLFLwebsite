@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { FileText, Package, Newspaper, Image, Users, Settings, LogOut, LayoutDashboard, MapPin, HelpCircle, Briefcase, Download, ImageIcon, MessageSquare, Shield, UserCog, GraduationCap, Menu, SearchCheck, SlidersHorizontal, TrendingUp, ArrowRightLeft, LineChart } from "lucide-react";
+import { FileText, Package, Newspaper, Image, Users, Settings, LogOut, LayoutDashboard, MapPin, HelpCircle, Briefcase, Download, ImageIcon, MessageSquare, Shield, UserCog, GraduationCap, Menu, SearchCheck, SlidersHorizontal, TrendingUp, ArrowRightLeft, LineChart, UserPlus, BarChart3 } from "lucide-react";
 import { getCmsUser, cmsLogout, type CmsUser } from "@/lib/cms-auth";
 import OnboardingCoachMarks from "./OnboardingCoachMarks";
 
@@ -26,6 +26,8 @@ const navItems = [
   { label: "Trainings", icon: GraduationCap, href: "/cms/trainings" },
   { label: "Navigation", icon: Menu, href: "/cms/navigation" },
   { label: "SEO", icon: SearchCheck, href: "/cms/seo" },
+  { label: "Analytics", icon: BarChart3, href: "/cms/analytics" },
+  { label: "Applications", icon: UserPlus, href: "/cms/applications" },
   { label: "Enquiries", icon: MessageSquare, href: "/cms/enquiries" },
   { label: "Media", icon: Image, href: "/cms/media" },
   { label: "Users", icon: UserCog, href: "/cms/users" },

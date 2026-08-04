@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import { Outfit, Inter } from "next/font/google";
+import { Outfit, Inter, Noto_Sans_Devanagari } from "next/font/google";
 import "./globals.css";
 
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-heading", display: "swap", preload: false });
 const inter = Inter({ subsets: ["latin"], variable: "--font-body", display: "swap", preload: false });
+const devanagari = Noto_Sans_Devanagari({ subsets: ["latin"], variable: "--font-devanagari", display: "swap", preload: false });
 
 export const metadata: Metadata = {
   title: {
@@ -19,10 +20,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${outfit.variable} ${inter.variable} font-body antialiased`}>
+    <html lang="en" className={`${outfit.variable} ${inter.variable} ${devanagari.variable} font-body antialiased`}>
       <head>
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#1a365d" />
+        <meta name="theme-color" content="#702B86" />
       </head>
       <body className="flex min-h-screen flex-col">
         <a

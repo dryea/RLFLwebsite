@@ -752,6 +752,56 @@ export const schemaMarkup = sqliteTable("schema_markup", {
   updatedAt: text("updated_at").default(sql`CURRENT_TIMESTAMP`),
 });
 
+export const analyticsEvents = sqliteTable("analytics_events", {
+  id: int("id").primaryKey({ autoIncrement: true }),
+  eventType: text("event_type").notNull(),
+  path: text("path"),
+  referrer: text("referrer"),
+  createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`),
+});
+
+// ── Applications (Account Opening & Loans) ──
+
+export const accountApplications = sqliteTable("account_applications", {
+  id: int("id").primaryKey({ autoIncrement: true }),
+  referenceNo: text("reference_no").notNull().unique(),
+  fullName: text("full_name").notNull(),
+  email: text("email").notNull(),
+  phone: text("phone").notNull(),
+  dateOfBirth: text("date_of_birth"),
+  citizenshipNo: text("citizenship_no"),
+  accountType: text("account_type").notNull(),
+  province: text("province"),
+  district: text("district"),
+  localBody: text("local_body"),
+  address: text("address"),
+  preferredBranch: text("preferred_branch"),
+  occupation: text("occupation"),
+  initialDeposit: real("initial_deposit"),
+  status: text("status").default("submitted"),
+  documents: text("documents", { mode: "json" }).$type<string[]>(),
+  createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: text("updated_at").default(sql`CURRENT_TIMESTAMP`),
+});
+
+export const loanApplications = sqliteTable("loan_applications", {
+  id: int("id").primaryKey({ autoIncrement: true }),
+  referenceNo: text("reference_no").notNull().unique(),
+  fullName: text("full_name").notNull(),
+  email: text("email").notNull(),
+  phone: text("phone").notNull(),
+  loanType: text("loan_type").notNull(),
+  requestedAmount: real("requested_amount"),
+  tenureMonths: int("tenure_months"),
+  occupation: text("occupation"),
+  monthlyIncome: real("monthly_income"),
+  preferredBranch: text("preferred_branch"),
+  status: text("status").default("submitted"),
+  timeline: text("timeline", { mode: "json" }).$type<{ status: string; date: string; note?: string }[]>(),
+  createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: text("updated_at").default(sql`CURRENT_TIMESTAMP`),
+});
+
 export interface SeoIssue {
   code: string;
   severity: "error" | "warning" | "good";

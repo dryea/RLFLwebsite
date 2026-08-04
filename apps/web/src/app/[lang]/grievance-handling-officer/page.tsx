@@ -49,25 +49,29 @@ export default async function GrievancePage({ params }: { params: Promise<{ lang
   try {
     cms = await serverFetchAPI("/api/pages/grievance-handling-officer");
   } catch {}
-  const content = cms?.data?.[0] || defaultContent;
+  const content = defaultContent[l];
+  const cmsHtml = lang === "np" ? (cms?.contentNp || cms?.content) : (cms?.content || cms?.contentNp);
 
   return (
     <>
       <section className="bg-gradient-to-br from-primary-800 to-primary-900 py-12 text-white">
         <div className="container-page">
-          <h1 className="text-3xl font-bold">{content.title?.[l] || defaultContent[l].title}</h1>
-          <p className="mt-2 text-primary-100">{content.subtitle?.[l] || defaultContent[l].subtitle}</p>
+          <h1 className="text-3xl font-bold">{cms?.title || content.title}</h1>
+          <p className="mt-2 text-primary-100">{cms?.titleNp && lang === "np" ? cms.titleNp : content.subtitle}</p>
         </div>
       </section>
 
       <section className="py-12">
         <div className="container-page">
           <div className="mx-auto max-w-4xl">
+            {cmsHtml && (
+              <div className="prose max-w-none mb-8 rounded-xl border bg-white p-6 shadow-sm" dangerouslySetInnerHTML={{ __html: cmsHtml }} />
+            )}
             <div className="rounded-xl border bg-white p-6 shadow-sm">
-              <h2 className="text-xl font-bold text-gray-900">{content.officerName || defaultContent[l].officerName}</h2>
-              <p className="text-sm text-primary-700">{content.officerRole || defaultContent[l].officerRole}</p>
-              <p className="mt-4 text-gray-600">{content.about || defaultContent[l].about}</p>
-              <p className="mt-3 text-sm text-gray-500">{content.contact || defaultContent[l].contact}</p>
+              <h2 className="text-xl font-bold text-gray-900">{content.officerName}</h2>
+              <p className="text-sm text-primary-700">{content.officerRole}</p>
+              <p className="mt-4 text-gray-600">{content.about}</p>
+              <p className="mt-3 text-sm text-gray-500">{content.contact}</p>
             </div>
 
             <div className="mt-8">
@@ -75,7 +79,7 @@ export default async function GrievancePage({ params }: { params: Promise<{ lang
                 {lang === "en" ? "Complaint Submission Process" : "उजुरी दर्ता प्रक्रिया"}
               </h2>
               <ol className="mt-4 space-y-3">
-                {(content.process || defaultContent[l].process).map((step: string, i: number) => (
+                {content.process.map((step: string, i: number) => (
                   <li key={i} className="flex gap-3">
                     <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary-100 text-sm font-bold text-primary-700">{i + 1}</span>
                     <span className="pt-1 text-gray-600">{step}</span>

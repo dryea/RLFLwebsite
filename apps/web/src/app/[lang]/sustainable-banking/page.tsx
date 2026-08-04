@@ -43,26 +43,33 @@ export default async function SustainableBankingPage({ params }: { params: Promi
   try {
     cms = await serverFetchAPI("/api/pages/sustainable-banking");
   } catch {}
-  const content = cms?.data?.[0] || defaultContent;
+  const content = defaultContent;
+  const cmsHtml = lang === "np" ? (cms?.contentNp || cms?.content) : (cms?.content || cms?.contentNp);
+  const langContent = content[lang];
 
   return (
     <>
       <section className="bg-gradient-to-br from-primary-800 to-primary-900 py-12 text-white">
         <div className="container-page">
-          <h1 className="text-3xl font-bold">{content.title?.[lang] || defaultContent[lang].title}</h1>
-          <p className="mt-2 text-primary-100">{content.subtitle?.[lang] || defaultContent[lang].subtitle}</p>
+          <h1 className="text-3xl font-bold">{cms?.title || langContent.title}</h1>
+          <p className="mt-2 text-primary-100">{cms?.titleNp && lang === "np" ? cms.titleNp : langContent.subtitle}</p>
         </div>
       </section>
 
       <section className="py-12">
         <div className="container-page">
           <div className="mx-auto max-w-4xl">
-            <p className="text-lg leading-relaxed text-gray-600">
-              {content.description || defaultContent[lang].description}
-            </p>
+            {cmsHtml && (
+              <div className="prose max-w-none text-lg leading-relaxed text-gray-600" dangerouslySetInnerHTML={{ __html: cmsHtml }} />
+            )}
+            {!cmsHtml && (
+              <p className="text-lg leading-relaxed text-gray-600">
+                {langContent.description}
+              </p>
+            )}
 
             <div className="mt-10 grid gap-6 sm:grid-cols-2">
-              {(content.pillars || defaultContent[lang].pillars).map((item: any, i: number) => (
+              {langContent.pillars.map((item: any, i: number) => (
                 <div key={i} className="rounded-xl border bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
                   <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-green-100 text-lg font-bold text-green-700">{i + 1}</div>
                   <h3 className="font-semibold text-gray-900">{item.title}</h3>
@@ -75,7 +82,7 @@ export default async function SustainableBankingPage({ params }: { params: Promi
               <h2 className="text-lg font-bold text-gray-900">
                 {lang === "en" ? "Our Commitment" : "हाम्रो प्रतिबद्धता"}
               </h2>
-              <p className="mt-2 text-gray-600">{content.commitment || defaultContent[lang].commitment}</p>
+              <p className="mt-2 text-gray-600">{langContent.commitment}</p>
             </div>
           </div>
         </div>

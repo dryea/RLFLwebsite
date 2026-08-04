@@ -6,6 +6,7 @@ import JsonLd from "@/components/shared/JsonLd";
 import CookieConsent from "@/components/shared/CookieConsent";
 import AccessibilityToolbar from "@/components/shared/AccessibilityToolbar";
 import IntlProvider from "@/components/providers/IntlProvider";
+import { getSeoSettings } from "@/lib/seo";
 
 export async function generateStaticParams() {
   return [{ lang: "en" }, { lang: "np" }];
@@ -13,24 +14,37 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
+  const seo = await getSeoSettings();
+  const siteUrl = seo.siteUrl || "https://reliancenepal.com.np";
+  const siteTitle = seo.siteTitle || "Reliance Finance Limited";
+  const template = seo.defaultTitleTemplate || "%s | Reliance Finance Limited";
+  const defaultDescription =
+    seo.defaultDescription ||
+    "Reliance Finance Limited — a trusted C-class finance company in Nepal offering savings, loans, fixed deposits, and banking services.";
+
   return {
-    title: {
-      template: "%s | Reliance Finance Limited",
-      default: "Reliance Finance Limited",
-    },
-    description: "Reliance Finance Limited — a trusted C-class finance company in Nepal offering savings, loans, fixed deposits, and banking services.",
+    title: { template, default: siteTitle },
+    description: defaultDescription,
     alternates: {
-      canonical: `https://reliancenepal.com.np/${lang}`,
+      canonical: `${siteUrl}/${lang}`,
       languages: {
-        "en": "https://reliancenepal.com.np/en",
-        "ne": "https://reliancenepal.com.np/np",
-        "x-default": "https://reliancenepal.com.np/en",
+        "en": `${siteUrl}/en`,
+        "ne": `${siteUrl}/np`,
+        "x-default": `${siteUrl}/en`,
       } as Record<string, string>,
     },
     openGraph: {
-      siteName: "Reliance Finance Limited",
+      siteName: siteTitle,
       locale: lang === "np" ? "ne_NP" : "en_US",
       type: "website",
+      ...(seo.ogImage ? { images: [{ url: seo.ogImage }] } : {}),
+    },
+    twitter: {
+      card: (seo.twitterCardType as any) || "summary_large_image",
+    },
+    robots: {
+      index: seo.robotsIndex !== false,
+      follow: seo.robotsFollow !== false,
     },
   };
 }
@@ -44,18 +58,25 @@ export default async function LangLayout({
 }) {
   const { lang } = await params;
   const messages = await getMessages();
+  const seo = await getSeoSettings();
+
+  const siteUrl = seo.siteUrl || "https://reliancenepal.com.np";
+  const orgSchema = {
+    "@context": "https://schema.org",
+    "@type": seo.schemaOrgType || "Organization",
+    name: seo.schemaOrgName || "Reliance Finance Limited",
+    url: siteUrl,
+    logo: seo.schemaOrgLogo || `${siteUrl}/logo.png`,
+    description: seo.tagline || "Your trusted financial partner in Nepal",
+    ...(seo.schemaOrgAddress ? { address: { "@type": "PostalAddress", streetAddress: seo.schemaOrgAddress, addressCountry: "NP" } } : {}),
+    ...(seo.schemaOrgPhone ? { telephone: seo.schemaOrgPhone } : {}),
+    ...(seo.schemaOrgEmail ? { email: seo.schemaOrgEmail } : {}),
+    sameAs: [seo.socialFacebook, seo.socialTwitter, seo.socialLinkedIn, seo.socialInstagram, seo.socialYouTube].filter(Boolean),
+  };
 
   return (
     <IntlProvider locale={lang as "en" | "np"} messages={messages}>
-      <JsonLd data={{
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        name: "Reliance Finance Limited",
-        url: "https://reliancenepal.com.np",
-        logo: "https://reliancenepal.com.np/logo.png",
-        description: "Your trusted financial partner in Nepal",
-        address: { "@type": "PostalAddress", addressCountry: "NP" },
-      }} />
+      <JsonLd data={orgSchema} />
       <Header lang={lang} />
       <main id="main-content" className="flex-1">{children}</main>
       <CookieConsent />

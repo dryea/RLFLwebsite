@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ChevronRight, Wallet, HandCoins, Smartphone, Handshake } from "lucide-react";
+import StaggerChildren, { StaggerItem } from "@/components/motion/StaggerChildren";
 
 interface OfferingLink {
   label: string;
@@ -222,14 +223,14 @@ export default function OfferingsGrid({ offerings, lang }: { offerings: Offering
   const cards = offerings.length >= 4 ? offerings : defaultCards;
 
   return (
-    <div className="service-grid grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+    <StaggerChildren className="service-grid grid gap-6 md:grid-cols-2 lg:grid-cols-4">
       {cards.map((card) => {
         const Icon = iconMap[card.icon] || Wallet;
         return (
-          <div
-            key={card.id}
-            className="service-card group relative flex flex-col overflow-hidden rounded-xl border border-gray-100 bg-white p-8 transition-all duration-300 hover:-translate-y-1 hover:border-primary-500 hover:shadow-lg"
-          >
+          <StaggerItem key={card.id} className="h-full">
+            <div
+              className="service-card group relative flex h-full flex-col overflow-hidden rounded-xl border border-gray-100 bg-white p-8 transition-all duration-300 hover:-translate-y-1 hover:border-primary-500 hover:shadow-lg"
+            >
             <div className="service-card-icon-wrapper mb-5 flex h-[60px] w-[60px] items-center justify-center rounded-xl bg-primary-50 transition-all duration-300 group-hover:bg-secondary-500">
               <Icon className="h-7 w-7 text-primary-500 transition-all duration-300 group-hover:text-white" />
             </div>
@@ -266,9 +267,10 @@ export default function OfferingsGrid({ offerings, lang }: { offerings: Offering
             <Link href={card.linkUrl} className="btn btn-primary service-card-cta mt-auto w-full text-center font-bold">
               {card.linkText}
             </Link>
-          </div>
+            </div>
+          </StaggerItem>
         );
       })}
-    </div>
+    </StaggerChildren>
   );
 }

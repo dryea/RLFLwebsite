@@ -16,7 +16,7 @@ const sections = [
     titleEn: "Events",
     titleNp: "कार्यक्रमहरू",
     descEn: "Upcoming events and programs",
-    descNp: "आगामी कार्यक्रम र कार्यक्र��mहरू",
+    descNp: "आगामी कार्यक्रम र कार्यक्रमहरू",
     href: "events",
     color: "bg-green-50 text-green-700",
   },
@@ -26,7 +26,7 @@ const sections = [
     titleNp: "सूचनाहरू",
     descEn: "Official notices categorized by type",
     descNp: "प्रकार अनुसार आधिकारिक सूचनाहरू",
-    href: "notices",
+    href: "notices/general-notice",
     color: "bg-amber-50 text-amber-700",
   },
   {
@@ -35,7 +35,7 @@ const sections = [
     titleNp: "प्रतिवेदनहरू",
     descEn: "Financial and regulatory reports",
     descNp: "वित्तीय र नियामक प्रतिवेदनहरू",
-    href: "reports",
+    href: "reports/annual-report",
     color: "bg-purple-50 text-purple-700",
   },
 ];

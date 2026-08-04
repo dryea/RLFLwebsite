@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { Heart, ArrowRight } from "lucide-react";
+import StaggerChildren, { StaggerItem } from "@/components/motion/StaggerChildren";
 
 interface CSRActivity {
   id: number;
@@ -22,11 +23,11 @@ export default function CSRGrid({ activities, lang }: { activities: CSRActivity[
   const items = activities.length ? activities : defaultActivities;
 
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+    <StaggerChildren className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
       {items.map((activity) => (
+        <StaggerItem key={activity.id} className="h-full">
         <div
-          key={activity.id}
-          className="group relative overflow-hidden rounded-xl border border-gray-100 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+          className="group relative h-full overflow-hidden rounded-xl border border-gray-100 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
           style={{ borderTop: "3px solid transparent" }}
           onMouseEnter={(e) => { e.currentTarget.style.borderTop = "3px solid #702B86"; }}
           onMouseLeave={(e) => { e.currentTarget.style.borderTop = "3px solid transparent"; }}
@@ -48,7 +49,8 @@ export default function CSRGrid({ activities, lang }: { activities: CSRActivity[
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
+        </StaggerItem>
       ))}
-    </div>
+    </StaggerChildren>
   );
 }

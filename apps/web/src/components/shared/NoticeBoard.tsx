@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Megaphone, Download, ExternalLink } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface Notice {
   id: number;
@@ -72,8 +73,11 @@ export default function NoticeBoard({
 
       <div className="space-y-4">
         {filtered.map((notice, i) => (
-          <div
+          <motion.div
             key={notice.id || i}
+            initial={{ opacity: 0, x: -16 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: i * 0.05, duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
             className="rounded-xl border bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
           >
             <div className="flex items-start justify-between">
@@ -133,7 +137,7 @@ export default function NoticeBoard({
                 )}
               </div>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
 

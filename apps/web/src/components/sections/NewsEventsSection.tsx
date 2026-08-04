@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Calendar, ArrowRight, ExternalLink } from "lucide-react";
 import { API } from "@/lib/api";
+import StaggerChildren, { StaggerItem } from "@/components/motion/StaggerChildren";
 
 interface NewsItem {
   id: number;
@@ -72,12 +73,12 @@ export default function NewsEventsSection({ lang }: { lang: string }) {
         </button>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <StaggerChildren className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         {displayItems.map((item) => (
+          <StaggerItem key={item.id} className="h-full">
           <Link
-            key={item.id}
             href={`/${lang}/${tab}/${item.slug}`}
-            className="group relative overflow-hidden rounded-xl bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+            className="group relative block h-full overflow-hidden rounded-xl bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
           >
             <div
               className="flex h-44 items-end bg-gradient-to-t from-primary-900/80 via-primary-900/40 to-primary-700/20 bg-cover bg-center"
@@ -104,8 +105,9 @@ export default function NewsEventsSection({ lang }: { lang: string }) {
               </span>
             </div>
           </Link>
+          </StaggerItem>
         ))}
-      </div>
+      </StaggerChildren>
     </div>
   );
 }

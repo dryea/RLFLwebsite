@@ -1,4 +1,6 @@
 import Link from "next/link";
+import Reveal from "@/components/motion/Reveal";
+import AnimatedStat from "./AnimatedStat";
 
 interface Stat {
   label: string;
@@ -28,7 +30,7 @@ export default function AboutSection({
     <section className="section bg-white">
       <div className="container-page">
         <div className="about-section-grid grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
-          <div className="about-text-content">
+          <Reveal type="slideInLeft" className="about-text-content">
             <h4 className="mb-2 text-xs font-bold uppercase tracking-[0.1em] text-secondary-700">
               {lang === "en" ? "Introduction" : "परिचय"}
             </h4>
@@ -48,15 +50,12 @@ export default function AboutSection({
 
             <div className="stats-grid mt-8 grid grid-cols-3 gap-5">
               {s.map((stat) => (
-                <div key={stat.label} className="stat-item relative overflow-hidden rounded-xl border border-gray-100 bg-gray-50 p-5 text-center">
-                  <div className="absolute bottom-0 left-0 h-1 w-full bg-secondary-500" />
-                  <div className="text-3xl font-extrabold text-primary-500 lg:text-4xl">
-                    {stat.value}{stat.suffix || ""}
-                  </div>
-                  <div className="mt-1 text-sm font-medium text-gray-500">
-                    {lang === "np" && stat.labelNp ? stat.labelNp : stat.label}
-                  </div>
-                </div>
+                <AnimatedStat
+                  key={stat.label}
+                  value={stat.value}
+                  suffix={stat.suffix}
+                  label={lang === "np" && stat.labelNp ? stat.labelNp : stat.label}
+                />
               ))}
             </div>
 
@@ -66,9 +65,9 @@ export default function AboutSection({
             >
               {lang === "en" ? "Read More About Us" : "हाम्रो बारेमा थप पढ्नुहोस्"}
             </Link>
-          </div>
+          </Reveal>
 
-          <div className="about-image-frame relative">
+          <Reveal type="slideInRight" className="about-image-frame relative" delay={0.1}>
             <img
               src={imageUrl || "/assets/about-building.jpg"}
               alt="Reliance Finance"
@@ -84,7 +83,7 @@ export default function AboutSection({
                   : "नेपाल राष्ट्र बैंकद्वारा स्थापित र इजाजतपत्र प्राप्त।"}
               </p>
             </div>
-          </div>
+          </Reveal>
         </div>
       </div>
     </section>

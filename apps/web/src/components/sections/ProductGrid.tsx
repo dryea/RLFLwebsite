@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, ImageIcon, Flame, Star, X, Eye, Scale } from "lucide-react";
 import { getProductsByType } from "@/lib/public-api";
+import StaggerChildren, { StaggerItem } from "@/components/motion/StaggerChildren";
 
 export default function ProductGrid({
   type,
@@ -52,9 +53,10 @@ export default function ProductGrid({
         </Link>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <StaggerChildren className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {products.map((p: any) => (
-          <div key={p.id} className="group relative flex flex-col overflow-hidden rounded-xl border bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+          <StaggerItem key={p.id} className="h-full">
+          <div className="group relative flex h-full flex-col overflow-hidden rounded-xl border bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
             {p.isPopular && (
               <span className="absolute left-3 top-3 z-10 inline-flex items-center gap-1 rounded-full bg-orange-500 px-2.5 py-1 text-[11px] font-semibold text-white shadow">
                 <Flame className="h-3 w-3" /> {isNp ? "लोकप्रिय" : "Most Popular"}
@@ -116,8 +118,9 @@ export default function ProductGrid({
               </div>
             </div>
           </div>
+          </StaggerItem>
         ))}
-      </div>
+      </StaggerChildren>
 
       {quickView && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setQuickView(null)}>

@@ -19,7 +19,9 @@ import {
   heroSlides, offeringCards, offeringLinks, siteStats, appBanner, csrActivities,
   reviews, appointments, trainings,
   navigation, navigationItems,
+  seoSettings, seoAnalysis, rankTracker, seoRedirects, schemaMarkup,
 } from "./db/schema";
+import { analyzeSeo, type SeoAnalyzerInput } from "./lib/seo";
 
 type Bindings = {
   DB: D1Database;
@@ -630,7 +632,7 @@ app.use("/api/cms/*", requireAuth);
 
 // ── CMS: Users & Roles ──
 
-const allResources = ["pages", "products", "services", "team", "branches", "rates", "news", "events", "notices", "reports", "gallery", "downloads", "faq", "careers", "applications", "media", "users", "roles", "settings", "enquiries", "calendar", "auctions", "merchants", "navigation", "navigation-items"];
+const allResources = ["pages", "products", "services", "team", "branches", "rates", "news", "events", "notices", "reports", "gallery", "downloads", "faq", "careers", "applications", "media", "users", "roles", "settings", "enquiries", "calendar", "auctions", "merchants", "navigation", "navigation-items", "seo", "redirects"];
 
 // Seed default roles if none exist
 app.post("/api/cms/roles/seed", async (c) => {
@@ -1157,6 +1159,293 @@ app.put("/api/cms/nav-items/reorder", async (c) => {
     await db.update(navigationItems).set(updateData).where(eq(navigationItems.id, item.id)).run();
   }
   return c.json({ success: true });
+});
+
+// ── CMS: SEO ──
+
+// Get all SEO settings as a map
+app.get("/api/cms/seo/settings", async (c) => {
+  const db = createDb(c.env.DB);
+  const rows = await db.select().from(seoSettings).all();
+  const map: Record<string, any> = {};
+  for (const row of rows) map[row.key] = row.value;
+  return c.json(map);
+});
+
+// Bulk upsert SEO settings
+app.put("/api/cms/seo/settings", async (c) => {
+  const db = createDb(c.env.DB);
+  const data = await c.req.json() as Record<string, any>;
+  for (const [key, value] of Object.entries(data)) {
+    const existing = await db.select().from(seoSettings).where(eq(seoSettings.key, key)).get();
+    if (existing) {
+      await db.update(seoSettings).set({ value, updatedAt: new Date().toISOString() }).where(eq(seoSettings.id, existing.id)).run();
+    } else {
+      await db.insert(seoSettings).values({ key, value }).run();
+    }
+  }
+  return c.json({ success: true });
+});
+
+// Get all SEO analyses (latest per resource), optionally filterable by type
+app.get("/api/cms/seo/analyses", async (c) => {
+  const db = createDb(c.env.DB);
+  const type = c.req.query("type");
+  const conditions = type ? [eq(seoAnalysis.resourceType, type as string)] : [];
+  const result = await db.select().from(seoAnalysis).where(conditions.length ? and(...conditions) : undefined).all();
+  return c.json(result);
+});
+
+// Run/refresh SEO analysis for a given resource, then store it
+app.post("/api/cms/seo/analyze", async (c) => {
+  const db = createDb(c.env.DB);
+  const body = await c.req.json() as {
+    resourceType: string;
+    resourceId: number;
+    title: string;
+    description?: string;
+    content?: string;
+    focusKeyword?: string;
+    slug?: string;
+    headings?: string[];
+    internalLinks?: number;
+    externalLinks?: number;
+    images?: { alt?: string }[];
+  };
+  if (!body.resourceType || !body.resourceId) return c.json({ error: "resourceType and resourceId required" }, 400);
+
+  const result = analyzeSeo({
+    title: body.title,
+    description: body.description,
+    content: body.content,
+    focusKeyword: body.focusKeyword,
+    slug: body.slug,
+    headings: body.headings,
+    internalLinks: body.internalLinks,
+    externalLinks: body.externalLinks,
+    images: body.images,
+  });
+
+  const existing = await db.select().from(seoAnalysis)
+    .where(and(eq(seoAnalysis.resourceType, body.resourceType), eq(seoAnalysis.resourceId, body.resourceId)))
+    .get();
+
+  const payload = {
+    score: result.score,
+    focusKeyword: body.focusKeyword || null,
+    issues: result.issues,
+    data: result.data,
+    analyzedAt: new Date().toISOString(),
+  };
+
+  if (existing) {
+    await db.update(seoAnalysis).set(payload).where(eq(seoAnalysis.id, existing.id)).run();
+  } else {
+    await db.insert(seoAnalysis).values({ resourceType: body.resourceType, resourceId: body.resourceId, ...payload }).run();
+  }
+  return c.json(payload);
+});
+
+// Get single analysis for a resource
+app.get("/api/cms/seo/analyses/:type/:id", async (c) => {
+  const db = createDb(c.env.DB);
+  const type = c.req.param("type");
+  const id = parseInt(c.req.param("id"));
+  const result = await db.select().from(seoAnalysis)
+    .where(and(eq(seoAnalysis.resourceType, type), eq(seoAnalysis.resourceId, id)))
+    .get();
+  if (!result) return c.json({ error: "Not found" }, 404);
+  return c.json(result);
+});
+
+// Delete an analysis
+app.delete("/api/cms/seo/analyses/:type/:id", async (c) => {
+  const db = createDb(c.env.DB);
+  const type = c.req.param("type");
+  const id = parseInt(c.req.param("id"));
+  await db.delete(seoAnalysis).where(and(eq(seoAnalysis.resourceType, type), eq(seoAnalysis.resourceId, id))).run();
+  return c.json({ success: true });
+});
+
+// Rank Tracker CRUD
+app.get("/api/cms/seo/rank-tracker", async (c) => {
+  const db = createDb(c.env.DB);
+  const result = await db.select().from(rankTracker).orderBy(rankTracker.id).all();
+  return c.json(result);
+});
+
+app.post("/api/cms/seo/rank-tracker", async (c) => {
+  const db = createDb(c.env.DB);
+  const data = await c.req.json() as Record<string, any>;
+  if (!data.keyword) return c.json({ error: "keyword required" }, 400);
+  const result = await db.insert(rankTracker).values({
+    keyword: data.keyword,
+    url: data.url || null,
+    position: data.position != null ? parseInt(data.position) : null,
+    previousPosition: null,
+    searchEngine: data.searchEngine || "google",
+    location: data.location || null,
+    trend: "new",
+    history: data.position != null ? [{ date: new Date().toISOString(), position: parseInt(data.position) }] : [],
+  }).returning().get();
+  return c.json(result, 201);
+});
+
+app.put("/api/cms/seo/rank-tracker/:id", async (c) => {
+  const db = createDb(c.env.DB);
+  const id = parseInt(c.req.param("id"));
+  const data = await c.req.json() as Record<string, any>;
+  const existing = await db.select().from(rankTracker).where(eq(rankTracker.id, id)).get();
+  if (!existing) return c.json({ error: "Not found" }, 404);
+
+  const history = Array.isArray(existing.history) ? [...existing.history] : [];
+  const previousPosition = existing.position;
+  let position = existing.position;
+  let trend = existing.trend;
+
+  if (data.position != null) {
+    position = parseInt(data.position);
+    history.push({ date: new Date().toISOString(), position });
+    if (previousPosition != null) {
+      trend = position < previousPosition ? "up" : position > previousPosition ? "down" : "same";
+    }
+  }
+
+  await db.update(rankTracker).set({
+    keyword: data.keyword ?? existing.keyword,
+    url: data.url !== undefined ? data.url : existing.url,
+    position,
+    previousPosition,
+    searchEngine: data.searchEngine ?? existing.searchEngine,
+    location: data.location !== undefined ? data.location : existing.location,
+    trend,
+    history,
+    lastChecked: new Date().toISOString(),
+  }).where(eq(rankTracker.id, id)).run();
+
+  const updated = await db.select().from(rankTracker).where(eq(rankTracker.id, id)).get();
+  return c.json(updated);
+});
+
+app.delete("/api/cms/seo/rank-tracker/:id", async (c) => {
+  const db = createDb(c.env.DB);
+  const id = parseInt(c.req.param("id"));
+  await db.delete(rankTracker).where(eq(rankTracker.id, id)).run();
+  return c.json({ success: true });
+});
+
+// Redirects CRUD
+app.get("/api/cms/seo/redirects", async (c) => {
+  const db = createDb(c.env.DB);
+  const result = await db.select().from(seoRedirects).orderBy(seoRedirects.id).all();
+  return c.json(result);
+});
+
+app.post("/api/cms/seo/redirects", async (c) => {
+  const db = createDb(c.env.DB);
+  const data = await c.req.json() as Record<string, any>;
+  if (!data.source || !data.target) return c.json({ error: "source and target required" }, 400);
+  const result = await db.insert(seoRedirects).values({
+    source: data.source,
+    target: data.target,
+    type: data.type || 301,
+    isActive: data.isActive !== false,
+  }).returning().get();
+  return c.json(result, 201);
+});
+
+app.put("/api/cms/seo/redirects/:id", async (c) => {
+  const db = createDb(c.env.DB);
+  const id = parseInt(c.req.param("id"));
+  const data = await c.req.json() as Record<string, any>;
+  const values: Record<string, any> = {};
+  if (data.source !== undefined) values.source = data.source;
+  if (data.target !== undefined) values.target = data.target;
+  if (data.type !== undefined) values.type = data.type;
+  if (data.isActive !== undefined) values.isActive = data.isActive;
+  await db.update(seoRedirects).set(values).where(eq(seoRedirects.id, id)).run();
+  const updated = await db.select().from(seoRedirects).where(eq(seoRedirects.id, id)).get();
+  return c.json(updated);
+});
+
+app.delete("/api/cms/seo/redirects/:id", async (c) => {
+  const db = createDb(c.env.DB);
+  const id = parseInt(c.req.param("id"));
+  await db.delete(seoRedirects).where(eq(seoRedirects.id, id)).run();
+  return c.json({ success: true });
+});
+
+// Schema markup CRUD
+app.get("/api/cms/seo/schema", async (c) => {
+  const db = createDb(c.env.DB);
+  const result = await db.select().from(schemaMarkup).all();
+  return c.json(result);
+});
+
+app.post("/api/cms/seo/schema", async (c) => {
+  const db = createDb(c.env.DB);
+  const data = await c.req.json() as Record<string, any>;
+  if (!data.resourceType || !data.resourceId) return c.json({ error: "resourceType and resourceId required" }, 400);
+  const existing = await db.select().from(schemaMarkup)
+    .where(and(eq(schemaMarkup.resourceType, data.resourceType), eq(schemaMarkup.resourceId, data.resourceId)))
+    .get();
+  if (existing) {
+    await db.update(schemaMarkup).set({
+      schemaType: data.schemaType || "auto",
+      jsonLd: data.jsonLd || null,
+      isActive: data.isActive !== false,
+      updatedAt: new Date().toISOString(),
+    }).where(eq(schemaMarkup.id, existing.id)).run();
+    return c.json({ ...existing, schemaType: data.schemaType, jsonLd: data.jsonLd });
+  }
+  const result = await db.insert(schemaMarkup).values({
+    resourceType: data.resourceType,
+    resourceId: data.resourceId,
+    schemaType: data.schemaType || "auto",
+    jsonLd: data.jsonLd || null,
+    isActive: data.isActive !== false,
+  }).returning().get();
+  return c.json(result, 201);
+});
+
+app.delete("/api/cms/seo/schema/:type/:id", async (c) => {
+  const db = createDb(c.env.DB);
+  const type = c.req.param("type");
+  const id = parseInt(c.req.param("id"));
+  await db.delete(schemaMarkup).where(and(eq(schemaMarkup.resourceType, type), eq(schemaMarkup.resourceId, id))).run();
+  return c.json({ success: true });
+});
+
+// ── Public SEO ──
+
+// Public: get SEO settings (safe subset for meta/schema/sitemap generation)
+app.get("/api/seo/settings", async (c) => {
+  const db = createDb(c.env.DB);
+  const rows = await db.select().from(seoSettings).all();
+  const map: Record<string, any> = {};
+  for (const row of rows) map[row.key] = row.value;
+  return c.json(map);
+});
+
+// Public: get SEO meta + schema for a resource
+app.get("/api/seo/:resourceType/:resourceId", async (c) => {
+  const db = createDb(c.env.DB);
+  const type = c.req.param("resourceType");
+  const id = parseInt(c.req.param("resourceId"));
+  const analysis = await db.select().from(seoAnalysis)
+    .where(and(eq(seoAnalysis.resourceType, type), eq(seoAnalysis.resourceId, id)))
+    .get();
+  const schema = await db.select().from(schemaMarkup)
+    .where(and(eq(schemaMarkup.resourceType, type), eq(schemaMarkup.resourceId, id), eq(schemaMarkup.isActive, true)))
+    .get();
+  return c.json({ analysis, schema });
+});
+
+// Public: active redirects for middleware
+app.get("/api/seo/redirects", async (c) => {
+  const db = createDb(c.env.DB);
+  const result = await db.select().from(seoRedirects).where(eq(seoRedirects.isActive, true)).all();
+  return c.json(result);
 });
 
 // ── Search ──

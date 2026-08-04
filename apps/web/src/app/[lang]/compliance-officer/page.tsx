@@ -51,25 +51,29 @@ export default async function CompliancePage({ params }: { params: Promise<{ lan
   try {
     cms = await serverFetchAPI("/api/pages/compliance-officer");
   } catch {}
-  const content = cms?.data?.[0] || defaultContent;
+  const content = defaultContent[lang];
+  const cmsHtml = lang === "np" ? (cms?.contentNp || cms?.content) : (cms?.content || cms?.contentNp);
 
   return (
     <>
       <section className="bg-gradient-to-br from-primary-800 to-primary-900 py-12 text-white">
         <div className="container-page">
-          <h1 className="text-3xl font-bold">{content.title?.[lang] || defaultContent[lang].title}</h1>
-          <p className="mt-2 text-primary-100">{content.subtitle?.[lang] || defaultContent[lang].subtitle}</p>
+          <h1 className="text-3xl font-bold">{cms?.title || content.title}</h1>
+          <p className="mt-2 text-primary-100">{cms?.titleNp && lang === "np" ? cms.titleNp : content.subtitle}</p>
         </div>
       </section>
 
       <section className="py-12">
         <div className="container-page">
           <div className="mx-auto max-w-4xl">
+            {cmsHtml && (
+              <div className="prose max-w-none mb-8 rounded-xl border bg-white p-6 shadow-sm" dangerouslySetInnerHTML={{ __html: cmsHtml }} />
+            )}
             <div className="rounded-xl border bg-white p-6 shadow-sm">
-              <h2 className="text-xl font-bold text-gray-900">{content.officerName || defaultContent[lang].officerName}</h2>
-              <p className="text-sm text-primary-700">{content.officerRole || defaultContent[lang].officerRole}</p>
-              <p className="mt-4 text-gray-600">{content.about || defaultContent[lang].about}</p>
-              <p className="mt-3 text-sm text-gray-500">{content.contact || defaultContent[lang].contact}</p>
+              <h2 className="text-xl font-bold text-gray-900">{content.officerName}</h2>
+              <p className="text-sm text-primary-700">{content.officerRole}</p>
+              <p className="mt-4 text-gray-600">{content.about}</p>
+              <p className="mt-3 text-sm text-gray-500">{content.contact}</p>
             </div>
 
             <div className="mt-8">
@@ -77,7 +81,7 @@ export default async function CompliancePage({ params }: { params: Promise<{ lan
                 {lang === "en" ? "Key Responsibilities" : "प्रमुख जिम्मेवारीहरू"}
               </h2>
               <ul className="mt-4 space-y-2">
-                {(content.responsibilities || defaultContent[lang].responsibilities).map((r: string, i: number) => (
+                {content.responsibilities.map((r: string, i: number) => (
                   <li key={i} className="flex gap-3">
                     <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-primary-500" />
                     <span className="text-gray-600">{r}</span>
@@ -90,7 +94,7 @@ export default async function CompliancePage({ params }: { params: Promise<{ lan
               <h2 className="text-lg font-bold text-gray-900">
                 {lang === "en" ? "Whistleblower Policy" : "सूचक संरक्षण नीति"}
               </h2>
-              <p className="mt-2 text-gray-600">{content.whistleblower || defaultContent[lang].whistleblower}</p>
+              <p className="mt-2 text-gray-600">{content.whistleblower}</p>
             </div>
           </div>
         </div>

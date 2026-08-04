@@ -271,14 +271,22 @@ export const footerServices = {
 export const footerContact = {
   title: { en: "Contact", np: "सम्पर्क" },
   phone: "+977–01–5361104",
+  phones: ["+977–01–5361104", "5323117", "5361041", "5361167", "5903698"],
+  tollFree: "18105000417",
   email: "info@reliancenepal.com.np",
-  address: { en: "Reliance Bhawan, Kamaladi, Kathmandu, Nepal", np: "रिलायन्स भवन, कमलादी, काठमाडौं, नेपाल" },
+  feedbackEmail: "feedback@reliancenepal.com.np",
+  poBox: "20136",
+  address: {
+    en: "Reliance Bhawan, Kamaladi, Kathmandu-01, Kathmandu Metropolitan, Bagmati Pradesh, Nepal",
+    np: "रिलायन्स भवन, कमलादी, काठमाडौं-०१, काठमाडौं महानगरपालिका, बागमती प्रदेश, नेपाल",
+  },
 };
 
 export const socialLinks = [
-  { name: "Facebook", href: "https://www.facebook.com/reliancenepal/", icon: "facebook" },
-  { name: "Twitter", href: "https://twitter.com/reliancenepal", icon: "twitter" },
+  { name: "Facebook", href: "https://www.facebook.com/reliancefinanceltd/", icon: "facebook" },
+  { name: "Instagram", href: "https://www.instagram.com/reliancefinanceltd/", icon: "instagram" },
+  { name: "Viber", href: "https://invite.viber.com/?g2=AQBrZz8OAV%2BDHEyStTd00AxchrcNvPbNEo%2Ffod8KjA0xzbM1A6Pw8V7LaSI0EDgv", icon: "viber" },
   { name: "YouTube", href: "https://www.youtube.com/@reliancenepal", icon: "youtube" },
   { name: "LinkedIn", href: "https://np.linkedin.com/company/reliancenepal", icon: "linkedin" },
-  { name: "Instagram", href: "https://www.instagram.com/reliancenepal/", icon: "instagram" },
+  { name: "Twitter", href: "https://twitter.com/reliancenepal", icon: "twitter" },
 ];

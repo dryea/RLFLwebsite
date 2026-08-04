@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef } from "react";
+import "leaflet/dist/leaflet.css";
 
 interface Branch {
   id: number;
@@ -12,9 +13,16 @@ interface Branch {
   latitude?: number;
   longitude?: number;
   region?: string;
+  province?: string;
   bankingHours?: string;
   managerName?: string;
 }
+
+const markerIcon = `<svg width="30" height="42" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M12 0C7.03 0 3 4.03 3 9c0 5.25 7.5 13.5 9 15 .75.9 1.5.9 2.25 0 1.5-1.5 9-9.75 9-15 0-4.97-4.03-9-9-9z" fill="#702B86"/>
+  <circle cx="12" cy="9" r="4" fill="white"/>
+</svg>`;
+const markerUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(markerIcon)}`;
 
 export default function BranchMap({ branches, lang }: { branches: Branch[]; lang: string }) {
   const mapRef = useRef<HTMLDivElement>(null);
@@ -22,54 +30,69 @@ export default function BranchMap({ branches, lang }: { branches: Branch[]; lang
   const markersRef = useRef<any[]>([]);
 
   useEffect(() => {
+    let cancelled = false;
+
     async function initMap() {
       const L = await import("leaflet");
+      if (cancelled || !mapRef.current) return;
 
-      delete (L.Icon.Default.prototype as any)._getIconUrl;
-      L.Icon.Default.mergeOptions({
-        iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png",
-        iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png",
-        shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png",
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+        markersRef.current = [];
+      }
+
+      const divIcon = L.divIcon({
+        className: "",
+        html: markerIcon,
+        iconSize: [30, 42],
+        iconAnchor: [15, 42],
+        popupAnchor: [0, -38],
       });
 
-      if (!mapRef.current || mapInstanceRef.current) return;
-
-      const map = L.map(mapRef.current).setView([27.7172, 85.3240], 12);
+      const map = L.map(mapRef.current, { scrollWheelZoom: false }).setView([27.7172, 85.324], 12);
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        maxZoom: 18,
       }).addTo(map);
 
       branches.forEach((b) => {
         if (!b.latitude || !b.longitude) return;
-        const marker = L.marker([b.latitude, b.longitude])
+        const marker = L.marker([b.latitude, b.longitude], { icon: divIcon })
           .addTo(map)
           .bindPopup(`
-            <strong>${lang === "np" && b.nameNp ? b.nameNp : b.name}</strong><br/>
-            ${lang === "np" && b.addressNp ? b.addressNp : b.address}<br/>
-            ${b.phone ? `📞 ${b.phone}<br/>` : ""}
-            ${b.email ? `✉️ ${b.email}<br/>` : ""}
-            ${b.bankingHours ? `🕐 ${b.bankingHours}` : ""}
+            <div style="min-width:180px;font-family:system-ui,sans-serif;">
+              <strong style="color:#702B86;font-size:14px;">${lang === "np" && b.nameNp ? b.nameNp : b.name}</strong><br/>
+              <span style="font-size:12px;color:#555;">${lang === "np" && b.addressNp ? b.addressNp : b.address}</span><br/>
+              ${b.phone ? `<span style="font-size:12px;">📞 ${b.phone}</span><br/>` : ""}
+              ${b.email ? `<span style="font-size:12px;">✉️ ${b.email}</span><br/>` : ""}
+              ${b.bankingHours ? `<span style="font-size:12px;">🕐 ${b.bankingHours}</span>` : ""}
+            </div>
           `);
         markersRef.current.push(marker);
       });
 
       if (markersRef.current.length > 0) {
         const group = L.featureGroup(markersRef.current);
-        map.fitBounds(group.getBounds().pad(0.1));
+        map.fitBounds(group.getBounds().pad(0.15));
       }
 
+      // Ensure the map sizes correctly after layout settles
+      setTimeout(() => map.invalidateSize(), 200);
       mapInstanceRef.current = map;
     }
 
     initMap();
 
     return () => {
+      cancelled = true;
       if (mapInstanceRef.current) {
         mapInstanceRef.current.remove();
         mapInstanceRef.current = null;
       }
+      markersRef.current = [];
     };
   }, [branches, lang]);
 
-  return <div ref={mapRef} className="h-[500px] w-full rounded-xl border z-0" />;
+  return <div ref={mapRef} className="h-[500px] w-full rounded-xl border border-gray-200 z-0" />;
 }

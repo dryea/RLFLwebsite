@@ -7,6 +7,7 @@ import Link from "next/link";
 import CMSLayout from "@/components/cms/CMSLayout";
 import TipTapEditor from "@/components/cms/TipTapEditor";
 import LanguageTabs from "@/components/cms/LanguageTabs";
+import SeoAnalyzer from "@/components/cms/seo/SeoAnalyzer";
 import { api, API } from "@/lib/api";
 
 export default function CmsPageEditorPage() {
@@ -22,6 +23,7 @@ export default function CmsPageEditorPage() {
   const [language, setLanguage] = useState("en");
   const [metaTitle, setMetaTitle] = useState("");
   const [metaDescription, setMetaDescription] = useState("");
+  const [metaKeywords, setMetaKeywords] = useState("");
   const [scheduledAt, setScheduledAt] = useState<string | null>(null);
   const [titleNp, setTitleNp] = useState("");
   const [contentNp, setContentNp] = useState("");
@@ -39,6 +41,7 @@ export default function CmsPageEditorPage() {
         setLanguage(p.language);
         setMetaTitle(p.metaTitle || "");
         setMetaDescription(p.metaDescription || "");
+        setMetaKeywords(p.metaKeywords || "");
         setScheduledAt(p.scheduledAt || null);
         setTitleNp(p.titleNp || "");
         setContentNp(p.contentNp || "");
@@ -55,7 +58,7 @@ export default function CmsPageEditorPage() {
 
   async function handleSave(publish = false) {
     setSaving(true);
-    const data = { title, slug, content, titleNp, contentNp, status: publish ? "published" : "draft", language, metaTitle, metaDescription };
+    const data = { title, slug, content, titleNp, contentNp, status: publish ? "published" : "draft", language, metaTitle, metaDescription, metaKeywords };
     try {
       if (pageId) {
         await api.updatePage(pageId, data);
@@ -73,7 +76,7 @@ export default function CmsPageEditorPage() {
     if (!pageId) return;
     setSaving(true);
     try {
-      await api.updatePage(pageId, { title, slug, content, titleNp, contentNp, language, metaTitle, metaDescription });
+      await api.updatePage(pageId, { title, slug, content, titleNp, contentNp, language, metaTitle, metaDescription, metaKeywords });
       const scheduleAt = scheduledAt || new Date(Date.now() + 3600000).toISOString();
       await fetch(`${API}/api/cms/pages/${pageId}/publish`, {
         method: "POST",
@@ -195,15 +198,31 @@ export default function CmsPageEditorPage() {
             <h3 className="mb-3 text-sm font-semibold text-gray-700">SEO</h3>
             <div className="space-y-3">
               <div>
-                <label className="mb-1 block text-xs font-medium text-gray-500">Meta Title</label>
+                <label className="mb-1 block text-xs font-medium text-gray-500">Meta Title ({metaTitle.length}/60)</label>
                 <input value={metaTitle} onChange={(e) => setMetaTitle(e.target.value)} className="w-full rounded border px-2 py-1.5 text-sm outline-none focus:border-primary-500" />
               </div>
               <div>
-                <label className="mb-1 block text-xs font-medium text-gray-500">Meta Description</label>
+                <label className="mb-1 block text-xs font-medium text-gray-500">Meta Description ({metaDescription.length}/160)</label>
                 <textarea value={metaDescription} onChange={(e) => setMetaDescription(e.target.value)} rows={3} className="w-full rounded border px-2 py-1.5 text-sm outline-none focus:border-primary-500" />
+              </div>
+              <div>
+                <label className="mb-1 block text-xs font-medium text-gray-500">Meta Keywords</label>
+                <input value={metaKeywords} onChange={(e) => setMetaKeywords(e.target.value)} placeholder="savings, loans, finance" className="w-full rounded border px-2 py-1.5 text-sm outline-none focus:border-primary-500" />
               </div>
             </div>
           </div>
+
+          {!isNew && (
+            <SeoAnalyzer
+              resourceType="page"
+              resourceId={pageId!}
+              initialTitle={metaTitle || title}
+              initialDescription={metaDescription}
+              initialContent={content}
+              initialKeyword=""
+              slug={slug}
+            />
+          )}
         </div>
       </div>
     </CMSLayout>

@@ -696,3 +696,65 @@ export const navigationItems = sqliteTable("navigation_items", {
   isActive: int("is_active", { mode: "boolean" }).default(true),
   createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`),
 });
+
+// ── SEO (Rank Math-style) ──
+
+export const seoSettings = sqliteTable("seo_settings", {
+  id: int("id").primaryKey({ autoIncrement: true }),
+  key: text("key").notNull().unique(),
+  value: text("value", { mode: "json" }).notNull().$type<Record<string, any>>(),
+  description: text("description"),
+  updatedAt: text("updated_at").default(sql`CURRENT_TIMESTAMP`),
+});
+
+export const seoAnalysis = sqliteTable("seo_analysis", {
+  id: int("id").primaryKey({ autoIncrement: true }),
+  resourceType: text("resource_type").notNull(),
+  resourceId: int("resource_id").notNull(),
+  score: int("score").default(0),
+  focusKeyword: text("focus_keyword"),
+  secondaryKeywords: text("secondary_keywords", { mode: "json" }).$type<string[]>(),
+  issues: text("issues", { mode: "json" }).$type<SeoIssue[]>(),
+  data: text("data", { mode: "json" }).$type<Record<string, any>>(),
+  analyzedAt: text("analyzed_at").default(sql`CURRENT_TIMESTAMP`),
+});
+
+export const rankTracker = sqliteTable("rank_tracker", {
+  id: int("id").primaryKey({ autoIncrement: true }),
+  keyword: text("keyword").notNull(),
+  url: text("url"),
+  position: int("position"),
+  previousPosition: int("previous_position"),
+  searchEngine: text("search_engine").default("google"),
+  location: text("location"),
+  trend: text("trend").$type<"up" | "down" | "same" | "new">().default("new"),
+  history: text("history", { mode: "json" }).$type<{ date: string; position: number | null }[]>(),
+  lastChecked: text("last_checked").default(sql`CURRENT_TIMESTAMP`),
+  createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`),
+});
+
+export const seoRedirects = sqliteTable("seo_redirects", {
+  id: int("id").primaryKey({ autoIncrement: true }),
+  source: text("source").notNull(),
+  target: text("target").notNull(),
+  type: int("type").default(301),
+  isActive: int("is_active", { mode: "boolean" }).default(true),
+  createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`),
+});
+
+export const schemaMarkup = sqliteTable("schema_markup", {
+  id: int("id").primaryKey({ autoIncrement: true }),
+  resourceType: text("resource_type").notNull(),
+  resourceId: int("resource_id").notNull(),
+  schemaType: text("schema_type").default("auto"),
+  jsonLd: text("json_ld"),
+  isActive: int("is_active", { mode: "boolean" }).default(true),
+  updatedAt: text("updated_at").default(sql`CURRENT_TIMESTAMP`),
+});
+
+export interface SeoIssue {
+  code: string;
+  severity: "error" | "warning" | "good";
+  message: string;
+  action?: string;
+}

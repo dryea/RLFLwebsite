@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Phone, Mail, MapPin, ExternalLink } from "lucide-react";
+import { Phone, Mail, MapPin, ExternalLink, Inbox, Apple } from "lucide-react";
 import { useLang } from "@/contexts/LanguageContext";
 import {
   footerColumns,
@@ -72,6 +72,7 @@ const socialIconPaths: Record<string, string> = {
   youtube: "M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.94 2C5.12 20 12 20 12 20s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58zM10 15V9l6 3-6 3z",
   linkedin: "M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2zM4 6a2 2 0 1 0 0-4 2 2 0 0 0 0 4z",
   instagram: "M17 2H7a5 5 0 0 0-5 5v10a5 5 0 0 0 5 5h10a5 5 0 0 0 5-5V7a5 5 0 0 0-5-5zm-5 14a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm5-9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z",
+  viber: "M15.9 2.4C11.7 1.6 7.9 2.1 4.9 4.5c-1.9 1.5-3 3.6-3.3 6.1-.3 2.4.3 4.8 1.6 6.7v.2l-.5 3.6c0 .2.1.3.3.3.1 0 .2-.1.3-.1l2.9-1.7h.1c1.6.6 3.3.9 4.9.9 1.3 0 2.6-.2 3.9-.5 2.8-.8 5.2-2.4 6.9-4.6 1.8-2.3 2.6-5.2 2.1-8-.4-2.8-1.8-4.9-4.2-6.3-.7-.4-1.5-.7-2.5-.9zM6.2 14.8c-.2-.3-.3-.7-.4-1-.2-.5-.3-.9-.4-1.4-.1-.8 0-1.6.2-2.4.2-.6.5-1.2.9-1.8 1.6-2.1 4.2-3.2 7.1-2.9 1.2.1 2.3.5 3.3 1.1 1.6 1 2.7 2.6 2.9 4.5.1 1-.1 2-.6 2.9-.6 1.1-1.4 2.1-2.4 2.9-.9.8-2 1.4-3.1 1.9-1.2.5-2.4.7-3.6.7-.7 0-1.4-.1-2.1-.2-.5-.1-1-.3-1.5-.4h-.1c-.3-.1-.5.1-.6.4l-.2.9c-.1.1-.2.2-.4.2-.2 0-.3-.2-.3-.4l-.1-.4c-.1-.3-.1-.5-.2-.7zm3.5-6.5c-.3 0-.6.2-.6.5s.2.6.5.7c1.1.3 2.1.9 2.9 1.7.8.8 1.3 1.8 1.6 2.9 0 .3.3.5.6.5.1 0 .3-.1.4-.2.1-.3 0-.5-.2-.7-1.7-2.2-4.4-3.3-4.8-3.4-.1 0-.3-.1-.4-.1zm2.9.6c-.4.1-.6.4-.6.8 0 .3.3.6.6.6 1.1.2 2 .8 2.7 1.7.6.8 1 1.7 1 2.7 0 .3.2.6.5.6.3 0 .6-.2.6-.5.1-.1.1-.3 0-.4-.1-1.2-.5-2.3-1.2-3.3-.9-1.2-2.2-2-3.6-2.2zm2.9-.1c-.4 0-.7.3-.7.7 0 .4.3.6.6.6.8.1 1.5.4 2.1.9.6.5 1 1.2 1.1 2 0 .3.2.6.5.6.4 0 .7-.2.7-.6 0-.1 0-.2-.1-.3-.1-1.2-.6-2.3-1.4-3.2-.7-.7-1.6-1.2-2.6-1.4-.2 0-.3 0-.3 0z",
 };
 
 export default function Footer() {
@@ -109,16 +110,35 @@ export default function Footer() {
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gray-500" />
                 <span>{lang === "en" ? c.address.en : c.address.np}</span>
               </li>
-              <li>
-                <a href={`tel:${c.phone.replace(/[^0-9]/g, "")}`} className="flex items-center gap-2 transition-colors hover:text-white">
-                  <Phone className="h-4 w-4 text-gray-500" />
-                  {c.phone}
-                </a>
+              {c.phones.map((p, i) => (
+                <li key={i}>
+                  <a href={`tel:${p.replace(/[^0-9]/g, "")}`} className="flex items-center gap-2 transition-colors hover:text-white">
+                    <Phone className="h-4 w-4 text-gray-500" />
+                    {p}
+                  </a>
+                </li>
+              ))}
+              <li className="flex items-start gap-2">
+                <Phone className="mt-0.5 h-4 w-4 shrink-0 text-gray-500" />
+                <span>
+                  {lang === "en" ? "Toll-Free: " : "टोल-फ्रि: "}
+                  {c.tollFree}
+                </span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Inbox className="mt-0.5 h-4 w-4 shrink-0 text-gray-500" />
+                <span>{lang === "en" ? "PO Box: " : "हुलाक बाकस: "}{c.poBox}</span>
               </li>
               <li>
                 <a href={`mailto:${c.email}`} className="flex items-center gap-2 transition-colors hover:text-white">
                   <Mail className="h-4 w-4 text-gray-500" />
                   {c.email}
+                </a>
+              </li>
+              <li>
+                <a href={`mailto:${c.feedbackEmail}`} className="flex items-center gap-2 transition-colors hover:text-white">
+                  <Mail className="h-4 w-4 text-gray-500" />
+                  {c.feedbackEmail}
                 </a>
               </li>
             </ul>
@@ -155,17 +175,28 @@ export default function Footer() {
             <p className="mb-4 text-sm text-gray-400">
               {lang === "en" ? "Download the RFL Smart app for convenient mobile banking." : "सुविधाजनक मोबाइल बैंकिङको लागि RFL Smart एप डाउनलोड गर्नुहोस्।"}
             </p>
-            <a
-              href="https://play.google.com/store/apps/details?id=com.rfl.smart"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-lg bg-gray-800 px-4 py-2.5 text-sm text-white transition-colors hover:bg-primary-600"
-            >
-              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M17.523 12.88l-4.463-4.462-2.073 2.074 3.416 3.416-3.416 3.416 2.073 2.074 4.463-4.462a.586.586 0 0 0 0-.826zM5.578 6.443a.61.61 0 0 0-.61.61v9.895a.61.61 0 0 0 .61.61.63.63 0 0 0 .433-.18l4.734-4.734-4.734-4.734a.613.613 0 0 0-.433-.18z" />
-              </svg>
-              <span>{lang === "en" ? "Download for Android" : "एन्ड्रोइडको लागि डाउनलोड गर्नुहोस्"}</span>
-            </a>
+            <div className="flex flex-col gap-2">
+              <a
+                href="https://play.google.com/store/apps/details?id=com.rfl.smart"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-lg bg-gray-800 px-4 py-2.5 text-sm text-white transition-colors hover:bg-primary-600"
+              >
+                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M17.523 12.88l-4.463-4.462-2.073 2.074 3.416 3.416-3.416 3.416 2.073 2.074 4.463-4.462a.586.586 0 0 0 0-.826zM5.578 6.443a.61.61 0 0 0-.61.61v9.895a.61.61 0 0 0 .61.61.63.63 0 0 0 .433-.18l4.734-4.734-4.734-4.734a.613.613 0 0 0-.433-.18z" />
+                </svg>
+                <span>{lang === "en" ? "Download for Android" : "एन्ड्रोइडको लागि डाउनलोड गर्नुहोस्"}</span>
+              </a>
+              <a
+                href="https://apps.apple.com/np/app/reliance-finance-smart/id1554035637"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-lg bg-gray-800 px-4 py-2.5 text-sm text-white transition-colors hover:bg-primary-600"
+              >
+                <Apple className="h-5 w-5" />
+                <span>{lang === "en" ? "Download for iOS" : "आईओएसको लागि डाउनलोड गर्नुहोस्"}</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>

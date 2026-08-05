@@ -93,7 +93,7 @@ export default function Header({ lang, initialNavData }: HeaderProps) {
             </a>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <ThemeToggle />
             <CommandPalette lang={lang} />
             <LanguageSwitcher />

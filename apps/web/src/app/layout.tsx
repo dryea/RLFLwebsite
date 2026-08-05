@@ -28,12 +28,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${outfit.variable} ${inter.variable} ${devanagari.variable} font-body antialiased`}>
+    <html lang="en" className={`${outfit.variable} ${inter.variable} ${devanagari.variable} font-body antialiased overflow-x-clip`}>
       <head>
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#702B86" />
       </head>
-      <body className="flex min-h-screen flex-col">
+      <body className="flex min-h-screen flex-col overflow-x-clip">
         <ThemeProvider>
           <a
             href="#main-content"

@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Prevent horizontal page scroll from decorative/full-width elements */
+html, body {
+  overflow-x: clip;
+}
+
 :root {
   --bg-primary: #fff;
   --text-primary: #1F2937;

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useLang } from "@/contexts/LanguageContext";
 import { API } from "@/lib/api";
 import AddressFields from "@/components/shared/AddressFields";
+import { trackEvent } from "@/components/shared/Analytics";
 
 export default function LangLoanEnquiryPage() {
   const lang = useLang();
@@ -25,6 +26,7 @@ export default function LangLoanEnquiryPage() {
       });
       if (!res.ok) throw new Error("Failed");
       setSubmitted(true);
+      trackEvent("conversion", "loan_enquiry");
     } catch {
       alert(isNp ? "पेश गर्न सकिएन। फेरि प्रयास गर्नुहोस्।" : "Submission failed. Please try again.");
     }

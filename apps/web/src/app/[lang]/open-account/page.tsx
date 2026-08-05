@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { UserPlus, ShieldCheck, CheckCircle2, Upload, FileText, Sparkles, Building } from "lucide-react";
 import { useLang } from "@/contexts/LanguageContext";
 import { API } from "@/lib/api";
+import { trackEvent } from "@/components/shared/Analytics";
 import Stepper from "@/components/ui/Stepper";
 import AddressFields from "@/components/shared/AddressFields";
 import Button from "@/components/ui/Button";
@@ -88,6 +89,7 @@ function OpenAccountFormContent() {
       const data = await res.json();
       if (res.ok) {
         setReference(data.referenceNo || `RFL-${Math.floor(100000 + Math.random() * 900000)}`);
+        trackEvent("conversion", "account_opening");
         setStep(4);
       } else {
         alert(isNp ? "पेश गर्न सकिएन। फेरि प्रयास गर्नुहोस्।" : "Submission failed. Please try again.");

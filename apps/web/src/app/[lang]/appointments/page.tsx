@@ -5,6 +5,7 @@ import { CalendarClock, Phone, Building2, CheckCircle2 } from "lucide-react";
 import { useLang } from "@/contexts/LanguageContext";
 import { getBranches } from "@/lib/public-api";
 import { API } from "@/lib/api";
+import { trackEvent } from "@/components/shared/Analytics";
 
 export default function AppointmentPage() {
   const lang = useLang();
@@ -29,6 +30,7 @@ export default function AppointmentPage() {
       });
       if (!res.ok) throw new Error("Failed");
       setSubmitted(true);
+      trackEvent("conversion", "appointment_booking");
     } catch {
       alert(isNp ? "पेश गर्न सकिएन। फेरि प्रयास गर्नुहोस्।" : "Submission failed. Try again.");
     }

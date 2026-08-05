@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Phone, Mail, MapPin } from "lucide-react";
 import { useLang } from "@/contexts/LanguageContext";
 import { API } from "@/lib/api";
+import { trackEvent } from "@/components/shared/Analytics";
 
 export default function LangContactPage() {
   const lang = useLang();
@@ -22,6 +23,7 @@ export default function LangContactPage() {
         body: JSON.stringify(form),
       });
       setSubmitted(true);
+      trackEvent("conversion", "contact_form");
     } catch { alert(isNp ? "पठाउन सकिएन। फेरि प्रयास गर्नुहोस्।" : "Failed to send. Try again."); }
     setLoading(false);
   }

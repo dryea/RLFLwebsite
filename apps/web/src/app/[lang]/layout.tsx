@@ -8,6 +8,7 @@ import AccessibilityToolbar from "@/components/shared/AccessibilityToolbar";
 import IntlProvider from "@/components/providers/IntlProvider";
 import Analytics from "@/components/shared/Analytics";
 import ChatWidget from "@/components/shared/ChatWidget";
+import BackToTop from "@/components/shared/BackToTop";
 import { getSeoSettings } from "@/lib/seo";
 
 export async function generateStaticParams() {
@@ -86,6 +87,7 @@ export default async function LangLayout({
       <AccessibilityToolbar />
       <Analytics />
       <ChatWidget lang={lang} />
+      <BackToTop />
     </IntlProvider>
   );
 }

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Star, Quote, Send } from "lucide-react";
 import { useLang } from "@/contexts/LanguageContext";
 import { API } from "@/lib/api";
+import { trackEvent } from "@/components/shared/Analytics";
 
 export default function TestimonialsPage() {
   const lang = useLang();
@@ -29,6 +30,7 @@ export default function TestimonialsPage() {
     });
     if (res.ok) {
       setSubmitted(true);
+      trackEvent("conversion", "review_submit");
       setForm({ name: "", email: "", rating: 5, review: "" });
     }
   }

@@ -25,7 +25,15 @@ export default function ProductDetailPage() {
   useEffect(() => {
     getProducts()
       .then((products: any[]) => {
-        const found = products.find((p: any) => p.slug === slug);
+        const normalize = (str: string) => (str || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+        const normSlug = normalize(slug);
+        const found = products.find(
+          (p: any) =>
+            p.slug === slug ||
+            normalize(p.slug) === normSlug ||
+            normalize(p.slug).includes(normSlug) ||
+            normSlug.includes(normalize(p.slug))
+        );
         setProduct(found || null);
       })
       .catch(() => setProduct(null))

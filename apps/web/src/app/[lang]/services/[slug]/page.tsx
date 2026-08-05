@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, CheckCircle, FileText } from "lucide-react";
+import { CheckCircle, FileText } from "lucide-react";
 import { useLang } from "@/contexts/LanguageContext";
 import { getServices } from "@/lib/public-api";
 
@@ -57,9 +57,19 @@ export default function ServiceDetailPage() {
     <>
       <section className="bg-gradient-to-br from-primary-800 via-primary-700 to-primary-900 py-14 text-white">
         <div className="container-page">
-          <Link href="/services" className="mb-4 inline-flex items-center gap-1 text-sm text-primary-200 transition-colors hover:text-white">
-            <ArrowLeft className="h-4 w-4" /> {lang === "en" ? "Back to Services" : "सेवाहरूमा फर्कनुहोस्"}
-          </Link>
+          <nav aria-label="Breadcrumb" className="mb-4">
+            <ol className="flex flex-wrap items-center gap-1.5 text-sm text-primary-200">
+              <li>
+                <Link href={`/${lang}`} className="transition-colors hover:text-white">{lang === "en" ? "Home" : "गृह"}</Link>
+              </li>
+              <li aria-hidden="true" className="text-primary-300">/</li>
+              <li>
+                <Link href="/services" className="transition-colors hover:text-white">{lang === "en" ? "Services" : "सेवाहरू"}</Link>
+              </li>
+              <li aria-hidden="true" className="text-primary-300">/</li>
+              <li className="font-medium text-white" aria-current="page">{service.title}</li>
+            </ol>
+          </nav>
           <div className="mb-3 text-4xl">{service.icon || "📱"}</div>
           <h1 className="text-3xl font-bold md:text-4xl">{service.title}</h1>
           {service.summary && <p className="mt-3 max-w-2xl text-lg text-primary-100">{service.summary}</p>}

@@ -97,8 +97,7 @@ function OpenAccountFormContent() {
         toast("error", isNp ? "पेश गर्न सकिएन। फेरि प्रयास गर्नुहोस्।" : "Submission failed. Please try again.");
       }
     } catch {
-      setReference(`RFL-${Math.floor(100000 + Math.random() * 900000)}`);
-      setStep(4);
+      toast("error", isNp ? "नेटवर्क त्रुटि। पुन: प्रयास गर्नुहोस्।" : "Network error. Please try again.");
     }
     setSubmitting(false);
   }

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, CheckCircle, FileText, Users, Percent, Banknote } from "lucide-react";
+import { CheckCircle, FileText, Users, Percent, Banknote } from "lucide-react";
 import { useLang } from "@/contexts/LanguageContext";
 import { getProducts } from "@/lib/public-api";
 import JsonLdScript from "@/components/shared/JsonLdScript";
@@ -89,11 +89,45 @@ export default function ProductDetailPage() {
           seller: { "@type": "Organization", name: "Reliance Finance Limited" },
         },
       }} />
+      <JsonLdScript
+        data={{
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: lang === "en" ? "Home" : "गृह", item: `https://rfil-web.sudeepdhakal.workers.dev/${lang}` },
+            { "@type": "ListItem", position: 2, name: lang === "en" ? "Products" : "उत्पादनहरू", item: `https://rfil-web.sudeepdhakal.workers.dev/${lang}/products` },
+            ...(cat
+              ? [{ "@type": "ListItem", position: 3, name: lang === "np" ? cat.np : cat.en, item: `https://rfil-web.sudeepdhakal.workers.dev${lang}${cat.href}` }]
+              : []),
+            { "@type": "ListItem", position: 4, name: lang === "np" && product.titleNp ? product.titleNp : product.title },
+          ],
+        }}
+      />
       <section className="bg-gradient-to-br from-primary-800 via-primary-700 to-primary-900 py-14 text-white">
         <div className="container-page">
-          <Link href={`/${lang}${cat?.href || "/products"}`} className="mb-4 inline-flex items-center gap-1 text-sm text-primary-200 transition-colors hover:text-white">
-            <ArrowLeft className="h-4 w-4" /> {lang === "en" ? `Back to ${cat?.en || "Products"}` : cat ? cat.np : "उत्पादनहरूमा फर्कनुहोस्"}
-          </Link>
+          <nav aria-label="Breadcrumb" className="mb-4">
+            <ol className="flex flex-wrap items-center gap-1.5 text-sm text-primary-200">
+              <li>
+                <Link href={`/${lang}`} className="transition-colors hover:text-white">{lang === "en" ? "Home" : "गृह"}</Link>
+              </li>
+              <li aria-hidden="true" className="text-primary-300">/</li>
+              <li>
+                <Link href={`/${lang}/products`} className="transition-colors hover:text-white">{lang === "en" ? "Products" : "उत्पादनहरू"}</Link>
+              </li>
+              {cat && (
+                <>
+                  <li aria-hidden="true" className="text-primary-300">/</li>
+                  <li>
+                    <Link href={`/${lang}${cat.href}`} className="transition-colors hover:text-white">{lang === "np" ? cat.np : cat.en}</Link>
+                  </li>
+                </>
+              )}
+              <li aria-hidden="true" className="text-primary-300">/</li>
+              <li className="font-medium text-white" aria-current="page">
+                {lang === "np" && product.titleNp ? product.titleNp : product.title}
+              </li>
+            </ol>
+          </nav>
           <h1 className="text-3xl font-bold md:text-4xl">{lang === "np" && product.titleNp ? product.titleNp : product.title}</h1>
           {product.summary && <p className="mt-3 max-w-2xl text-lg text-primary-100">{product.summary}</p>}
           <div className="mt-4 flex flex-wrap gap-4 text-sm text-primary-200">

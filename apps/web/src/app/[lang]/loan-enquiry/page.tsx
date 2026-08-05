@@ -5,6 +5,7 @@ import { useLang } from "@/contexts/LanguageContext";
 import { API } from "@/lib/api";
 import AddressFields from "@/components/shared/AddressFields";
 import { trackEvent } from "@/components/shared/Analytics";
+import SuccessCheck from "@/components/ui/SuccessCheck";
 import { useToast } from "@/components/ui/Toast";
 
 export default function LangLoanEnquiryPage() {
@@ -39,7 +40,7 @@ export default function LangLoanEnquiryPage() {
     return (
       <section className="flex flex-1 items-center justify-center py-20">
         <div className="text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 text-2xl text-green-600">✓</div>
+          <SuccessCheck size={64} />
           <h2 className="text-2xl font-bold text-gray-900">{isNp ? "सोधपुछ पेश भयो" : "Enquiry Submitted"}</h2>
           <p className="mt-2 text-gray-600">{isNp ? "हामी चाँडै सम्पर्क गर्नेछौं।" : "We will contact you shortly."}</p>
         </div>

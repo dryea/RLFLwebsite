@@ -2,6 +2,7 @@
 import { useState, useMemo } from "react";
 import { IndianRupee, Percent, CalendarDays, Calculator, HandCoins, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import DonutChart from "@/components/ui/DonutChart";
 import { localize } from "@/lib/localize";
 
 const RATES: Record<string, Record<number, number>> = {
@@ -160,6 +161,30 @@ export default function FDMaturityCalculator({ lang }: { lang: string }) {
               {lang === "en" ? "Maturity Amount" : "परिपक्वता रकम"}
             </p>
             <p className="text-lg font-bold text-green-700">NPR {result.maturityAmount.toLocaleString()}</p>
+          </div>
+        </div>
+
+        <div className="mb-6 flex items-center gap-6 rounded-xl border border-gray-100 bg-gray-50 p-4">
+          <DonutChart
+            segments={[
+              { value: principal, color: "#702B86", label: "Deposit" },
+              { value: result.totalInterest, color: "#F2A900", label: "Interest" },
+            ]}
+            size={120}
+            centerLabel="FD"
+            centerSub={lang === "en" ? "Growth" : "वृद्धि"}
+          />
+          <div className="space-y-1.5 text-sm">
+            <div className="flex items-center gap-2">
+              <span className="h-2.5 w-2.5 rounded-full bg-primary-600" />
+              <span className="text-gray-600">{lang === "en" ? "Deposit" : "निक्षेप"}</span>
+              <span className="font-semibold text-gray-900">{principal.toLocaleString()}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="h-2.5 w-2.5 rounded-full bg-secondary-500" />
+              <span className="text-gray-600">{lang === "en" ? "Interest" : "ब्याज"}</span>
+              <span className="font-semibold text-gray-900">{result.totalInterest.toLocaleString()}</span>
+            </div>
           </div>
         </div>
 

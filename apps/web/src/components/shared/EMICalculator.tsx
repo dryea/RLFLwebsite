@@ -90,15 +90,27 @@ export default function EMICalculator({ lang = "en" }: { lang?: string }) {
                 <p className="text-2xl font-bold text-green-700">Rs. {result.totalPayment.toLocaleString()}</p>
               </div>
             </div>
-            <div className="h-48">
+            <div className="relative h-48">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <Pie data={pieData} cx="50%" cy="50%" innerRadius={50} outerRadius={80} dataKey="value" label={({ name, percent }: any) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}>
+                  <Pie data={pieData} cx="50%" cy="50%" innerRadius={50} outerRadius={80} dataKey="value" paddingAngle={3} strokeWidth={2}>
                     {pieData.map((_, i) => <Cell key={i} fill={COLORS[i]} />)}
                   </Pie>
-                  <Tooltip />
+                  <Tooltip formatter={(v: any) => `Rs. ${Number(v).toLocaleString()}`} />
                 </PieChart>
               </ResponsiveContainer>
+              <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
+                <span className="text-[11px] text-gray-500">{isNp ? "कुल भुक्तानी" : "Total"}</span>
+                <span className="text-lg font-extrabold text-gray-900">Rs. {result.totalPayment.toLocaleString()}</span>
+              </div>
+            </div>
+            <div className="mt-3 flex justify-center gap-4">
+              {pieData.map((d, i) => (
+                <div key={d.name} className="flex items-center gap-1.5 text-xs text-gray-600">
+                  <span className="h-2.5 w-2.5 rounded-full" style={{ background: COLORS[i] }} />
+                  {d.name}: <span className="font-semibold">{((d.value / result.totalPayment) * 100).toFixed(0)}%</span>
+                </div>
+              ))}
             </div>
             <button onClick={() => setShowSchedule(!showSchedule)} className="mt-4 w-full rounded-lg border px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50">
               {showSchedule ? (isNp ? "लुकाउनुहोस्" : "Hide") : (isNp ? "देखाउनुहोस्" : "Show")} {isNp ? "ऋण तालिका" : "Amortization Schedule"}

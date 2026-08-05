@@ -6,6 +6,7 @@ import { useLang } from "@/contexts/LanguageContext";
 import { API } from "@/lib/api";
 import { trackEvent } from "@/components/shared/Analytics";
 import { useToast } from "@/components/ui/Toast";
+import SuccessCheck from "@/components/ui/SuccessCheck";
 
 export default function LangContactPage() {
   const lang = useLang();
@@ -66,7 +67,7 @@ export default function LangContactPage() {
             <div className="lg:col-span-2">
               {submitted ? (
                 <div className="rounded-xl border bg-white p-12 text-center shadow-sm">
-                  <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 text-2xl text-green-600">✓</div>
+                  <SuccessCheck size={64} />
                   <h2 className="text-xl font-bold text-gray-900">{isNp ? "सन्देश पठाइयो!" : "Message Sent!"}</h2>
                   <p className="mt-2 text-gray-600">{isNp ? "हामी चाँडै सम्पर्क गर्नेछौं।" : "We'll get back to you soon."}</p>
                 </div>

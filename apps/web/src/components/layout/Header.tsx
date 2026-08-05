@@ -17,7 +17,6 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import LanguageSwitcher from "@/components/shared/LanguageSwitcher";
-import ThemeToggle from "@/components/shared/ThemeToggle";
 import CommandPalette from "@/components/shared/CommandPalette";
 import MegaMenu from "./MegaMenu";
 import MobileNav from "./MobileNav";
@@ -94,7 +93,6 @@ export default function Header({ lang, initialNavData }: HeaderProps) {
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3">
-            <ThemeToggle />
             <CommandPalette lang={lang} />
             <LanguageSwitcher />
           </div>

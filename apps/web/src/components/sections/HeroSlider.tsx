@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useABTest } from "@/hooks/useABTest";
+import { useParallax } from "@/hooks/useParallax";
 import { localize } from "@/lib/localize";
 
 interface Slide {
@@ -89,9 +90,12 @@ export default function HeroSlider({ slides, lang }: { slides: Slide[]; lang: st
   const [current, setCurrent] = useState(0);
   const [progressKey, setProgressKey] = useState(0);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const sectionRef = useRef<HTMLElement | null>(null);
 
   // A/B test: which CTA variant to show on the first slide
   const { variant: ctaVariant, trackConversion } = useABTest("hero_cta");
+  // Parallax background
+  const parallax = useParallax(sectionRef, 0.3);
 
   const goTo = useCallback((index: number) => {
     setCurrent(index);
@@ -113,6 +117,7 @@ export default function HeroSlider({ slides, lang }: { slides: Slide[]; lang: st
 
   return (
     <section
+      ref={sectionRef}
       className="hero-slider relative overflow-hidden bg-gray-950"
       style={{ minHeight: "clamp(540px, 75vh, 820px)" }}
       aria-label="Featured highlights"
@@ -127,10 +132,14 @@ export default function HeroSlider({ slides, lang }: { slides: Slide[]; lang: st
           transition={{ duration: 0.9, ease: "easeInOut" }}
           className="absolute inset-0"
         >
-          {/* Background image with Ken Burns */}
+          {/* Background image with Ken Burns + parallax */}
           <div
-            className="absolute inset-0 animate-kenburns bg-cover bg-center"
-            style={{ backgroundImage: `url(${optimizedBg(allSlides[current].imageUrl)})` }}
+            className="absolute -inset-y-16 inset-x-0 animate-kenburns bg-cover bg-center"
+            style={{
+              backgroundImage: `url(${optimizedBg(allSlides[current].imageUrl)})`,
+              transform: `translateY(${parallax}px) scale(1.05)`,
+              willChange: "transform",
+            }}
             aria-hidden="true"
           />
           {/* Gradient overlay */}

@@ -7,6 +7,7 @@ import CookieConsent from "@/components/shared/CookieConsent";
 import AccessibilityToolbar from "@/components/shared/AccessibilityToolbar";
 import IntlProvider from "@/components/providers/IntlProvider";
 import Analytics from "@/components/shared/Analytics";
+import ChatWidget from "@/components/shared/ChatWidget";
 import { getSeoSettings } from "@/lib/seo";
 
 export async function generateStaticParams() {
@@ -84,6 +85,7 @@ export default async function LangLayout({
       <Footer />
       <AccessibilityToolbar />
       <Analytics />
+      <ChatWidget lang={lang} />
     </IntlProvider>
   );
 }

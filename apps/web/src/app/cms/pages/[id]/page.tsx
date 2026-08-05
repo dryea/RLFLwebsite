@@ -56,12 +56,32 @@ export default function CmsPageEditorPage() {
     }
   }
 
+  async function runAutoSeo(pageId: number) {
+    // Fire-and-forget SEO analysis after save so the dashboard has fresh scores
+    try {
+      await fetch(`${API}/api/cms/seo/analyze`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem("cms_token")}` },
+        body: JSON.stringify({
+          resourceType: "page",
+          resourceId: pageId,
+          title: metaTitle || title,
+          description: metaDescription,
+          content,
+          focusKeyword: "",
+          slug,
+        }),
+      });
+    } catch { /* non-blocking */ }
+  }
+
   async function handleSave(publish = false) {
     setSaving(true);
     const data = { title, slug, content, titleNp, contentNp, status: publish ? "published" : "draft", language, metaTitle, metaDescription, metaKeywords };
     try {
       if (pageId) {
         await api.updatePage(pageId, data);
+        if (publish) runAutoSeo(pageId);
       } else {
         const created = await api.createPage(data);
         router.replace(`/cms/pages/${created.id}`);

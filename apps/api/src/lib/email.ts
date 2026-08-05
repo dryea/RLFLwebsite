@@ -50,3 +50,28 @@ export function jobApplicationNotification(name: string, email: string, phone: s
     </div>
   `;
 }
+
+export function applicationStatusEmail(name: string, referenceNo: string, type: string, status: string, note?: string): string {
+  const statusLabels: Record<string, string> = {
+    submitted: "Submitted",
+    under_review: "Under Review",
+    verified: "Documents Verified",
+    approved: "Approved",
+    rejected: "Rejected",
+    processing: "Processing",
+  };
+  return `
+    <div style="font-family: Arial; max-width: 600px; margin: 0 auto;">
+      <h2 style="color: #1a365d;">Your ${type === "loan" ? "Loan" : "Account"} Application Status</h2>
+      <p>Dear ${name},</p>
+      <p>Your application status has been updated to:</p>
+      <p style="display: inline-block; background: #f0f0f0; padding: 8px 16px; border-radius: 20px; font-weight: bold; color: #1a365d;">
+        ${statusLabels[status] || status}
+      </p>
+      ${note ? `<p><strong>Note:</strong> ${note}</p>` : ""}
+      <p>Reference Number: <strong>${referenceNo}</strong></p>
+      <hr />
+      <p style="color: #666; font-size: 12px;">Reliance Finance Limited | Track status anytime on our website.</p>
+    </div>
+  `;
+}

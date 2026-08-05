@@ -73,6 +73,16 @@ const defaultSlides: Slide[] = [
 
 const SLIDE_DURATION = 6000;
 
+// Build a Cloudflare-resized URL for hero backgrounds (WebP/AVIF, width-scaled)
+function optimizedBg(src: string): string {
+  if (!src) return src;
+  if (src.startsWith("http")) {
+    return `https://rfil-web.sudeepdhakal.workers.dev/cdn-cgi/image/width=1920,quality=75,format=auto/${encodeURIComponent(src)}`;
+  }
+  const base = `https://rfil-web.sudeepdhakal.workers.dev${src}`;
+  return `https://rfil-web.sudeepdhakal.workers.dev/cdn-cgi/image/width=1920,quality=75,format=auto/${encodeURIComponent(base)}`;
+}
+
 export default function HeroSlider({ slides, lang }: { slides: Slide[]; lang: string }) {
   const allSlides = slides.length >= 5 ? slides : defaultSlides;
   const [current, setCurrent] = useState(0);
@@ -116,7 +126,7 @@ export default function HeroSlider({ slides, lang }: { slides: Slide[]; lang: st
           {/* Background image with Ken Burns */}
           <div
             className="absolute inset-0 animate-kenburns bg-cover bg-center"
-            style={{ backgroundImage: `url(${allSlides[current].imageUrl})` }}
+            style={{ backgroundImage: `url(${optimizedBg(allSlides[current].imageUrl)})` }}
             aria-hidden="true"
           />
           {/* Gradient overlay */}

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Megaphone } from "lucide-react";
 import NoticeBoard from "@/components/shared/NoticeBoard";
+import NoticeSubscribe from "@/components/shared/NoticeSubscribe";
 import { getNotices } from "@/lib/public-api";
 import { useLang } from "@/contexts/LanguageContext";
 
@@ -22,6 +23,9 @@ export default function NoticesPage() {
 
       <section className="py-12">
         <div className="container-page">
+          <div className="mb-8">
+            <NoticeSubscribe />
+          </div>
           {notices.length === 0 ? (
             <div className="rounded-xl border-2 border-dashed p-12 text-center text-gray-500">
               <Megaphone className="mx-auto mb-3 h-10 w-10 text-gray-300" />

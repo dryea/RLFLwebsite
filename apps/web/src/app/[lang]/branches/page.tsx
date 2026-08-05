@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { getBranches } from "@/lib/public-api";
 import BranchList from "@/components/shared/BranchList";
+import JsonLdScript from "@/components/shared/JsonLdScript";
 import { useLang } from "@/contexts/LanguageContext";
 import { Building2 } from "lucide-react";
 
@@ -383,6 +384,30 @@ export default function LangBranchesPage() {
 
   return (
     <>
+      {branches.length > 0 && (
+        <JsonLdScript data={{
+          "@context": "https://schema.org",
+          "@type": "FinancialService",
+          name: "Reliance Finance Limited",
+          url: "https://reliancenepal.com.np/branches",
+          brand: { "@type": "Brand", name: "Reliance Finance Limited" },
+          location: branches.map((b) => ({
+            "@type": "Place",
+            name: b.name,
+            address: {
+              "@type": "PostalAddress",
+              streetAddress: b.address,
+              addressLocality: b.district,
+              addressRegion: b.province,
+              addressCountry: "NP",
+            },
+            ...(b.latitude && b.longitude ? { geo: { "@type": "GeoCoordinates", latitude: b.latitude, longitude: b.longitude } } : {}),
+            ...(b.phone ? { telephone: b.phone } : {}),
+            ...(b.email ? { email: b.email } : {}),
+            ...(b.bankingHours ? { openingHours: b.bankingHours } : {}),
+          })),
+        }} />
+      )}
       <section className="bg-gradient-to-br from-primary-900 via-primary-800 to-primary-950 py-14 text-white">
         <div className="container-page">
           <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-secondary-400 mb-2">

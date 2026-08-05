@@ -46,7 +46,7 @@ export default function HeroQuickActions({ lang }: HeroQuickActionsProps) {
   ];
 
   return (
-    <div className="container-page">
+    <>
       {/* Horizontal scroll on mobile, centered flex on desktop */}
       <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-hide sm:flex-wrap sm:overflow-visible">
         {actions.map((a) => {
@@ -82,6 +82,6 @@ export default function HeroQuickActions({ lang }: HeroQuickActionsProps) {
           );
         })}
       </div>
-    </div>
+    </>
   );
 }

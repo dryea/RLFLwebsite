@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Outfit, Inter, Noto_Sans_Devanagari } from "next/font/google";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 import "./globals.css";
 
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-heading", display: "swap", preload: false });
@@ -33,13 +34,15 @@ export default function RootLayout({
         <meta name="theme-color" content="#702B86" />
       </head>
       <body className="flex min-h-screen flex-col">
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[9999] focus:rounded-lg focus:bg-primary-700 focus:px-4 focus:py-2 focus:text-white"
-        >
-          Skip to main content
-        </a>
-        {children}
+        <ThemeProvider>
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[9999] focus:rounded-lg focus:bg-primary-700 focus:px-4 focus:py-2 focus:text-white"
+          >
+            Skip to main content
+          </a>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

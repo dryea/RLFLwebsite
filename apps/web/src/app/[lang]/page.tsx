@@ -8,6 +8,7 @@ import NewsEventsSection from "@/components/sections/NewsEventsSection";
 import CSRGrid from "@/components/sections/CSRGrid";
 import AppBanner from "@/components/sections/AppBanner";
 import HeroQuickActions from "@/components/sections/HeroQuickActions";
+import HeroRatesWidget from "@/components/sections/HeroRatesWidget";
 import HomepageSections from "@/components/sections/HomepageSections";
 
 export const revalidate = 60;
@@ -50,9 +51,16 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
       {/* 1. Hero — Full viewport, cinematic */}
       <HeroSlider slides={data.slides} lang={lang} />
 
-      {/* 2. Quick Actions — below hero */}
+      {/* 2. Quick Actions + Live Rates — below hero */}
       <div className="relative z-20 -mt-16 pb-6">
-        <HeroQuickActions lang={lang} />
+        <div className="container-page">
+          <div className="grid items-end gap-4 lg:grid-cols-[1fr_280px]">
+            <HeroQuickActions lang={lang} />
+            <div className="hidden lg:block">
+              <HeroRatesWidget lang={lang} />
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* 3. Live Rates Ticker */}

@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { eq, and, desc, like, sql } from "drizzle-orm";
 import { hashPassword, verifyPassword, signJWT, verifyJWT } from "./lib/auth";
-import { contactConfirmation, contactNotification, loanEnquiryNotification, jobApplicationNotification } from "./lib/email";
+import { contactConfirmation, contactNotification, loanEnquiryNotification, jobApplicationNotification, applicationStatusEmail } from "./lib/email";
 import { createDb } from "./db";
 import {
   pages, products, news, users, roles,
@@ -1559,6 +1559,46 @@ function buildNavTree(items: any[], parentId: number | null, locale = "en"): any
 
 // ── Email-enabled form submissions ──
 
+// ── Newsletter Subscription (double opt-in) ──
+app.post("/api/newsletter", async (c) => {
+  const db = createDb(c.env.DB);
+  const { email, language } = await c.req.json().catch(() => ({})) as { email?: string; language?: string };
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return c.json({ error: "Valid email required" }, 400);
+  }
+  const existing = await db.select().from(newsletterSubscribers).where(eq(newsletterSubscribers.email, email)).get();
+  if (existing) {
+    if (existing.isActive) return c.json({ message: "Already subscribed" }, 200);
+    await db.update(newsletterSubscribers).set({ isActive: true, subscribedAt: new Date().toISOString(), language: language || existing.language || "en" })
+      .where(eq(newsletterSubscribers.id, existing.id)).run();
+    return c.json({ message: "Re-subscribed" }, 200);
+  }
+  await db.insert(newsletterSubscribers).values({
+    email,
+    language: language || "en",
+    isActive: true,
+  }).run();
+
+  try {
+    await c.env.EMAIL_QUEUE.send([{
+      to: email,
+      subject: "Welcome to Reliance Finance Newsletter",
+      html: `
+        <div style="font-family: Arial; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #1a365d;">Welcome to Reliance Finance!</h2>
+          <p>Thank you for subscribing to our newsletter.</p>
+          <p>You'll receive updates on interest rates, notices, and financial news.</p>
+          <p>To unsubscribe anytime, reply with "unsubscribe".</p>
+          <hr />
+          <p style="color: #666; font-size: 12px;">Reliance Finance Limited</p>
+        </div>
+      `,
+    }]);
+  } catch (e) { console.error("Newsletter email error:", e); }
+
+  return c.json({ message: "Subscribed" }, 201);
+});
+
 app.post("/api/contact", async (c) => {
   const db = createDb(c.env.DB);
   const data = await c.req.json() as Record<string, any>;
@@ -1770,17 +1810,32 @@ app.put("/api/cms/applications/status", async (c) => {
   const { type, id, status, note } = await c.req.json() as { type: string; id: number; status: string; note?: string };
   if (!type || !id || !status) return c.json({ error: "type, id, status required" }, 400);
   const now = new Date().toISOString();
+  let customer: { email: string; fullName: string; referenceNo: string; loanType?: string; accountType?: string } | null = null;
   if (type === "loan") {
     const existing = await db.select().from(loanApplications).where(eq(loanApplications.id, id)).get();
     if (!existing) return c.json({ error: "Not found" }, 404);
     const timeline = Array.isArray(existing.timeline) ? [...existing.timeline] : [];
     timeline.push({ status, date: now, note: note || null });
     await db.update(loanApplications).set({ status, timeline, updatedAt: now }).where(eq(loanApplications.id, id)).run();
+    customer = { email: existing.email, fullName: existing.fullName, referenceNo: existing.referenceNo, loanType: existing.loanType };
   } else {
     const existing = await db.select().from(accountApplications).where(eq(accountApplications.id, id)).get();
     if (!existing) return c.json({ error: "Not found" }, 404);
     await db.update(accountApplications).set({ status, updatedAt: now }).where(eq(accountApplications.id, id)).run();
+    customer = { email: existing.email, fullName: existing.fullName, referenceNo: existing.referenceNo, accountType: existing.accountType };
   }
+
+  // Notify the customer of the status change
+  if (customer) {
+    try {
+      await c.env.EMAIL_QUEUE.send([{
+        to: customer.email,
+        subject: `Your ${type === "loan" ? "Loan" : "Account"} Application Status - Reliance Finance`,
+        html: applicationStatusEmail(customer.fullName, customer.referenceNo, type, status, note),
+      }]);
+    } catch (e) { console.error("Status email error:", e); }
+  }
+
   return c.json({ success: true });
 });
 

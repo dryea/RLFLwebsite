@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Briefcase, MapPin, Clock } from "lucide-react";
+import { Briefcase, MapPin, Clock, Send, Mail } from "lucide-react";
 import Link from "next/link";
 import { getCareers } from "@/lib/public-api";
 import { useLang } from "@/contexts/LanguageContext";
@@ -23,10 +23,22 @@ export default function LangCareersPage() {
       <section className="py-12">
         <div className="container-page">
           {jobs.length === 0 ? (
-            <div className="rounded-lg border-2 border-dashed p-12 text-center text-gray-500">
-              <Briefcase className="mx-auto mb-2 h-10 w-10 text-gray-300" />
-              <p className="text-lg font-medium">{isNp ? "अहिले कुनै रिक्त पद छैन" : "No openings right now"}</p>
-              <p className="mt-1 text-sm">{isNp ? "पछि फेरि जाँच गर्नुहोस्" : "Check back later"}</p>
+            <div className="mx-auto max-w-2xl rounded-2xl border-2 border-dashed p-12 text-center">
+              <Briefcase className="mx-auto mb-4 h-12 w-12 text-primary-200" />
+              <h2 className="text-xl font-bold text-gray-900">{isNp ? "अहिले कुनै रिक्त पद छैन" : "No openings right now"}</h2>
+              <p className="mt-2 text-sm text-gray-500">
+                {isNp
+                  ? "नयाँ अवसरहरू चाँडै पोस्ट गरिनेछन्। यसै बीच, तपाईंको CV सहित आफ्नो विवरण हामीलाई पठाउन सक्नुहुन्छ।"
+                  : "New opportunities will be posted soon. Meanwhile, feel free to send us your CV and details for future consideration."}
+              </p>
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+                <a href="mailto:careers@reliancenepal.com.np?subject=Speculative%20Application" className="inline-flex items-center gap-2 rounded-xl bg-primary-700 px-5 py-2.5 text-sm font-semibold text-white hover:bg-primary-800">
+                  <Send className="h-4 w-4" /> careers@reliancenepal.com.np
+                </a>
+                <a href="mailto:info@reliancenepal.com.np" className="inline-flex items-center gap-2 rounded-xl border border-primary-200 px-5 py-2.5 text-sm font-semibold text-primary-700 hover:bg-primary-50">
+                  <Mail className="h-4 w-4" /> {isNp ? "सामान्य सम्पर्क" : "General Contact"}
+                </a>
+              </div>
             </div>
           ) : (
             <div className="space-y-4">

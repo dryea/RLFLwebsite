@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Scale, Check, X } from "lucide-react";
+import { ArrowLeft, Scale, Check, X, FileText } from "lucide-react";
 import { getProducts } from "@/lib/public-api";
 import { useLang } from "@/contexts/LanguageContext";
 import { useToast } from "@/components/ui/Toast";
@@ -101,6 +101,26 @@ export default function ProductComparePage() {
                       values={compare.map((p) => (p.features || []).slice(0, 5).map((f: string) => (
                         <li key={f} className="flex items-start gap-1.5">
                           <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-green-500" />
+                          <span className="text-xs text-gray-600">{f}</span>
+                        </li>
+                      )))}
+                      list
+                    />
+                    <Row
+                      label={isNp ? "पात्रता" : "Eligibility"}
+                      values={compare.map((p) => (p.eligibility || []).slice(0, 4).map((f: string) => (
+                        <li key={f} className="flex items-start gap-1.5">
+                          <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-green-500" />
+                          <span className="text-xs text-gray-600">{f}</span>
+                        </li>
+                      )))}
+                      list
+                    />
+                    <Row
+                      label={isNp ? "आवश्यक कागजात" : "Required Documents"}
+                      values={compare.map((p) => (p.documentsRequired || []).slice(0, 4).map((f: string) => (
+                        <li key={f} className="flex items-start gap-1.5">
+                          <FileText className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary-500" />
                           <span className="text-xs text-gray-600">{f}</span>
                         </li>
                       )))}

@@ -26,7 +26,7 @@
   --dur-slow: 500ms;
 }
 
-/* Devanagari support: use Noto Sans Devanagari for Nepali glyphs */
+/* Devanagari support */
 :lang(np), [lang="np"] {
   font-family: var(--font-devanagari), var(--font-body), sans-serif;
 }
@@ -48,6 +48,11 @@
   h1, h2, h3, h4, h5, h6 {
     @apply font-heading;
   }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { @apply bg-gray-100; }
+  ::-webkit-scrollbar-thumb { @apply rounded-full bg-gray-300 hover:bg-primary-400; }
 }
 
 @layer components {
@@ -57,6 +62,10 @@
 
   .section {
     @apply py-16 md:py-20;
+  }
+
+  .section-sm {
+    @apply py-12 md:py-16;
   }
 
   .section-header {
@@ -69,28 +78,113 @@
 
   .section-header h2::after {
     content: '';
-    @apply absolute bottom-0 left-1/2 h-1 w-16 -translate-x-1/2 rounded-full bg-secondary-500;
+    @apply absolute bottom-0 left-1/2 h-1 w-16 -translate-x-1/2 rounded-full;
+    background: linear-gradient(90deg, #702B86, #F2A900);
   }
 
   .section-header p {
     @apply text-lg text-text-secondary;
   }
 
+  /* Gradient heading */
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary-600 to-secondary-500 bg-clip-text text-transparent;
+  }
+
+  /* Glassmorphism */
+  .glass {
+    @apply backdrop-blur-xl border border-white/20;
+    background: rgba(255, 255, 255, 0.08);
+  }
+  .glass-white {
+    @apply backdrop-blur-xl border border-white/30 bg-white/90;
+  }
+
+  /* Buttons */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-md px-5 py-3 font-heading font-semibold transition-all duration-300;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-5 py-3 font-heading font-semibold transition-all duration-300 will-change-transform;
   }
-
   .btn-primary {
-    @apply bg-primary-500 text-white hover:bg-primary-600 hover:-translate-y-0.5;
+    @apply bg-primary-500 text-white shadow-md hover:bg-primary-600 hover:-translate-y-0.5 hover:shadow-lg;
   }
-
   .btn-secondary {
-    @apply bg-secondary-500 text-text-primary hover:bg-secondary-600 hover:-translate-y-0.5;
+    @apply bg-secondary-500 text-gray-900 shadow-md hover:bg-secondary-400 hover:-translate-y-0.5 hover:shadow-lg;
+  }
+  .btn-outline {
+    @apply border-2 border-primary-500 bg-transparent text-primary-600 hover:bg-primary-50 hover:-translate-y-0.5;
+  }
+  .btn-ghost {
+    @apply border border-white/30 bg-white/10 text-white backdrop-blur-sm hover:bg-white/20 hover:-translate-y-0.5;
   }
 
-  .btn-outline {
-    @apply border-2 border-primary-500 bg-transparent text-primary-500 hover:bg-primary-50 hover:-translate-y-0.5;
+  /* EMI & FD Range Sliders */
+  .emi-slider,
+  .fd-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    background: #e5e7eb;
+    border-radius: 3px;
+    outline: none;
+    width: 100%;
   }
+  .emi-slider::-webkit-slider-thumb,
+  .fd-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #702B86;
+    border: 3px solid #F2A900;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(112, 43, 134, 0.3);
+    transition: transform 0.15s ease;
+  }
+  .emi-slider::-webkit-slider-thumb:hover,
+  .fd-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+  }
+  .emi-slider::-moz-range-thumb,
+  .fd-slider::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #702B86;
+    border: 3px solid #F2A900;
+    cursor: pointer;
+  }
+
+  /* Card hover lift */
+  .card-hover {
+    @apply transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg;
+  }
+}
+
+/* Keyframe Animations */
+@keyframes kenburns {
+  0% { transform: scale(1) translate(0, 0); }
+  100% { transform: scale(1.08) translate(-1%, -1%); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-14px); }
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes progress-bar {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
+@keyframes slide-fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Accessibility */

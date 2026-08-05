@@ -2,6 +2,7 @@
 import { useState, useMemo } from "react";
 import { IndianRupee, Percent, CalendarDays, Calculator, HandCoins, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { localize } from "@/lib/localize";
 
 const RATES: Record<string, Record<number, number>> = {
   individual: { 3: 3.50, 6: 3.50, 12: 4.00, 24: 4.25, 36: 4.25, 60: 6.25 },
@@ -179,42 +180,13 @@ export default function FDMaturityCalculator({ lang }: { lang: string }) {
         </div>
 
         <Link
-          href="/loan-enquiry"
+          href={localize("/open-account", lang)}
           className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary-500 px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-primary-600"
         >
           {lang === "en" ? "Open a Fixed Deposit" : "मुद्दती निक्षेप खोल्नुहोस्"}
           <ArrowRight className="h-4 w-4" />
         </Link>
       </div>
-
-      <style jsx>{`
-        .fd-slider {
-          -webkit-appearance: none;
-          appearance: none;
-          height: 6px;
-          background: #e5e7eb;
-          border-radius: 3px;
-          outline: none;
-        }
-        .fd-slider::-webkit-slider-thumb {
-          -webkit-appearance: none;
-          appearance: none;
-          width: 20px;
-          height: 20px;
-          border-radius: 50%;
-          background: #702B86;
-          border: 3px solid #F2A900;
-          cursor: pointer;
-        }
-        .fd-slider::-moz-range-thumb {
-          width: 20px;
-          height: 20px;
-          border-radius: 50%;
-          background: #702B86;
-          border: 3px solid #F2A900;
-          cursor: pointer;
-        }
-      `}</style>
     </div>
   );
 }

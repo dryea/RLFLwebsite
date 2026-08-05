@@ -7,7 +7,6 @@ import EMISection from "@/components/sections/EMISection";
 import NewsEventsSection from "@/components/sections/NewsEventsSection";
 import CSRGrid from "@/components/sections/CSRGrid";
 import AppBanner from "@/components/sections/AppBanner";
-import TrustBar from "@/components/sections/TrustBar";
 import HeroQuickActions from "@/components/sections/HeroQuickActions";
 import HomepageSections from "@/components/sections/HomepageSections";
 
@@ -19,9 +18,10 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     title: {
       absolute: lang === "en" ? "Reliance Finance Limited" : "रिलायन्स फाइनान्स लिमिटेड",
     },
-    description: lang === "en"
-      ? "Your trusted financial partner in Nepal — savings, loans, fixed deposits, and digital banking services."
-      : "नेपालमा तपाईंको विश्वसनीय वित्तीय साझेदार — बचत, ऋण, मुद्दती निक्षेप र डिजिटल बैंकिङ सेवाहरू।",
+    description:
+      lang === "en"
+        ? "Your trusted financial partner in Nepal — savings, loans, fixed deposits, and digital banking services."
+        : "नेपालमा तपाईंको विश्वसनीय वित्तीय साझेदार — बचत, ऋण, मुद्दती निक्षेप र डिजिटल बैंकिङ सेवाहरू।",
   };
 }
 
@@ -42,18 +42,23 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
     const res = await serverFetchAPI("/api/homepage/full");
     data = res.data || res;
   } catch {
-    // Use default/empty data so the page always renders
+    // Render with defaults — all sections have built-in fallbacks
   }
 
   return (
     <>
+      {/* 1. Hero — Full viewport, cinematic */}
       <HeroSlider slides={data.slides} lang={lang} />
-      <div className="-mt-24 relative z-20">
+
+      {/* 2. Quick Actions — below hero */}
+      <div className="relative z-20 -mt-16 pb-6">
         <HeroQuickActions lang={lang} />
       </div>
-      <TrustBar lang={lang} />
+
+      {/* 3. Live Rates Ticker */}
       <RatesTicker lang={lang} />
 
+      {/* 4–9: Main homepage sections */}
       <HomepageSections
         offerings={<OfferingsGrid offerings={data.offerings} lang={lang} />}
         about={
@@ -63,7 +68,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
             imageUrl={data.aboutImageUrl}
           />
         }
-        emi={<EMISection />}
+        emi={<EMISection lang={lang} />}
         news={<NewsEventsSection lang={lang} />}
         csr={(data.csrActivities?.length ?? 0) > 0 ? <CSRGrid activities={data.csrActivities} lang={lang} /> : null}
         appBanner={<AppBanner data={data.appBanner} lang={lang} />}

@@ -1,7 +1,9 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { localize } from "@/lib/localize";
 
 interface Slide {
   id: number;
@@ -23,24 +25,24 @@ const defaultSlides: Slide[] = [
     description: "Experience seamless mobile banking, QR payments, and digital transfers anytime, anywhere in Nepal.",
     imageUrl: "/assets/hero_digital_banking.png",
     ctaPrimaryText: "Open Account",
-    ctaPrimaryLink: "/products/savings",
+    ctaPrimaryLink: "/open-account",
     ctaSecondaryText: "View Rates",
     ctaSecondaryLink: "/rates",
   },
   {
     id: 2,
-    title: "Individual Fixed Deposits",
-    description: "Earn higher returns on your hard-earned savings. Open a fixed deposit with flexible tenures and lucrative rates.",
+    title: "Earn More with Fixed Deposits",
+    description: "Maximize your savings with competitive fixed deposit rates and flexible tenure options.",
     imageUrl: "/assets/hero_fixed_deposits.png",
     ctaPrimaryText: "Explore Fixed Deposits",
     ctaPrimaryLink: "/products/fixed-deposits",
-    ctaSecondaryText: "Calculate Earnings",
-    ctaSecondaryLink: "/emi-calculator",
+    ctaSecondaryText: "Calculate Returns",
+    ctaSecondaryLink: "/calculators",
   },
   {
     id: 3,
     title: "Flexible Home & Auto Loans",
-    description: "Turn your dreams into reality with low-interest home, vehicle, and agricultural loan options customized for you.",
+    description: "Turn your dreams into reality with low-interest home, vehicle, and business loan options built for you.",
     imageUrl: "/assets/hero_loans.png",
     ctaPrimaryText: "Explore Loans",
     ctaPrimaryLink: "/products/loans",
@@ -49,10 +51,10 @@ const defaultSlides: Slide[] = [
   },
   {
     id: 4,
-    title: "Corporate Governance & Legacy",
-    description: "Guided by transparency, institutional integrity, and compliance under Nepal Rastra Bank regulations for over a decade.",
+    title: "Trusted Governance & Legacy",
+    description: "Built on 17+ years of trust, institutional integrity, and full compliance under Nepal Rastra Bank.",
     imageUrl: "/assets/hero_governance.png",
-    ctaPrimaryText: "Governance Policies",
+    ctaPrimaryText: "Our Governance",
     ctaPrimaryLink: "/governance",
     ctaSecondaryText: "Board of Directors",
     ctaSecondaryLink: "/governance",
@@ -60,76 +62,179 @@ const defaultSlides: Slide[] = [
   {
     id: 5,
     title: "Fast & Secure Remittance",
-    description: "Collect international and domestic money transfers easily across our nationwide branch network.",
+    description: "Collect international and domestic money transfers instantly across our 21+ branch network.",
     imageUrl: "/assets/hero_remittance.png",
     ctaPrimaryText: "Explore Remittance",
     ctaPrimaryLink: "/services/remittance",
-    ctaSecondaryText: "Locate Branches",
+    ctaSecondaryText: "Find a Branch",
     ctaSecondaryLink: "/branches",
   },
 ];
 
+const SLIDE_DURATION = 6000;
+
 export default function HeroSlider({ slides, lang }: { slides: Slide[]; lang: string }) {
   const allSlides = slides.length >= 5 ? slides : defaultSlides;
   const [current, setCurrent] = useState(0);
+  const [progressKey, setProgressKey] = useState(0);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const next = useCallback(() => setCurrent((c) => (c + 1) % allSlides.length), [allSlides.length]);
-  const prev = useCallback(() => setCurrent((c) => (c - 1 + allSlides.length) % allSlides.length), [allSlides.length]);
+  const goTo = useCallback((index: number) => {
+    setCurrent(index);
+    setProgressKey((k) => k + 1);
+  }, []);
 
+  const next = useCallback(() => goTo((current + 1) % allSlides.length), [current, allSlides.length, goTo]);
+  const prev = useCallback(() => goTo((current - 1 + allSlides.length) % allSlides.length), [current, allSlides.length, goTo]);
+
+  // Autoplay with timer reset on manual nav
   useEffect(() => {
-    const timer = setInterval(next, 6000);
-    return () => clearInterval(timer);
-  }, [next]);
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
+      setCurrent((c) => (c + 1) % allSlides.length);
+      setProgressKey((k) => k + 1);
+    }, SLIDE_DURATION);
+    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
+  }, [current, allSlides.length]);
 
   return (
-    <section className="hero-slider relative h-[70vh] min-h-[500px] max-h-[800px] overflow-hidden bg-black">
-      {allSlides.map((slide, i) => (
-        <div
-          key={slide.id}
-          className={`slide absolute inset-0 bg-cover bg-center transition-opacity duration-1000 flex items-center ${i === current ? "opacity-100 z-10" : "opacity-0 z-0"}`}
-          style={{ backgroundImage: `url(${slide.imageUrl})` }}
+    <section
+      className="hero-slider relative overflow-hidden bg-gray-950"
+      style={{ minHeight: "clamp(540px, 75vh, 820px)" }}
+      aria-label="Featured highlights"
+    >
+      {/* Slides */}
+      <AnimatePresence initial={false} mode="sync">
+        <motion.div
+          key={current}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.9, ease: "easeInOut" }}
+          className="absolute inset-0"
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/40 to-transparent z-[2]" />
-          <div className={`container-page relative z-[3] w-full transition-all duration-1000 ${i === current ? "translate-y-0" : "translate-y-8"}`}>
-            <div className="max-w-[650px] text-white">
-              <h2 className="mb-4 text-[clamp(2.5rem,6vw,4rem)] font-extrabold leading-tight text-secondary-700">
-                {lang === "np" && slide.titleNp ? slide.titleNp : slide.title}
-              </h2>
-              <p className="mb-8 text-[clamp(1rem,2vw,1.25rem)] text-white/90">
-                {lang === "np" && slide.descriptionNp ? slide.descriptionNp : slide.description}
-              </p>
-              <div className="flex flex-wrap gap-4">
-                {slide.ctaPrimaryText && (
-                  <Link href={slide.ctaPrimaryLink || "#"} className="btn btn-secondary">
-                    {slide.ctaPrimaryText}
+          {/* Background image with Ken Burns */}
+          <div
+            className="absolute inset-0 animate-kenburns bg-cover bg-center"
+            style={{ backgroundImage: `url(${allSlides[current].imageUrl})` }}
+            aria-hidden="true"
+          />
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-gray-950/85 via-gray-900/50 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-950/60 via-transparent to-transparent" />
+        </motion.div>
+      </AnimatePresence>
+
+      {/* Slide Content */}
+      <AnimatePresence mode="wait">
+        <div
+          key={current}
+          className="relative z-10 flex h-full items-center"
+          style={{ minHeight: "clamp(540px, 75vh, 820px)" }}
+        >
+          <div className="container-page w-full pb-20">
+            <div className="max-w-[640px]">
+              <motion.div
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.1 }}
+              >
+                <span className="mb-3 inline-block rounded-full bg-secondary-500/20 px-3 py-1 text-xs font-bold uppercase tracking-widest text-secondary-400">
+                  {lang === "en" ? "Reliance Finance" : "रिलायन्स फाइनान्स"}
+                </span>
+              </motion.div>
+
+              {/* H1 for active slide — correct semantics */}
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
+                className="mb-5 text-[clamp(2rem,5.5vw,3.5rem)] font-extrabold leading-[1.1] text-white"
+              >
+                {lang === "np" && allSlides[current].titleNp
+                  ? allSlides[current].titleNp
+                  : allSlides[current].title}
+              </motion.h1>
+
+              <motion.p
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.32, ease: [0.25, 0.1, 0.25, 1] }}
+                className="mb-8 text-[clamp(1rem,2vw,1.2rem)] leading-relaxed text-white/80"
+              >
+                {lang === "np" && allSlides[current].descriptionNp
+                  ? allSlides[current].descriptionNp
+                  : allSlides[current].description}
+              </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.45, delay: 0.44, ease: [0.25, 0.1, 0.25, 1] }}
+                className="flex flex-wrap gap-3"
+              >
+                {allSlides[current].ctaPrimaryText && (
+                  <Link
+                    href={localize(allSlides[current].ctaPrimaryLink || "#", lang)}
+                    className="btn btn-secondary"
+                  >
+                    {allSlides[current].ctaPrimaryText}
                   </Link>
                 )}
-                {slide.ctaSecondaryText && (
-                  <Link href={slide.ctaSecondaryLink || "#"} className="btn btn-outline !border-white !text-white hover:!bg-white/10">
-                    {slide.ctaSecondaryText}
+                {allSlides[current].ctaSecondaryText && (
+                  <Link
+                    href={localize(allSlides[current].ctaSecondaryLink || "#", lang)}
+                    className="btn btn-ghost"
+                  >
+                    {allSlides[current].ctaSecondaryText}
                   </Link>
                 )}
-              </div>
+              </motion.div>
             </div>
           </div>
         </div>
-      ))}
+      </AnimatePresence>
 
-      <div className="slider-controls absolute bottom-8 right-8 z-[4] flex gap-3">
-        <button onClick={prev} className="slider-btn flex h-11 w-11 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur transition-colors hover:bg-secondary-500 hover:text-text-primary" aria-label="Previous">
+      {/* Progress bar (auto-advance indicator) */}
+      <div className="absolute bottom-0 left-0 right-0 z-20 h-0.5 bg-white/10">
+        <motion.div
+          key={progressKey}
+          className="h-full bg-secondary-500"
+          initial={{ width: "0%" }}
+          animate={{ width: "100%" }}
+          transition={{ duration: SLIDE_DURATION / 1000, ease: "linear" }}
+        />
+      </div>
+
+      {/* Navigation controls */}
+      <div className="absolute bottom-8 right-6 z-20 flex items-center gap-3">
+        <button
+          onClick={prev}
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur transition-all hover:bg-secondary-500 hover:text-gray-900"
+          aria-label="Previous slide"
+        >
           <ChevronLeft className="h-5 w-5" />
         </button>
-        <button onClick={next} className="slider-btn flex h-11 w-11 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur transition-colors hover:bg-secondary-500 hover:text-text-primary" aria-label="Next">
+        <button
+          onClick={next}
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur transition-all hover:bg-secondary-500 hover:text-gray-900"
+          aria-label="Next slide"
+        >
           <ChevronRight className="h-5 w-5" />
         </button>
       </div>
 
-      <div className="absolute bottom-8 left-1/2 z-[4] flex -translate-x-1/2 gap-3">
+      {/* Dot indicators */}
+      <div className="absolute bottom-10 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2">
         {allSlides.map((_, i) => (
           <button
             key={i}
-            onClick={() => setCurrent(i)}
-            className={`h-3 rounded-full transition-all ${i === current ? "w-8 bg-secondary-500" : "w-3 bg-white/50 hover:bg-white/80"}`}
+            onClick={() => goTo(i)}
+            className={`rounded-full transition-all duration-300 ${
+              i === current
+                ? "w-7 h-2 bg-secondary-500"
+                : "w-2 h-2 bg-white/40 hover:bg-white/70"
+            }`}
             aria-label={`Go to slide ${i + 1}`}
           />
         ))}

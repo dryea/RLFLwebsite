@@ -24,7 +24,7 @@ interface MegaMenuProps {
 
 export default function MegaMenu({ items, lang }: MegaMenuProps) {
   return (
-    <nav className="hidden items-center gap-1 lg:flex">
+    <nav className="hidden items-center gap-0.5 lg:flex" aria-label="Main navigation">
       {items.map((item) => (
         <MegaMenuItem key={item.id} item={item} lang={lang} />
       ))}
@@ -36,23 +36,23 @@ function MegaMenuItem({ item, lang }: { item: NavItemData; lang: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-
   const hasChildren = item.children && item.children.length > 0;
 
-  const handleMouseEnter = useCallback(() => {
+  const open = useCallback(() => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setIsOpen(true);
   }, []);
 
-  const handleMouseLeave = useCallback(() => {
-    timeoutRef.current = setTimeout(() => setIsOpen(false), 150);
+  const close = useCallback(() => {
+    timeoutRef.current = setTimeout(() => setIsOpen(false), 120);
   }, []);
 
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
+  // Keyboard support
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === "Escape") setIsOpen(false);
   }, []);
+
+  useEffect(() => () => { if (timeoutRef.current) clearTimeout(timeoutRef.current); }, []);
 
   if (!hasChildren) {
     if (item.isOpenInNewTab) {
@@ -61,17 +61,17 @@ function MegaMenuItem({ item, lang }: { item: NavItemData; lang: string }) {
           href={item.href || "#"}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-1 rounded-md px-3 py-2.5 font-heading text-sm font-medium text-text-primary transition-colors hover:bg-primary-50 hover:text-primary-500"
+          className="flex items-center gap-1 rounded-lg px-3.5 py-2 font-heading text-sm font-medium text-text-primary transition-all duration-200 hover:bg-primary-50 hover:text-primary-600"
         >
           {item.label}
-          <ExternalLink className="h-3 w-3" />
+          <ExternalLink className="h-3 w-3 opacity-60" />
         </a>
       );
     }
     return (
       <Link
         href={item.href ? localize(item.href, lang) : "#"}
-        className="flex items-center gap-1 rounded-md px-3 py-2.5 font-heading text-sm font-medium text-text-primary transition-colors hover:bg-primary-50 hover:text-primary-500"
+        className="rounded-lg px-3.5 py-2 font-heading text-sm font-medium text-text-primary transition-all duration-200 hover:bg-primary-50 hover:text-primary-600"
       >
         {item.label}
       </Link>
@@ -81,32 +81,55 @@ function MegaMenuItem({ item, lang }: { item: NavItemData; lang: string }) {
   return (
     <div
       ref={containerRef}
-      className="group relative"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      className="relative"
+      onMouseEnter={open}
+      onMouseLeave={close}
+      onKeyDown={handleKeyDown}
     >
       <Link
         href={item.href ? localize(item.href, lang) : "#"}
-        className={`flex items-center gap-1 rounded-md px-3 py-2.5 font-heading text-sm font-medium transition-colors ${
-          isOpen ? "bg-primary-50 text-primary-500" : "text-text-primary hover:bg-primary-50 hover:text-primary-500"
+        className={`flex items-center gap-1 rounded-lg px-3.5 py-2 font-heading text-sm font-medium transition-all duration-200 ${
+          isOpen
+            ? "bg-primary-50 text-primary-600"
+            : "text-text-primary hover:bg-primary-50 hover:text-primary-600"
         }`}
+        aria-expanded={isOpen}
+        aria-haspopup="true"
       >
         {item.label}
-        <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
+        <motion.span
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.2, ease: "easeInOut" }}
+          className="inline-flex"
+        >
+          <ChevronDown className="h-3.5 w-3.5" />
+        </motion.span>
       </Link>
+
+      {/* Active indicator bar */}
+      {isOpen && (
+        <motion.div
+          layoutId="nav-indicator"
+          className="absolute bottom-0 left-4 right-4 h-0.5 rounded-full bg-primary-500"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.15 }}
+        />
+      )}
 
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 8, scale: 0.98 }}
+            initial={{ opacity: 0, y: 6, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 4, scale: 0.98 }}
-            transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
-            className="absolute left-0 top-full z-50 mt-1"
-            style={{ minWidth: item.children.some(c => c.description || c.imageUrl) ? "480px" : "240px" }}
+            transition={{ duration: 0.18, ease: [0.25, 0.1, 0.25, 1] }}
+            className="absolute left-0 top-full z-50 mt-2"
+            style={{ minWidth: item.children.some((c) => c.description || c.imageUrl) ? "480px" : "220px" }}
           >
-            <div className="overflow-hidden rounded-xl border border-border bg-white shadow-xl">
-              {item.children.some(c => c.description || c.imageUrl) ? (
+            <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white/95 shadow-xl ring-1 ring-black/5 backdrop-blur-xl">
+              {item.children.some((c) => c.description || c.imageUrl) ? (
                 <MegaPanel items={item.children} lang={lang} />
               ) : (
                 <SimpleDropdown items={item.children} lang={lang} />
@@ -129,16 +152,16 @@ function SimpleDropdown({ items, lang }: { items: NavItemData[]; lang: string })
             href={child.href || "#"}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:bg-primary-50 hover:text-primary-500"
+            className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:bg-primary-50 hover:text-primary-600"
           >
             {child.label}
-            <ExternalLink className="h-3 w-3" />
+            <ExternalLink className="h-3 w-3 opacity-50" />
           </a>
         ) : (
           <Link
             key={child.id}
             href={child.href ? localize(child.href, lang) : "#"}
-            className="block rounded-lg px-4 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:bg-primary-50 hover:text-primary-500"
+            className="block rounded-xl px-4 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:bg-primary-50 hover:text-primary-600"
           >
             {child.label}
           </Link>
@@ -149,8 +172,8 @@ function SimpleDropdown({ items, lang }: { items: NavItemData[]; lang: string })
 }
 
 function MegaPanel({ items, lang }: { items: NavItemData[]; lang: string }) {
-  const featured = items.find(c => c.imageUrl);
-  const links = featured ? items.filter(c => c.id !== featured.id) : items;
+  const featured = items.find((c) => c.imageUrl);
+  const links = featured ? items.filter((c) => c.id !== featured.id) : items;
 
   return (
     <div className="flex">
@@ -160,19 +183,23 @@ function MegaPanel({ items, lang }: { items: NavItemData[]; lang: string }) {
             <Link
               key={child.id}
               href={child.href ? localize(child.href, lang) : "#"}
-              className="group/link flex items-start gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-primary-50"
+              className="group/link flex items-start gap-3 rounded-xl px-3 py-3 transition-colors hover:bg-primary-50"
             >
               {child.imageUrl && (
                 <img
                   src={child.imageUrl}
                   alt={child.imageAlt || child.label}
-                  className="h-10 w-10 shrink-0 rounded-lg object-cover"
+                  className="h-9 w-9 shrink-0 rounded-lg object-cover"
                 />
               )}
               <div className="min-w-0">
-                <p className="text-sm font-medium text-gray-900 group-hover/link:text-primary-600">{child.label}</p>
+                <p className="text-sm font-semibold text-gray-900 transition-colors group-hover/link:text-primary-600">
+                  {child.label}
+                </p>
                 {child.description && (
-                  <p className="mt-0.5 text-xs text-gray-500 line-clamp-2">{child.description}</p>
+                  <p className="mt-0.5 text-xs leading-relaxed text-gray-500 line-clamp-2">
+                    {child.description}
+                  </p>
                 )}
               </div>
             </Link>
@@ -181,20 +208,20 @@ function MegaPanel({ items, lang }: { items: NavItemData[]; lang: string }) {
       </div>
 
       {featured && (
-        <div className="w-[180px] border-l border-gray-100 bg-gray-50 p-4">
+        <div className="w-[176px] border-l border-gray-100 bg-gradient-to-b from-primary-50 to-white p-4">
           <img
             src={featured.imageUrl!}
             alt={featured.imageAlt || featured.label}
-            className="mb-3 h-24 w-full rounded-lg object-cover"
+            className="mb-3 h-24 w-full rounded-xl object-cover"
           />
           <p className="text-sm font-semibold text-gray-900">{featured.label}</p>
           {featured.description && (
-            <p className="mt-1 text-xs text-gray-500 line-clamp-3">{featured.description}</p>
+            <p className="mt-1 text-xs leading-relaxed text-gray-500 line-clamp-3">{featured.description}</p>
           )}
           {featured.href && (
             <Link
               href={localize(featured.href, lang)}
-              className="mt-3 inline-block text-xs font-medium text-primary-600 hover:text-primary-700"
+              className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-primary-600 hover:text-primary-700"
             >
               Learn more →
             </Link>

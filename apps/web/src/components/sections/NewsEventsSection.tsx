@@ -1,7 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Calendar, ArrowRight, ExternalLink } from "lucide-react";
+import { Calendar, ArrowRight } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { API } from "@/lib/api";
 import StaggerChildren, { StaggerItem } from "@/components/motion/StaggerChildren";
 
@@ -13,11 +14,26 @@ interface NewsItem {
   imageUrl?: string;
 }
 
+const defaultNews: NewsItem[] = [
+  { id: 1, title: "Reliance Finance announces strong Q3 financial results with double-digit growth", slug: "q3-results", publishedDate: "2025-03-15" },
+  { id: 2, title: "New branch inaugurated in Pokhara to expand service network across Gandaki Province", slug: "pokhara-branch", publishedDate: "2025-02-28" },
+  { id: 3, title: "Reliance Finance launches enhanced mobile banking platform with new features", slug: "mobile-banking-update", publishedDate: "2025-02-10" },
+  { id: 4, title: "Financial literacy program reaches 5,000 students across Nepal", slug: "financial-literacy", publishedDate: "2025-01-20" },
+];
+
+const defaultEvents: NewsItem[] = [
+  { id: 1, title: "26th Annual General Meeting of Reliance Finance Limited", slug: "agm-2025", publishedDate: "2025-04-20" },
+  { id: 2, title: "Free Health Camp organized in Bardiya district in collaboration with Red Cross", slug: "health-camp-bardiya", publishedDate: "2025-03-25" },
+  { id: 3, title: "Employee training workshop on digital banking services and compliance", slug: "digital-training", publishedDate: "2025-03-05" },
+  { id: 4, title: "Tree plantation drive for environmental sustainability across 5 districts", slug: "tree-plantation", publishedDate: "2025-02-15" },
+];
+
 export default function NewsEventsSection({ lang }: { lang: string }) {
   const [tab, setTab] = useState<"news" | "events">("news");
   const [news, setNews] = useState<NewsItem[]>([]);
   const [events, setEvents] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const isNp = lang === "np";
 
   useEffect(() => {
     async function fetchData() {
@@ -38,76 +54,92 @@ export default function NewsEventsSection({ lang }: { lang: string }) {
     fetchData();
   }, []);
 
-  const items = tab === "news" ? news : events;
-
-  const defaultNews: NewsItem[] = [
-    { id: 1, title: "Reliance Finance announces Q3 financial results with strong growth", slug: "q3-results", publishedDate: "2025-03-15", imageUrl: "" },
-    { id: 2, title: "New branch inaugurated in Pokhara to expand service network", slug: "pokhara-branch", publishedDate: "2025-02-28", imageUrl: "" },
-    { id: 3, title: "Reliance Finance launches enhanced mobile banking platform", slug: "mobile-banking-update", publishedDate: "2025-02-10", imageUrl: "" },
-    { id: 4, title: "Financial literacy program reaches 5,000 students across Nepal", slug: "financial-literacy", publishedDate: "2025-01-20", imageUrl: "" },
-  ];
-
-  const defaultEvents: NewsItem[] = [
-    { id: 1, title: "26th Annual General Meeting of Reliance Finance Limited", slug: "agm-2025", publishedDate: "2025-04-20", imageUrl: "" },
-    { id: 2, title: "Free Health Camp organized in Bardiya district", slug: "health-camp-bardiya", publishedDate: "2025-03-25", imageUrl: "" },
-    { id: 3, title: "Employee training workshop on digital banking services", slug: "digital-training", publishedDate: "2025-03-05", imageUrl: "" },
-    { id: 4, title: "Tree plantation drive for environmental sustainability", slug: "tree-plantation", publishedDate: "2025-02-15", imageUrl: "" },
-  ];
-
-  const displayItems = items.length ? items : (tab === "news" ? defaultNews : defaultEvents);
+  const liveItems = tab === "news" ? news : events;
+  const displayItems = liveItems.length ? liveItems : (tab === "news" ? defaultNews : defaultEvents);
 
   return (
     <div>
-      <div className="mb-8 flex justify-center gap-2">
-        <button
-          onClick={() => setTab("news")}
-          className={`rounded-lg px-6 py-2.5 font-heading font-semibold transition-all ${tab === "news" ? "bg-primary-500 text-white shadow-md" : "bg-white text-gray-600 hover:bg-primary-50"}`}
-        >
-          {lang === "en" ? "Latest News" : "पछिल्लो समाचार"}
-        </button>
-        <button
-          onClick={() => setTab("events")}
-          className={`rounded-lg px-6 py-2.5 font-heading font-semibold transition-all ${tab === "events" ? "bg-primary-500 text-white shadow-md" : "bg-white text-gray-600 hover:bg-primary-50"}`}
-        >
-          {lang === "en" ? "Events" : "कार्यक्रमहरू"}
-        </button>
+      {/* Section header with integrated tab toggle */}
+      <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+        <div>
+          <span className="mb-1 block text-xs font-bold uppercase tracking-[0.12em] text-secondary-600">
+            {isNp ? "अपडेटहरू" : "Stay Updated"}
+          </span>
+          <h2 className="text-3xl font-bold text-primary-800 md:text-4xl">
+            {isNp ? "पछिल्लो हाइलाइट्स" : "Latest Highlights"}
+          </h2>
+        </div>
+        {/* Tab toggle — acts as section navigation */}
+        <div className="flex overflow-hidden rounded-xl border border-gray-200 bg-gray-50">
+          <button
+            onClick={() => setTab("news")}
+            className={`px-5 py-2.5 text-sm font-semibold transition-all ${
+              tab === "news"
+                ? "bg-primary-500 text-white shadow-sm"
+                : "text-gray-600 hover:bg-gray-100"
+            }`}
+          >
+            {isNp ? "समाचार" : "News"}
+          </button>
+          <button
+            onClick={() => setTab("events")}
+            className={`px-5 py-2.5 text-sm font-semibold transition-all ${
+              tab === "events"
+                ? "bg-primary-500 text-white shadow-sm"
+                : "text-gray-600 hover:bg-gray-100"
+            }`}
+          >
+            {isNp ? "कार्यक्रमहरू" : "Events"}
+          </button>
+        </div>
       </div>
 
-      <StaggerChildren className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {displayItems.map((item) => (
-          <StaggerItem key={item.id} className="h-full">
-          <Link
-            href={`/${lang}/${tab}/${item.slug}`}
-            className="group relative block h-full overflow-hidden rounded-xl bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
-          >
-            <div
-              className="flex h-44 items-end bg-gradient-to-t from-primary-900/80 via-primary-900/40 to-primary-700/20 bg-cover bg-center"
-              style={{
-                backgroundImage: item.imageUrl
-                  ? `url(${item.imageUrl})`
-                  : `linear-gradient(135deg, #702B86 0%, #5a226b 100%)`,
-              }}
-            >
-              <div className="p-4">
-                <span className="inline-flex items-center gap-1 rounded-full bg-white/20 px-3 py-1 text-xs font-medium text-white backdrop-blur">
-                  <Calendar className="h-3 w-3" />
-                  {item.publishedDate}
-                </span>
-              </div>
-            </div>
-            <div className="p-4">
-              <h3 className="mb-2 line-clamp-2 font-heading font-bold text-gray-900 transition-colors group-hover:text-primary-700">
-                {item.title}
-              </h3>
-              <span className="inline-flex items-center gap-1 text-xs font-semibold text-primary-700 group-hover:text-secondary-600">
-                {lang === "en" ? "Read More" : "थप पढ्नुहोस्"}
-                <ExternalLink className="h-3 w-3" />
-              </span>
-            </div>
-          </Link>
-          </StaggerItem>
-        ))}
-      </StaggerChildren>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={tab}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
+        >
+          <StaggerChildren className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+            {displayItems.map((item) => (
+              <StaggerItem key={item.id} className="h-full">
+                <Link
+                  href={`/${lang}/${tab}/${item.slug}`}
+                  className="group relative block h-full overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg"
+                >
+                  <div
+                    className="flex h-44 items-end bg-cover bg-center"
+                    style={{
+                      backgroundImage: item.imageUrl
+                        ? `url(${item.imageUrl})`
+                        : `linear-gradient(135deg, #702B86 0%, #5a226b 100%)`,
+                    }}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                    <div className="relative p-4">
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-2.5 py-1 text-xs font-medium text-white backdrop-blur">
+                        <Calendar className="h-3 w-3" />
+                        {item.publishedDate}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="mb-3 line-clamp-2 font-heading text-sm font-bold leading-snug text-gray-900 transition-colors group-hover:text-primary-700">
+                      {item.title}
+                    </h3>
+                    <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary-600 transition-colors group-hover:text-secondary-600">
+                      {isNp ? "थप पढ्नुहोस्" : "Read More"}
+                      <ArrowRight className="h-3 w-3" />
+                    </span>
+                  </div>
+                </Link>
+              </StaggerItem>
+            ))}
+          </StaggerChildren>
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }

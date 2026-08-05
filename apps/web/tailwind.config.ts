@@ -16,6 +16,7 @@ const config: Config = {
           700: "#4a1a58",
           800: "#3a1345",
           900: "#2a0d33",
+          950: "#0a0522",
           DEFAULT: "#702B86",
         },
         secondary: {
@@ -67,12 +68,15 @@ const config: Config = {
         md: "0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.06)",
         lg: "0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.05)",
         xl: "0 20px 25px -5px rgb(0 0 0 / 0.09), 0 8px 10px -6px rgb(0 0 0 / 0.05)",
-        "brand": "0 8px 30px rgb(112 43 134 / 0.18)",
+        brand: "0 8px 30px rgb(112 43 134 / 0.18)",
+        glass: "0 8px 32px 0 rgba(112, 43, 134, 0.12), inset 0 0 0 1px rgba(255,255,255,0.1)",
       },
       borderRadius: {
         sm: "8px",
+        DEFAULT: "12px",
         md: "12px",
         lg: "20px",
+        xl: "24px",
         full: "9999px",
       },
       transitionTimingFunction: {
@@ -91,11 +95,31 @@ const config: Config = {
           "0%": { backgroundPosition: "-200% 0" },
           "100%": { backgroundPosition: "200% 0" },
         },
+        kenburns: {
+          "0%": { transform: "scale(1) translate(0, 0)" },
+          "100%": { transform: "scale(1.08) translate(-1%, -1%)" },
+        },
+        float: {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-14px)" },
+        },
+        "gradient-shift": {
+          "0%, 100%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
+        },
+        "progress-bar": {
+          from: { width: "0%" },
+          to: { width: "100%" },
+        },
       },
       animation: {
         marquee: "marquee 30s linear infinite",
         "fade-up": "fade-up 0.5s cubic-bezier(0.25, 0.1, 0.25, 1) both",
         shimmer: "shimmer 1.5s infinite",
+        kenburns: "kenburns 10s ease-out forwards",
+        float: "float 4s ease-in-out infinite",
+        "gradient-shift": "gradient-shift 6s ease infinite",
+        "progress-bar": "progress-bar linear forwards",
       },
     },
   },

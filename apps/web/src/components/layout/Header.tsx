@@ -71,32 +71,32 @@ export default function Header({ lang, initialNavData }: HeaderProps) {
 
   return (
     <>
-      {/* Crisp Top Bar — Single-Line Key Rates Ticker */}
-      <div className="bg-slate-900 py-1.5 text-[11px] text-slate-300 border-b border-slate-800 relative z-50">
-        <div className="container-page flex items-center justify-between gap-4">
-          {/* Single-Line Rates Bar */}
-          <div className="flex items-center gap-3 overflow-x-auto no-scrollbar whitespace-nowrap text-xs">
-            <span className="font-bold text-amber-400 flex items-center gap-1">
-              <TrendingUp className="h-3 w-3 text-amber-400" />
-              <span>{isNp ? "दरहरू:" : "Key Rates:"}</span>
-            </span>
-            <span className="text-slate-400">Savings <strong className="text-white font-mono">6.25% p.a.</strong></span>
-            <span className="text-slate-600">•</span>
-            <span className="text-slate-400">Fixed Deposit <strong className="text-white font-mono">8.25% p.a.</strong></span>
-            <span className="text-slate-600">•</span>
-            <span className="text-slate-400">Base Rate <strong className="text-white font-mono">8.45%</strong></span>
-            <span className="text-slate-600">•</span>
-            <span className="text-slate-400">Spread Rate <strong className="text-white font-mono">4.00%</strong></span>
-          </div>
-
-          <div className="flex items-center gap-3 shrink-0">
+      {/* Top Utility Bar */}
+      <div className="bg-slate-950 py-1.5 text-xs text-slate-300 border-b border-slate-800 relative z-50">
+        <div className="container-page flex items-center justify-between">
+          <div className="flex items-center gap-5">
             <a
               href="tel:+977015361104"
-              className="hidden sm:flex items-center gap-1 text-slate-300 hover:text-white transition-colors"
+              className="flex items-center gap-1.5 font-medium text-slate-300 transition-colors hover:text-white"
             >
-              <Phone className="h-3 w-3 text-amber-400" />
-              <span>+977-01-5361104</span>
+              <Phone className="h-3 w-3 text-secondary-400" />
+              <span className="hidden sm:inline">+977-01-5361104</span>
+              <span className="sm:hidden">Call Us</span>
             </a>
+            <a
+              href="mailto:info@reliancenepal.com.np"
+              className="hidden items-center gap-1.5 font-medium text-slate-300 transition-colors hover:text-white md:flex"
+            >
+              <Mail className="h-3 w-3 text-secondary-400" />
+              info@reliancenepal.com.np
+            </a>
+            <div className="hidden lg:flex items-center gap-2 border-l border-slate-800 pl-4 text-[11px] text-slate-400">
+              <span className="inline-block h-2 w-2 rounded-full bg-emerald-400" />
+              <span>{isNp ? "नेपाल राष्ट्र बैंकबाट 'ग' वर्गको इजाजतपत्र प्राप्त" : "NRB Licensed 'C' Class Financial Institution"}</span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
             <CommandPalette lang={lang} />
             <LanguageSwitcher />
           </div>

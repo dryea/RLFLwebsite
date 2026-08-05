@@ -87,13 +87,7 @@ export default function MobileNav({ items, lang, isOpen, onClose }: MobileNavPro
               </div>
             </div>
 
-            {/* Financial Live Rate Strip */}
-            <div className="flex items-center justify-between bg-primary-950 px-4 py-2 text-[11px] text-white">
-              <span className="flex items-center gap-1 text-secondary-400 font-bold">
-                <TrendingUp className="h-3 w-3" /> Base Rate: 8.45%
-              </span>
-              <span className="text-white/80 font-mono">FD Rate: 8.25%</span>
-            </div>
+
 
             {/* Navigation Accordion List */}
             <div className="flex-1 overflow-y-auto px-3 py-3">

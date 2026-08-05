@@ -158,6 +158,8 @@ export const redirects: Record<string, string> = {
   "/emi": "/en/emi-calculator",
   "/news": "/en/publications/news",
   "/en/news": "/en/publications/news",
+  "/calculator": "/en/calculators",
+  "/en/calculator": "/en/calculators",
   "/products": "/en/products",
   "/about": "/en/about",
   "/banking-hours": "/en/banking-hours",

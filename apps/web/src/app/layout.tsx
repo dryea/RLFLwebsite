@@ -12,6 +12,13 @@ export const metadata: Metadata = {
     template: "%s | Reliance Finance Limited",
   },
   description: "Reliance Finance Limited — Your trusted financial partner in Nepal",
+  icons: {
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/favicon.png", type: "image/png" },
+    ],
+    apple: "/favicon.png",
+  },
 };
 
 export default function RootLayout({

@@ -3,6 +3,7 @@
 -- Extracted from old site (commit 1cdfecd)
 -- All INSERT OR REPLACE — safe to re-run
 -- ============================================================
+PRAGMA foreign_keys = OFF;
 
 -- ============================================================
 -- 1. HERO SLIDES (5 slides)

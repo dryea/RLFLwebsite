@@ -5,10 +5,12 @@ import Link from "next/link";
 import { ArrowLeft, Scale, Check, X } from "lucide-react";
 import { getProducts } from "@/lib/public-api";
 import { useLang } from "@/contexts/LanguageContext";
+import { useToast } from "@/components/ui/Toast";
 
 export default function ProductComparePage() {
   const lang = useLang();
   const isNp = lang === "np";
+  const { toast } = useToast();
   const [products, setProducts] = useState<any[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
 
@@ -21,7 +23,7 @@ export default function ProductComparePage() {
   function toggle(slug: string) {
     setSelected((prev) => {
       if (prev.includes(slug)) return prev.filter((s) => s !== slug);
-      if (prev.length >= 3) { alert(isNp ? "अधिकतम ३ उत्पादन तुलना गर्न सकिन्छ" : "Compare up to 3 products"); return prev; }
+      if (prev.length >= 3) { toast("info", isNp ? "अधिकतम ३ उत्पादन तुलना गर्न सकिन्छ" : "Compare up to 3 products"); return prev; }
       return [...prev, slug];
     });
   }

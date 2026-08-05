@@ -5,11 +5,13 @@ import { ArrowLeft } from "lucide-react";
 import { getCareers } from "@/lib/public-api";
 import { API } from "@/lib/api";
 import { useLang } from "@/contexts/LanguageContext";
+import { useToast } from "@/components/ui/Toast";
 import AddressFields from "@/components/shared/AddressFields";
 
 export default function ApplyPage() {
   const lang = useLang();
   const isNp = lang === "np";
+  const { toast } = useToast();
   const { id } = useParams<{ id: string }>();
   const [job, setJob] = useState<any>(null);
   const [form, setForm] = useState({ name: "", email: "", phone: "", address: "", province: "", district: "", localBody: "", coverLetter: "" });
@@ -45,7 +47,7 @@ export default function ApplyPage() {
       });
       setSubmitted(true);
     } catch {
-      alert(isNp ? "आवेदन पेश गर्न सकिएन। फेरि प्रयास गर्नुहोस्।" : "Failed to submit application. Try again.");
+      toast("error", isNp ? "आवेदन पेश गर्न सकिएन। फेरि प्रयास गर्नुहोस्।" : "Failed to submit application. Try again.");
     }
     setLoading(false);
   }

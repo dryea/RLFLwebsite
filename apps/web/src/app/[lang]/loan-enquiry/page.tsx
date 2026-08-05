@@ -5,18 +5,20 @@ import { useLang } from "@/contexts/LanguageContext";
 import { API } from "@/lib/api";
 import AddressFields from "@/components/shared/AddressFields";
 import { trackEvent } from "@/components/shared/Analytics";
+import { useToast } from "@/components/ui/Toast";
 
 export default function LangLoanEnquiryPage() {
   const lang = useLang();
   const isNp = lang === "np";
+  const { toast } = useToast();
   const [form, setForm] = useState({ name: "", address: "", province: "", district: "", localBody: "", phone: "", email: "", nationality: isNp ? "नेपाली" : "Nepali", customerProfile: "individual", loanType: "", proposedAmount: "", preferredBranch: "", remarks: "", consent: false });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!form.consent) return alert(isNp ? "कृपया सर्तहरू स्वीकार गर्नुहोस्" : "Please accept the terms");
-    if (!form.province || !form.district || !form.localBody) return alert(isNp ? "कृपया प्रदेश, जिल्ला र स्थानीय तह चयन गर्नुहोस्" : "Please select province, district, and local body");
+    if (!form.consent) return toast("error", isNp ? "कृपया सर्तहरू स्वीकार गर्नुहोस्" : "Please accept the terms");
+    if (!form.province || !form.district || !form.localBody) return toast("error", isNp ? "कृपया प्रदेश, जिल्ला र स्थानीय तह चयन गर्नुहोस्" : "Please select province, district, and local body");
     setLoading(true);
     try {
       const res = await fetch(`${API}/api/cms/loan-enquiries`, {
@@ -28,7 +30,7 @@ export default function LangLoanEnquiryPage() {
       setSubmitted(true);
       trackEvent("conversion", "loan_enquiry");
     } catch {
-      alert(isNp ? "पेश गर्न सकिएन। फेरि प्रयास गर्नुहोस्।" : "Submission failed. Please try again.");
+      toast("error", isNp ? "पेश गर्न सकिएन। फेरि प्रयास गर्नुहोस्।" : "Submission failed. Please try again.");
     }
     setLoading(false);
   }

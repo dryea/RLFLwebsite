@@ -5,10 +5,12 @@ import { Phone, Mail, MapPin } from "lucide-react";
 import { useLang } from "@/contexts/LanguageContext";
 import { API } from "@/lib/api";
 import { trackEvent } from "@/components/shared/Analytics";
+import { useToast } from "@/components/ui/Toast";
 
 export default function LangContactPage() {
   const lang = useLang();
   const isNp = lang === "np";
+  const { toast } = useToast();
   const [form, setForm] = useState({ name: "", email: "", phone: "", subject: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -24,7 +26,7 @@ export default function LangContactPage() {
       });
       setSubmitted(true);
       trackEvent("conversion", "contact_form");
-    } catch { alert(isNp ? "पठाउन सकिएन। फेरि प्रयास गर्नुहोस्।" : "Failed to send. Try again."); }
+    } catch { toast("error", isNp ? "पठाउन सकिएन। फेरि प्रयास गर्नुहोस्।" : "Failed to send. Try again."); }
     setLoading(false);
   }
 

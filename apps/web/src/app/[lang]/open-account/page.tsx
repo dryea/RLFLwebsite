@@ -7,6 +7,7 @@ import { UserPlus, ShieldCheck, CheckCircle2, Upload, FileText, Sparkles, Buildi
 import { useLang } from "@/contexts/LanguageContext";
 import { API } from "@/lib/api";
 import { trackEvent } from "@/components/shared/Analytics";
+import { useToast } from "@/components/ui/Toast";
 import Stepper from "@/components/ui/Stepper";
 import AddressFields from "@/components/shared/AddressFields";
 import Button from "@/components/ui/Button";
@@ -22,6 +23,7 @@ const accountTypes = [
 
 function OpenAccountFormContent() {
   const lang = useLang();
+  const { toast } = useToast();
   const searchParams = useSearchParams();
   const isNp = lang === "np";
 
@@ -92,7 +94,7 @@ function OpenAccountFormContent() {
         trackEvent("conversion", "account_opening");
         setStep(4);
       } else {
-        alert(isNp ? "पेश गर्न सकिएन। फेरि प्रयास गर्नुहोस्।" : "Submission failed. Please try again.");
+        toast("error", isNp ? "पेश गर्न सकिएन। फेरि प्रयास गर्नुहोस्।" : "Submission failed. Please try again.");
       }
     } catch {
       setReference(`RFL-${Math.floor(100000 + Math.random() * 900000)}`);

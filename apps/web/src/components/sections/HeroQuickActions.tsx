@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { Calculator, TrendingUp, MapPin, UserPlus, PhoneCall } from "lucide-react";
 import { localize } from "@/lib/localize";
 
@@ -47,38 +48,45 @@ export default function HeroQuickActions({ lang }: HeroQuickActionsProps) {
 
   return (
     <>
-      {/* Horizontal scroll on mobile, centered flex on desktop */}
+      {/* Staggered entrance for quick actions */}
       <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-hide sm:flex-wrap sm:overflow-visible">
-        {actions.map((a) => {
+        {actions.map((a, i) => {
           const Icon = a.icon;
           return (
-            <Link
+            <motion.div
               key={a.href}
-              href={a.href}
-              className={`group flex flex-shrink-0 items-center gap-3 rounded-2xl px-5 py-3.5 backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg ${
-                a.highlight
-                  ? "bg-secondary-500 text-gray-900 shadow-md hover:bg-secondary-400"
-                  : "border border-white/25 bg-white/12 text-white hover:bg-white/22"
-              }`}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.35 + i * 0.07, duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
+              className="flex flex-shrink-0"
             >
-              <span
-                className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110 ${
-                  a.highlight ? "bg-gray-900/15" : "bg-white/15"
+              <Link
+                href={a.href}
+                className={`group flex items-center gap-3 rounded-2xl px-5 py-3.5 backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg ${
+                  a.highlight
+                    ? "bg-secondary-500 text-gray-900 shadow-md hover:bg-secondary-400"
+                    : "border border-white/25 bg-white/12 text-white hover:bg-white/22"
                 }`}
               >
-                <Icon className="h-4.5 w-4.5" />
-              </span>
-              <span className="text-left">
-                <span className="block text-sm font-bold leading-tight">{a.label}</span>
                 <span
-                  className={`block text-[11px] leading-tight ${
-                    a.highlight ? "text-gray-700" : "text-white/65"
+                  className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3 ${
+                    a.highlight ? "bg-gray-900/15" : "bg-white/15"
                   }`}
                 >
-                  {a.desc}
+                  <Icon className="h-4.5 w-4.5" />
                 </span>
-              </span>
-            </Link>
+                <span className="text-left">
+                  <span className="block text-sm font-bold leading-tight">{a.label}</span>
+                  <span
+                    className={`block text-[11px] leading-tight ${
+                      a.highlight ? "text-gray-700" : "text-white/65"
+                    }`}
+                  >
+                    {a.desc}
+                  </span>
+                </span>
+              </Link>
+            </motion.div>
           );
         })}
       </div>

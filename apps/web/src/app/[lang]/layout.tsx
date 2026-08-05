@@ -9,6 +9,7 @@ import IntlProvider from "@/components/providers/IntlProvider";
 import Analytics from "@/components/shared/Analytics";
 import ChatWidget from "@/components/shared/ChatWidget";
 import BackToTop from "@/components/shared/BackToTop";
+import RouteProgress from "@/components/shared/RouteProgress";
 import { getSeoSettings } from "@/lib/seo";
 
 export async function generateStaticParams() {
@@ -79,6 +80,7 @@ export default async function LangLayout({
 
   return (
     <IntlProvider locale={lang as "en" | "np"} messages={messages}>
+      <RouteProgress />
       <JsonLd data={orgSchema} />
       <Header lang={lang} />
       <main id="main-content" className="flex-1">{children}</main>

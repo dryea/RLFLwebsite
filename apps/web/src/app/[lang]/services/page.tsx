@@ -5,13 +5,17 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { getServices } from "@/lib/public-api";
 import { useLang } from "@/contexts/LanguageContext";
+import { SkeletonGrid } from "@/components/ui/Skeleton";
 
 export default function LangServicesPage() {
   const lang = useLang();
   const isNp = lang === "np";
   const [services, setServices] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => { getServices().then(setServices).catch(() => {}); }, []);
+  useEffect(() => {
+    getServices().then(setServices).catch(() => {}).finally(() => setLoading(false));
+  }, []);
 
   return (
     <>
@@ -23,6 +27,9 @@ export default function LangServicesPage() {
       </section>
       <section className="py-12">
         <div className="container-page">
+          {loading ? (
+            <SkeletonGrid count={6} columns={3} />
+          ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {services.map((svc: any) => (
               <Link key={svc.id} href={`/${lang}/services/${svc.slug}`} className="group rounded-xl border bg-white p-6 transition-shadow hover:shadow-md">
@@ -33,6 +40,7 @@ export default function LangServicesPage() {
               </Link>
             ))}
           </div>
+          )}
         </div>
       </section>
     </>

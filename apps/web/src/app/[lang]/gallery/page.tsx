@@ -4,14 +4,16 @@ import { useEffect, useState } from "react";
 import { getAlbums } from "@/lib/public-api";
 import GalleryGrid from "@/components/shared/GalleryGrid";
 import { useLang } from "@/contexts/LanguageContext";
+import { SkeletonGrid } from "@/components/ui/Skeleton";
 
 export default function LangGalleryPage() {
   const lang = useLang();
   const isNp = lang === "np";
   const [albums, setAlbums] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getAlbums().then(setAlbums).catch(() => {});
+    getAlbums().then(setAlbums).catch(() => {}).finally(() => setLoading(false));
   }, []);
 
   return (
@@ -24,7 +26,7 @@ export default function LangGalleryPage() {
       </section>
       <section className="py-12">
         <div className="container-page">
-          <GalleryGrid albums={albums} />
+          {loading ? <SkeletonGrid count={6} columns={3} /> : <GalleryGrid albums={albums} />}
         </div>
       </section>
     </>

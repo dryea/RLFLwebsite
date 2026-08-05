@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ArrowLeft, Calendar, Share2 } from "lucide-react";
 import { useLang } from "@/contexts/LanguageContext";
 import { getNews } from "@/lib/public-api";
+import JsonLdScript from "@/components/shared/JsonLdScript";
 
 export default function NewsDetailPage() {
   const lang = useLang();
@@ -62,6 +63,34 @@ export default function NewsDetailPage() {
 
   return (
     <>
+      <JsonLdScript
+        data={{
+          "@context": "https://schema.org",
+          "@type": "NewsArticle",
+          headline: article.title,
+          description: article.summary || article.title,
+          image: article.coverImage || undefined,
+          datePublished: article.publishedAt || undefined,
+          dateModified: article.updatedAt || article.publishedAt || undefined,
+          author: {
+            "@type": "Organization",
+            name: "Reliance Finance Limited",
+            url: `${typeof window !== "undefined" ? window.location.origin : ""}/en/about`,
+          },
+          publisher: {
+            "@type": "Organization",
+            name: "Reliance Finance Limited",
+            logo: {
+              "@type": "ImageObject",
+              url: `${typeof window !== "undefined" ? window.location.origin : ""}/logo.svg`,
+            },
+          },
+          mainEntityOfPage: {
+            "@type": "WebPage",
+            "@id": typeof window !== "undefined" ? window.location.href : "",
+          },
+        }}
+      />
       <section className="bg-gradient-to-br from-primary-800 via-primary-700 to-primary-900 py-14 text-white">
         <div className="container-page">
           <Link href="/news" className="mb-4 inline-flex items-center gap-1 text-sm text-primary-200 transition-colors hover:text-white">

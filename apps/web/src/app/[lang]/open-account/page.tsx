@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { UserPlus, ShieldCheck, CheckCircle2, Upload, FileText, Sparkles, Building } from "lucide-react";
+import { UserPlus, ShieldCheck, CheckCircle2, Upload, FileText, Sparkles, Building, Search } from "lucide-react";
 import { useLang } from "@/contexts/LanguageContext";
 import { API } from "@/lib/api";
 import { trackEvent } from "@/components/shared/Analytics";
@@ -116,9 +116,15 @@ function OpenAccountFormContent() {
           <p className="mt-2 text-gray-600">{isNp ? "तपाईंको आवेदन सन्दर्भ नम्बर:" : "Your application reference number is:"}</p>
           <div className="mt-3 inline-block rounded-2xl bg-primary-50 px-6 py-3 font-mono text-xl font-bold text-primary-700">{reference}</div>
           <p className="mt-4 text-xs leading-relaxed text-gray-500">{isNp ? "यो नम्बर सुरक्षित राख्नुहोस्। हाम्रो टोलीले तपाईंलाई सम्पर्क गर्नेछ।" : "Keep this reference safe. Our customer onboarding team will reach out to finalize your account setup."}</p>
-          <button onClick={() => (window.location.href = `/${lang}`)} className="mt-6 rounded-xl bg-primary-700 px-6 py-2.5 text-sm font-semibold text-white hover:bg-primary-800 shadow-sm">
-            {isNp ? "मुख्य पृष्ठमा फर्कनुहोस्" : "Return to Home"}
-          </button>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+            <button onClick={() => (window.location.href = `/${lang}/application-status`)} className="inline-flex items-center gap-2 rounded-xl bg-primary-700 px-6 py-2.5 text-sm font-semibold text-white hover:bg-primary-800 shadow-sm">
+              <Search className="h-4 w-4" />
+              {isNp ? "आवेदन स्थिति ट्र्याक गर्नुहोस्" : "Track Application Status"}
+            </button>
+            <button onClick={() => (window.location.href = `/${lang}`)} className="rounded-xl border px-6 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-50">
+              {isNp ? "मुख्य पृष्ठमा फर्कनुहोस्" : "Return to Home"}
+            </button>
+          </div>
         </motion.div>
       </section>
     );

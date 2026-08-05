@@ -7,6 +7,11 @@ const staticRoutes = [
   "faq", "gallery", "careers", "downloads", "banking-hours",
   "search", "rates", "governance", "notices", "privacy-policy",
   "loan-enquiry", "calendar", "products", "publications", "testimonials",
+  "open-account", "application-status", "regulator-hub", "our-network",
+  "partner", "merchant-offers", "committee-of-directors", "csr",
+  "sustainable-banking", "compliance-officer", "company-secretary",
+  "grievance-handling-officer", "information-officer",
+  "beware-of-digital-fraud", "write-to-us", "auction-notice",
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

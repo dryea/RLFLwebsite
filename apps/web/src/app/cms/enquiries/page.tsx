@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Mail, Phone, Check, ExternalLink } from "lucide-react";
+import { Mail, Phone, Check, ExternalLink, Download } from "lucide-react";
 import CMSLayout from "@/components/cms/CMSLayout";
 import { api } from "@/lib/api";
 
@@ -52,6 +52,29 @@ export default function EnquiriesPage() {
     } catch (e) { console.error(e); }
   }
 
+  function exportCSV() {
+    const rows = currentList.map((e) => ({
+      ID: e.id,
+      Name: e.name,
+      Email: e.email,
+      Phone: e.phone || "",
+      [tab === "loan" ? "Loan Type" : "Subject"]: tab === "loan" ? (e.loanType || "") : (e.subject || ""),
+      Amount: tab === "loan" ? (e.amount || "") : "",
+      Message: (e.message || "").replace(/\r?\n/g, " "),
+      Date: e.createdAt,
+      Status: e.readAt ? "read" : "unread",
+    }));
+    const headers = Object.keys(rows[0] || {});
+    const csv = [headers.join(","), ...rows.map((r) => headers.map((h) => `"${String((r as any)[h] || "").replace(/"/g, '""')}"`).join(","))].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${tab === "loan" ? "loan-enquiries" : "contact-submissions"}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
   const currentList = tab === "contact" ? contacts : loans;
   const unread = currentList.filter((e) => !e.readAt).length;
 
@@ -59,9 +82,16 @@ export default function EnquiriesPage() {
 
   return (
     <CMSLayout>
-      <div className="mb-6">
-        <h1 className="text-xl font-bold text-gray-900">Enquiries</h1>
-        <p className="mt-1 text-sm text-gray-500">Manage contact submissions and loan enquiries</p>
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-bold text-gray-900">Enquiries</h1>
+          <p className="mt-1 text-sm text-gray-500">Manage contact submissions and loan enquiries</p>
+        </div>
+        {currentList.length > 0 && (
+          <button onClick={exportCSV} className="flex items-center gap-1.5 rounded-lg border border-primary-200 px-3 py-1.5 text-sm font-medium text-primary-700 hover:bg-primary-50">
+            <Download className="h-4 w-4" /> Export CSV
+          </button>
+        )}
       </div>
 
       <div className="mb-4 flex gap-1 rounded-lg bg-gray-100 p-1">

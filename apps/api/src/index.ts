@@ -1863,6 +1863,14 @@ export default {
         await db.update(pages).set({ status: "published", publishedAt: new Date().toISOString() })
           .where(and(eq(pages.status, "scheduled"), sql`scheduled_at <= ${new Date().toISOString()}`)).run();
         break;
+      case "0 9 * * 1":
+        // Weekly email digest: notify subscribers of new notices/news by preference
+        try {
+          await sendDigestEmails(db, env);
+        } catch (err) {
+          console.error("Digest email failed:", err);
+        }
+        break;
       case "0 2 * * *":
         // Daily backup of core content tables to R2
         try {
@@ -1886,3 +1894,78 @@ export default {
     }
   },
 };
+
+// ── Weekly Email Digest ──
+async function sendDigestEmails(db: any, env: any) {
+  // Get last-sent timestamp from site settings (fallback: 7 days ago)
+  const setting = await db.select().from(siteSettings).where(eq(siteSettings.key, "last_digest_at")).get();
+  const sinceStr = (setting?.value as string) || new Date(Date.now() - 7 * 86400000).toISOString();
+  const since = new Date(sinceStr);
+  const now = new Date().toISOString();
+
+  // Recent notices & news since last digest
+  const [recentNotices, recentNews] = await Promise.all([
+    db.select({ id: notices.id, title: notices.title, titleNp: notices.titleNp, publishedDate: notices.publishedDate })
+      .from(notices).where(and(eq(notices.status, "published"), sql`${notices.publishedDate} >= ${sinceStr}`)).limit(10).all(),
+    db.select({ id: news.id, title: news.title, titleNp: news.titleNp, publishedAt: news.publishedAt })
+      .from(news).where(and(eq(news.status, "published"), sql`${news.publishedAt} >= ${sinceStr}`)).limit(10).all(),
+  ]);
+
+  const items: { title: string; type: string }[] = [
+    ...recentNotices.map((n: any) => ({ title: n.titleNp || n.title, type: "Notice" })),
+    ...recentNews.map((n: any) => ({ title: n.titleNp || n.title, type: "News" })),
+  ];
+
+  // No new content -> just update timestamp and return
+  if (items.length === 0) {
+    if (setting) {
+      await db.update(siteSettings).set({ value: now, updatedAt: now }).where(eq(siteSettings.id, setting.id)).run();
+    } else {
+      await db.insert(siteSettings).values({ key: "last_digest_at", value: now }).run();
+    }
+    return;
+  }
+
+  // Get active subscribers (email via admin only; no queue bulk here, send individually)
+  const subscribers = await db.select().from(newsletterSubscribers).where(eq(newsletterSubscribers.isActive, true)).all();
+
+  const digestHtml = (name: string, lang: string) => `
+    <div style="font-family: Arial; max-width: 600px; margin: 0 auto;">
+      <h2 style="color: #1a365d;">Weekly Update - Reliance Finance</h2>
+      <p>Dear ${name || "Subscriber"},</p>
+      <p>Here's what's new at Reliance Finance this week:</p>
+      <ul>
+        ${items.slice(0, 8).map((i) => `<li><strong>${i.type}:</strong> ${i.title}</li>`).join("")}
+      </ul>
+      <p>${lang === "np" ? "हाम्रो वेबसाइटमा थप जान्नुहोस्।" : "Learn more on our website."}</p>
+      <hr />
+      <p style="color: #666; font-size: 12px;">Reliance Finance Limited</p>
+    </div>
+  `;
+
+  let sent = 0;
+  for (const sub of subscribers) {
+    const prefs: string[] = Array.isArray(sub.preferences) ? sub.preferences : ["newsletter"];
+    // Only send if they subscribed to notices or news (or general newsletter)
+    const interested = prefs.some((p) => p === "newsletter" || p === "notices" || p === "news");
+    if (!interested) continue;
+    try {
+      await env.EMAIL_QUEUE.send([{
+        to: sub.email,
+        subject: "Weekly Update - Reliance Finance",
+        html: digestHtml(sub.email, sub.language || "en"),
+      }]);
+      sent++;
+    } catch (e) {
+      console.error("Digest send error:", e);
+    }
+  }
+
+  // Update last-sent timestamp
+  if (setting) {
+    await db.update(siteSettings).set({ value: now, updatedAt: now }).where(eq(siteSettings.id, setting.id)).run();
+  } else {
+    await db.insert(siteSettings).values({ key: "last_digest_at", value: now }).run();
+  }
+  console.log(`Digest sent to ${sent} subscribers`);
+}

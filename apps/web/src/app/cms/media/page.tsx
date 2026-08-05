@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useState, useRef } from "react";
-import { Upload, Trash2, Copy, FolderOpen, Search, ChevronLeft, ChevronRight } from "lucide-react";
+import { Upload, Trash2, Copy, FolderOpen, Search, ChevronLeft, ChevronRight, FileText } from "lucide-react";
 import CMSLayout from "@/components/cms/CMSLayout";
 import { api } from "@/lib/api";
+import { suggestAltText } from "@/lib/alt-text";
 
 interface MediaItem {
   id: number;
@@ -12,6 +13,7 @@ interface MediaItem {
   mimeType: string;
   size: number;
   url: string;
+  altText?: string | null;
   createdAt: string;
 }
 
@@ -53,6 +55,14 @@ export default function CmsMediaPage() {
     setUploading(true);
     try {
       const result = await api.uploadMedia(file);
+      // Auto-suggest alt text from filename (best effort)
+      if (result && !result.altText && file.type.startsWith("image/")) {
+        const alt = suggestAltText(file.name);
+        try {
+          await api.updateMedia(result.id, { altText: alt });
+          result.altText = alt;
+        } catch { /* non-blocking */ }
+      }
       setItems((prev) => [result, ...prev]);
     } catch (err) {
       alert("Upload failed: " + err);
@@ -65,6 +75,11 @@ export default function CmsMediaPage() {
     if (!confirm("Delete this file?")) return;
     await api.deleteMedia(id);
     setItems((p) => p.filter((x) => x.id !== id));
+  }
+
+  function copyAlt(item: MediaItem) {
+    const alt = item.altText || suggestAltText(item.originalName || item.filename);
+    navigator.clipboard?.writeText(alt).then(() => alert("Alt text copied"));
   }
 
   function copyUrl(url: string) {
@@ -157,6 +172,11 @@ export default function CmsMediaPage() {
                 <button onClick={() => copyUrl(item.url)} className="rounded bg-white/90 p-1.5 text-gray-600 shadow-sm hover:bg-white" title="Copy URL">
                   <Copy className="h-3.5 w-3.5" />
                 </button>
+                {item.mimeType.startsWith("image/") && (
+                  <button onClick={() => copyAlt(item)} className="rounded bg-white/90 p-1.5 text-primary-600 shadow-sm hover:bg-white" title="Copy alt text">
+                    <FileText className="h-3.5 w-3.5" />
+                  </button>
+                )}
                 <button onClick={() => handleDelete(item.id)} className="rounded bg-white/90 p-1.5 text-red-600 shadow-sm hover:bg-white" title="Delete">
                   <Trash2 className="h-3.5 w-3.5" />
                 </button>

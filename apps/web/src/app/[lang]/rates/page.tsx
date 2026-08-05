@@ -6,6 +6,7 @@ import { Percent, Download, ArrowRight, FileText } from "lucide-react";
 import { getRates } from "@/lib/public-api";
 import { useLang } from "@/contexts/LanguageContext";
 import MarketRatesWidget from "@/components/sections/MarketRatesWidget";
+import ABButton from "@/components/shared/ABButton";
 
 export default function RatesPage() {
   const lang = useLang();
@@ -47,6 +48,16 @@ export default function RatesPage() {
         <div className="container-page space-y-14">
           <div className="mx-auto max-w-3xl">
             <MarketRatesWidget lang={lang} />
+          </div>
+          {/* A/B tested CTA */}
+          <div className="flex justify-center">
+            <ABButton
+              name="rates_cta"
+              variants={[
+                { label: isNp ? "दर डाउनलोड गर्नुहोस्" : "Download Rates PDF", href: "https://reliancenepal.com.np/uploads/document/aa72ec286ce3a90b8e335685a3f214490e82b3b5.jpg" },
+                { label: isNp ? "आधार दर हेर्नुहोस्" : "View Base / Spread Rate", href: `/${lang}/rates/base-rate-spread-rate`, className: "inline-flex items-center justify-center gap-2 rounded-xl bg-secondary-500 px-6 py-3 font-semibold text-gray-900 shadow-lg transition-transform hover:-translate-y-0.5 hover:bg-secondary-400" },
+              ]}
+            />
           </div>
           {/* Download link */}
           <div className="flex flex-wrap gap-4">

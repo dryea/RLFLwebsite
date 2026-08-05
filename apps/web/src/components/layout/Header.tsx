@@ -1,28 +1,35 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Phone, Mail, Menu, UserPlus, Search } from "lucide-react";
+import { Phone, Mail, Menu, UserPlus } from "lucide-react";
 import LanguageSwitcher from "@/components/shared/LanguageSwitcher";
-import SearchOverlay from "@/components/shared/SearchOverlay";
+import CommandPalette from "@/components/shared/CommandPalette";
 import MegaMenu from "./MegaMenu";
 import MobileNav from "./MobileNav";
+import { CMSNavItem } from "@/types/navigation";
+import { fallbackCMSNav } from "@/lib/cms-navigation";
 import { useNavigation } from "@/hooks/useNavigation";
 import { localize } from "@/lib/localize";
 
-const fallbackNav = [
-  { label: { en: "About", np: "बारे" }, href: "/about/introduction" },
-  { label: { en: "Products", np: "उत्पादन" }, href: "/products" },
-  { label: { en: "Rates", np: "दर" }, href: "/rates" },
-  { label: { en: "Publications", np: "प्रकाशन" }, href: "/publications/news" },
-  { label: { en: "Services", np: "सेवा" }, href: "/services" },
-  { label: { en: "Contact", np: "सम्पर्क" }, href: "/contact" },
-];
+interface HeaderProps {
+  lang: string;
+  initialNavData?: CMSNavItem[];
+}
 
-export default function Header({ lang }: { lang: string }) {
+export default function Header({ lang, initialNavData }: HeaderProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const navItems = useNavigation("main-nav", lang);
+  const clientNavData = useNavigation("main-nav", lang);
   const isNp = lang === "np";
+
+  // Use initialNavData if provided, fallback to client fetch or built-in fallback
+  const navItems: CMSNavItem[] =
+    initialNavData && initialNavData.length > 0
+      ? initialNavData
+      : clientNavData && clientNavData.length > 0
+      ? (clientNavData as unknown as CMSNavItem[])
+      : fallbackCMSNav;
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 12);
@@ -32,20 +39,22 @@ export default function Header({ lang }: { lang: string }) {
 
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [mobileOpen]);
 
   return (
     <header className="z-50">
-      {/* Utility Bar — slim, minimal */}
-      <div className="bg-primary-700 text-white">
+      {/* Top Utility Bar */}
+      <div className="bg-primary-950 text-white border-b border-white/10">
         <div className="container-page flex items-center justify-between py-1.5">
           <div className="flex items-center gap-5 text-xs">
             <a
               href="tel:+977015361104"
               className="flex items-center gap-1.5 text-white/80 transition-colors hover:text-secondary-400"
             >
-              <Phone className="h-3 w-3" />
+              <Phone className="h-3 w-3 text-secondary-400" />
               <span className="hidden sm:inline">+977-01-5361104</span>
               <span className="sm:hidden">Call Us</span>
             </a>
@@ -53,19 +62,19 @@ export default function Header({ lang }: { lang: string }) {
               href="mailto:info@reliancenepal.com.np"
               className="hidden items-center gap-1.5 text-white/80 transition-colors hover:text-secondary-400 md:flex"
             >
-              <Mail className="h-3 w-3" />
+              <Mail className="h-3 w-3 text-secondary-400" />
               info@reliancenepal.com.np
             </a>
           </div>
 
           <div className="flex items-center gap-3">
+            <CommandPalette lang={lang} />
             <LanguageSwitcher />
-            <SearchOverlay />
           </div>
         </div>
       </div>
 
-      {/* Main Navigation — sticky with glassmorphism on scroll */}
+      {/* Main Navigation — Sticky with glassmorphism on scroll */}
       <div
         className={`sticky top-0 z-50 transition-all duration-300 ${
           scrolled
@@ -91,60 +100,33 @@ export default function Header({ lang }: { lang: string }) {
           </Link>
 
           {/* Desktop Mega Menu */}
-          {navItems.length > 0 ? (
-            <MegaMenu items={navItems} lang={lang} />
-          ) : (
-            <nav className="hidden items-center gap-0.5 lg:flex">
-              {fallbackNav.map((item) => (
-                <Link
-                  key={item.href}
-                  href={localize(item.href, lang)}
-                  className="rounded-lg px-3.5 py-2 font-heading text-sm font-medium text-text-primary transition-all duration-200 hover:bg-primary-50 hover:text-primary-600"
-                >
-                  {isNp && item.label.np ? item.label.np : item.label.en}
-                </Link>
-              ))}
-            </nav>
-          )}
+          <MegaMenu items={navItems} lang={lang} />
 
-          {/* Right actions */}
+          {/* Right Action Button & Mobile Hamburger */}
           <div className="flex items-center gap-2">
             <Link
               href={localize("/open-account", lang)}
-              className="hidden items-center gap-1.5 rounded-lg bg-secondary-500 px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm transition-all hover:bg-secondary-400 hover:-translate-y-px hover:shadow-md lg:inline-flex"
+              className="hidden items-center gap-1.5 rounded-xl bg-secondary-500 px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm transition-all hover:bg-secondary-400 hover:-translate-y-px hover:shadow-md lg:inline-flex"
             >
               <UserPlus className="h-4 w-4" />
               {isNp ? "खाता खोल्नुहोस्" : "Open Account"}
             </Link>
 
-            {/* Mobile hamburger */}
+            {/* Mobile Menu Trigger */}
             <button
               onClick={() => setMobileOpen(true)}
-              className="flex items-center justify-center rounded-lg p-2 text-gray-700 transition-colors hover:bg-gray-100 lg:hidden"
+              className="flex items-center justify-center rounded-xl p-2 text-gray-700 transition-colors hover:bg-gray-100 lg:hidden"
               aria-label={isNp ? "मेनु खोल्नुहोस्" : "Open menu"}
             >
-              <Menu className="h-5 w-5" />
+              <Menu className="h-5.5 w-5.5" />
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile Slide-in Nav */}
+      {/* Mobile Slide-in Drawer */}
       <MobileNav
-        items={
-          navItems.length > 0
-            ? navItems
-            : fallbackNav.map((item, i) => ({
-                id: i,
-                label: isNp && item.label.np ? item.label.np : item.label.en,
-                href: item.href,
-                imageUrl: null,
-                imageAlt: null,
-                description: null,
-                isOpenInNewTab: false,
-                children: [],
-              }))
-        }
+        items={navItems}
         lang={lang}
         isOpen={mobileOpen}
         onClose={() => setMobileOpen(false)}

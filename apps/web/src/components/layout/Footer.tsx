@@ -1,7 +1,21 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import { Phone, Mail, MapPin, ExternalLink, Inbox, Apple, UserPlus, MessageSquare } from "lucide-react";
+import {
+  Phone,
+  Mail,
+  MapPin,
+  ExternalLink,
+  Inbox,
+  Apple,
+  UserPlus,
+  MessageSquare,
+  Calculator,
+  Percent,
+  ChevronRight,
+  ShieldCheck,
+} from "lucide-react";
 import { useLang } from "@/contexts/LanguageContext";
 import {
   footerColumns,
@@ -22,101 +36,104 @@ const socialIconPaths: Record<string, string> = {
   viber: "M15.9 2.4C11.7 1.6 7.9 2.1 4.9 4.5c-1.9 1.5-3 3.6-3.3 6.1-.3 2.4.3 4.8 1.6 6.7v.2l-.5 3.6c0 .2.1.3.3.3.1 0 .2-.1.3-.1l2.9-1.7h.1c1.6.6 3.3.9 4.9.9 1.3 0 2.6-.2 3.9-.5 2.8-.8 5.2-2.4 6.9-4.6 1.8-2.3 2.6-5.2 2.1-8-.4-2.8-1.8-4.9-4.2-6.3-.7-.4-1.5-.7-2.5-.9z",
 };
 
-function FooterLink({ href, label, external, lang }: { href: string; label: string; external?: boolean; lang: string }) {
-  if (external) {
-    return (
-      <a
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex items-center gap-1 text-sm text-gray-400 transition-colors hover:text-white"
-      >
-        {label}
-        <ExternalLink className="h-3 w-3" />
-      </a>
-    );
-  }
-  return (
-    <Link
-      href={localize(href, lang)}
-      className="text-sm text-gray-400 transition-colors hover:text-secondary-400"
-    >
-      {label}
-    </Link>
-  );
-}
-
-function FooterLinkColumn({ title, links }: { title: string; links: { en: string; np: string; href: string; external?: boolean }[] }) {
-  const lang = useLang();
-  return (
-    <div>
-      <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.12em] text-white/60">{title}</h3>
-      <ul className="space-y-2.5">
-        {links.map((link) => (
-          <li key={link.href}>
-            <FooterLink
-              href={link.href}
-              label={lang === "en" ? link.en : link.np}
-              external={link.external}
-              lang={lang}
-            />
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
 export default function Footer() {
   const lang = useLang();
   const c = footerContact;
+  const isNp = lang === "np";
+  const [selectedBranch, setSelectedBranch] = useState("kamaladi");
+
+  const branchContacts: Record<string, string> = {
+    kamaladi: "+977-01-5361104 (Head Office)",
+    butwal: "+977-071-550992 (Lumbini)",
+    pokhara: "+977-061-538188 (Gandaki)",
+    kohalpur: "+977-081-542131 (Banke)",
+  };
 
   return (
     <footer>
-      {/* Pre-footer CTA Strip */}
-      <div className="bg-gradient-to-r from-primary-600 to-primary-800">
-        <div className="container-page flex flex-col items-center justify-between gap-6 py-10 text-center md:flex-row md:text-left">
-          <div>
-            <h3 className="text-xl font-bold text-white md:text-2xl">
-              {lang === "en" ? "Ready to start your financial journey?" : "आफ्नो वित्तीय यात्रा सुरु गर्न तयार हुनुहुन्छ?"}
-            </h3>
-            <p className="mt-1.5 text-sm text-white/70">
-              {lang === "en" ? "Open an account today and experience banking built around you." : "आज खाता खोल्नुहोस् र तपाईंको वरिपरि बनाइएको बैंकिङ अनुभव गर्नुहोस्।"}
-            </p>
-          </div>
-          <div className="flex flex-shrink-0 items-center gap-3">
-            <Link
-              href={localize("/open-account", lang)}
-              className="inline-flex items-center gap-2 rounded-xl bg-secondary-500 px-5 py-2.5 text-sm font-bold text-gray-900 shadow-md transition-all hover:bg-secondary-400 hover:-translate-y-0.5"
-            >
-              <UserPlus className="h-4 w-4" />
-              {lang === "en" ? "Open Account" : "खाता खोल्नुहोस्"}
-            </Link>
-            <Link
-              href={localize("/contact", lang)}
-              className="inline-flex items-center gap-2 rounded-xl border border-white/30 bg-white/10 px-5 py-2.5 text-sm font-semibold text-white backdrop-blur transition-all hover:bg-white/20"
-            >
-              <MessageSquare className="h-4 w-4" />
-              {lang === "en" ? "Contact Us" : "सम्पर्क"}
-            </Link>
+      {/* Pre-footer Interactive Tools & CTA Strip */}
+      <div className="border-t border-primary-700 bg-gradient-to-r from-primary-900 via-primary-800 to-primary-950 text-white">
+        <div className="container-page py-8">
+          <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-3">
+            {/* Tool 1: Branch Quick Finder */}
+            <div className="flex items-center gap-3 rounded-2xl bg-white/10 p-4 backdrop-blur border border-white/15">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-secondary-500 text-gray-900">
+                <MapPin className="h-5 w-5" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-bold uppercase tracking-wider text-secondary-400">
+                  {isNp ? "शाखा खोज्नुहोस्" : "Quick Branch Locator"}
+                </p>
+                <select
+                  value={selectedBranch}
+                  onChange={(e) => setSelectedBranch(e.target.value)}
+                  className="mt-1 w-full rounded-lg border border-white/20 bg-gray-900 px-2 py-1 text-xs text-white outline-none"
+                >
+                  <option value="kamaladi">Kamaladi H.O. (Kathmandu)</option>
+                  <option value="butwal">Butwal (Lumbini)</option>
+                  <option value="pokhara">Pokhara (Gandaki)</option>
+                  <option value="kohalpur">Kohalpur (Banke)</option>
+                </select>
+                <p className="mt-1 text-[11px] text-white/70">{branchContacts[selectedBranch]}</p>
+              </div>
+            </div>
+
+            {/* Tool 2: Rate Quick Check */}
+            <div className="flex items-center gap-3 rounded-2xl bg-white/10 p-4 backdrop-blur border border-white/15">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-secondary-500 text-gray-900">
+                <Percent className="h-5 w-5" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-bold uppercase tracking-wider text-secondary-400">
+                  {isNp ? "नवीनतम दरहरू" : "Interest Rate Highlights"}
+                </p>
+                <div className="mt-1 flex items-center justify-between text-xs text-white/90">
+                  <span>Individual FD: <strong>Up to 6.25%</strong></span>
+                  <span>Saving: <strong>Up to 5.75%</strong></span>
+                </div>
+                <Link
+                  href={localize("/rates", lang)}
+                  className="mt-1.5 inline-flex items-center gap-1 text-[11px] font-bold text-secondary-400 hover:text-white"
+                >
+                  View All Interest Schedules <ChevronRight className="h-3 w-3" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Tool 3: Instant Support & Application */}
+            <div className="flex items-center justify-between gap-3 rounded-2xl bg-white/10 p-4 backdrop-blur border border-white/15">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wider text-secondary-400">
+                  {isNp ? "तत्काल सहायता" : "Instant Banking Access"}
+                </p>
+                <p className="mt-1 text-xs text-white/80">Toll-Free: <strong>1810-5000-417</strong></p>
+              </div>
+              <Link
+                href={localize("/open-account", lang)}
+                className="inline-flex items-center gap-1.5 rounded-xl bg-secondary-500 px-3.5 py-2 text-xs font-bold text-gray-900 shadow transition-transform hover:scale-105"
+              >
+                <UserPlus className="h-3.5 w-3.5" />
+                {isNp ? "खाता खोल्नुहोस्" : "Open Account"}
+              </Link>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Main Footer */}
-      <div className="bg-gradient-to-b from-[#0f1729] to-[#06091a] text-gray-400">
+      {/* Main Dark Footer */}
+      <div className="bg-gradient-to-b from-[#0a0f1d] via-[#060914] to-[#03040a] text-gray-400">
         <div className="container-page py-12">
-          {/* Logo + tagline */}
-          <div className="mb-10 flex flex-col items-start gap-4 border-b border-white/8 pb-10 md:flex-row md:items-center md:justify-between">
+          {/* Logo & NRB Badge Header */}
+          <div className="mb-10 flex flex-col items-start gap-4 border-b border-white/10 pb-10 md:flex-row md:items-center md:justify-between">
             <div>
               <img src="/assets/logo.png" alt="Reliance Finance Limited" className="mb-3 h-10 brightness-0 invert" />
-              <p className="max-w-sm text-sm leading-relaxed text-gray-500">
-                {lang === "en"
-                  ? "A licensed Class C financial institution regulated by Nepal Rastra Bank. Serving Nepal since B.S. 2066."
-                  : "नेपाल राष्ट्र बैंकद्वारा नियन्त्रित 'ग' वर्गको इजाजतपत्र प्राप्त वित्तीय संस्था।"}
+              <p className="max-w-md text-sm leading-relaxed text-gray-400">
+                {isNp
+                  ? "नेपाल राष्ट्र बैंकद्वारा नियन्त्रित 'ग' वर्गको इजाजतपत्र प्राप्त वित्तीय संस्था। वि.सं. २०६६ देखि सेवामा निरन्तर।"
+                  : "A licensed Class C financial institution regulated by Nepal Rastra Bank. Incorporated in B.S. 2066 to provide trusted retail & commercial banking."}
               </p>
             </div>
-            {/* Social Links */}
+            {/* Social Icons */}
             <div className="flex gap-2.5">
               {socialLinks.map((s) => (
                 <a
@@ -124,10 +141,10 @@ export default function Footer() {
                   href={s.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/8 text-gray-400 transition-all hover:bg-primary-600 hover:text-white hover:-translate-y-0.5"
+                  className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-gray-300 transition-all hover:bg-primary-600 hover:text-white hover:-translate-y-0.5"
                   aria-label={s.name}
                 >
-                  <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current">
+                  <svg viewBox="0 0 24 24" className="h-4.5 w-4.5 fill-current">
                     <path d={socialIconPaths[s.icon] || ""} />
                   </svg>
                 </a>
@@ -135,54 +152,88 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Link Columns — dynamic grid */}
-          <div className="grid gap-8" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))" }}>
-            {footerColumns.slice(0, 4).map((col) => (
-              <FooterLinkColumn
-                key={col.title.en}
-                title={lang === "en" ? col.title.en : col.title.np}
-                links={col.links}
-              />
-            ))}
-            <FooterLinkColumn
-              title={lang === "en" ? footerAboutLinks.title.en : footerAboutLinks.title.np}
-              links={footerAboutLinks.links}
-            />
-            <FooterLinkColumn
-              title={lang === "en" ? footerServices.title.en : footerServices.title.np}
-              links={footerServices.links}
-            />
-          </div>
-
-          {/* Contact + App Download */}
-          <div className="mt-10 grid gap-8 border-t border-white/8 pt-10 md:grid-cols-2 lg:grid-cols-3">
+          {/* Structured Link Columns */}
+          <div className="grid gap-8" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))" }}>
             <div>
               <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.12em] text-white/60">
-                {lang === "en" ? c.title.en : c.title.np}
+                {isNp ? "कम्पनी र सुशासन" : "About & Governance"}
               </h3>
-              <ul className="space-y-2 text-sm">
+              <ul className="space-y-2.5 text-sm">
+                <li><Link href={localize("/about/introduction", lang)} className="hover:text-secondary-400 transition-colors">Introduction</Link></li>
+                <li><Link href={localize("/about/mission-goals", lang)} className="hover:text-secondary-400 transition-colors">Mission & Goals</Link></li>
+                <li><Link href={localize("/team/board-of-directors", lang)} className="hover:text-secondary-400 transition-colors">Board of Directors</Link></li>
+                <li><Link href={localize("/team/management-team", lang)} className="hover:text-secondary-400 transition-colors">Management Team</Link></li>
+                <li><Link href={localize("/csr", lang)} className="hover:text-secondary-400 transition-colors">CSR Initiatives</Link></li>
+                <li><Link href={localize("/faq", lang)} className="hover:text-secondary-400 transition-colors">FAQ</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.12em] text-white/60">
+                {isNp ? "उत्पादनहरू" : "Products & Loans"}
+              </h3>
+              <ul className="space-y-2.5 text-sm">
+                <li><Link href={localize("/products/savings", lang)} className="hover:text-secondary-400 transition-colors">Savings Accounts</Link></li>
+                <li><Link href={localize("/products/fixed-deposits", lang)} className="hover:text-secondary-400 transition-colors">Fixed Deposits</Link></li>
+                <li><Link href={localize("/products/loans/home-loan", lang)} className="hover:text-secondary-400 transition-colors">Home Loans</Link></li>
+                <li><Link href={localize("/products/loans/auto-loan", lang)} className="hover:text-secondary-400 transition-colors">Auto Loans</Link></li>
+                <li><Link href={localize("/products/loans/business-loan", lang)} className="hover:text-secondary-400 transition-colors">Business Loans</Link></li>
+                <li><Link href={localize("/emi-calculator", lang)} className="hover:text-secondary-400 transition-colors">EMI Calculator</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.12em] text-white/60">
+                {isNp ? "दर र प्रतिवेदन" : "Rates & Reports"}
+              </h3>
+              <ul className="space-y-2.5 text-sm">
+                <li><Link href={localize("/rates", lang)} className="hover:text-secondary-400 transition-colors">Interest Rates</Link></li>
+                <li><Link href={localize("/rates/base-rate-spread-rate", lang)} className="hover:text-secondary-400 transition-colors">Base / Spread Rate</Link></li>
+                <li><Link href={localize("/rates/forex-rates", lang)} className="hover:text-secondary-400 transition-colors">Forex Exchange</Link></li>
+                <li><Link href={localize("/rates/gold-silver", lang)} className="hover:text-secondary-400 transition-colors">Gold & Silver Rates</Link></li>
+                <li><Link href={localize("/publications/reports/annual-report", lang)} className="hover:text-secondary-400 transition-colors">Annual Reports</Link></li>
+                <li><Link href={localize("/publications/notices/general-notice", lang)} className="hover:text-secondary-400 transition-colors">Notices & Auctions</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.12em] text-white/60">
+                {isNp ? "डिजिटल सेवाहरू" : "Digital Services"}
+              </h3>
+              <ul className="space-y-2.5 text-sm">
+                <li><Link href={localize("/services/mobile-banking", lang)} className="hover:text-secondary-400 transition-colors">Smart Mobile Banking</Link></li>
+                <li><Link href={localize("/services/connect-ips", lang)} className="hover:text-secondary-400 transition-colors">connectIPS Payments</Link></li>
+                <li><Link href={localize("/services/corporatepay", lang)} className="hover:text-secondary-400 transition-colors">CORPORATEPAY</Link></li>
+                <li><Link href={localize("/services/debit-card", lang)} className="hover:text-secondary-400 transition-colors">Debit Card Services</Link></li>
+                <li><Link href={localize("/services/remittance", lang)} className="hover:text-secondary-400 transition-colors">Remittance</Link></li>
+                <li><Link href={localize("/services/qr-teller", lang)} className="hover:text-secondary-400 transition-colors">QR Teller Counter</Link></li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Contact Details & Newsletter Grid */}
+          <div className="mt-10 grid gap-8 border-t border-white/10 pt-10 md:grid-cols-2 lg:grid-cols-3">
+            <div>
+              <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.12em] text-white/60">
+                {isNp ? "सम्पर्क ठेगाना" : "Central Contact"}
+              </h3>
+              <ul className="space-y-2.5 text-sm">
                 <li className="flex items-start gap-2">
-                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gray-600" />
-                  <span>{lang === "en" ? c.address.en : c.address.np}</span>
+                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary-400" />
+                  <span>{isNp ? c.address.np : c.address.en}</span>
                 </li>
-                {c.phones.map((p, i) => (
-                  <li key={i}>
-                    <a href={`tel:${p.replace(/[^0-9]/g, "")}`} className="flex items-center gap-2 transition-colors hover:text-white">
-                      <Phone className="h-4 w-4 text-gray-600" />{p}
-                    </a>
-                  </li>
-                ))}
-                <li className="flex items-start gap-2">
-                  <Phone className="mt-0.5 h-4 w-4 shrink-0 text-gray-600" />
-                  <span>{lang === "en" ? "Toll-Free: " : "टोल-फ्रि: "}{c.tollFree}</span>
+                <li>
+                  <a href={`tel:${c.phone}`} className="flex items-center gap-2 transition-colors hover:text-white">
+                    <Phone className="h-4 w-4 text-primary-400" />{c.phone}
+                  </a>
                 </li>
-                <li className="flex items-start gap-2">
-                  <Inbox className="mt-0.5 h-4 w-4 shrink-0 text-gray-600" />
-                  <span>{lang === "en" ? "PO Box: " : "हुलाक बाकस: "}{c.poBox}</span>
+                <li className="flex items-center gap-2">
+                  <Inbox className="h-4 w-4 text-primary-400" />
+                  <span>PO Box: {c.poBox}</span>
                 </li>
                 <li>
                   <a href={`mailto:${c.email}`} className="flex items-center gap-2 transition-colors hover:text-white">
-                    <Mail className="h-4 w-4 text-gray-600" />{c.email}
+                    <Mail className="h-4 w-4 text-primary-400" />{c.email}
                   </a>
                 </li>
               </ul>
@@ -190,50 +241,40 @@ export default function Footer() {
 
             <div>
               <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.12em] text-white/60">
-                {lang === "en" ? "Grievance & Compliance" : "गुनासो र अनुपालन"}
+                {isNp ? "गुनासो र अनुपालन" : "Compliance & Officer Details"}
               </h3>
-              <ul className="space-y-2.5">
-                {[
-                  { label: lang === "en" ? "Grievance Handling Officer" : "गुनासो अधिकारी", href: localize("/grievance-handling-officer", lang) },
-                  { label: lang === "en" ? "Compliance Officer" : "अनुपालन अधिकारी", href: localize("/compliance-officer", lang) },
-                  { label: lang === "en" ? "Write to Us" : "हामीलाई लेख्नुहोस्", href: localize("/write-to-us", lang) },
-                  { label: lang === "en" ? "Beware of Digital Fraud" : "डिजिटल धोखाधडीबाट सावधान", href: localize("/beware-of-digital-fraud", lang) },
-                ].map((item) => (
-                  <li key={item.href}>
-                    <Link href={item.href} className="text-sm text-gray-400 transition-colors hover:text-secondary-400">
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
+              <ul className="space-y-2.5 text-sm">
+                <li><Link href={localize("/grievance-handling-officer", lang)} className="hover:text-secondary-400 transition-colors">Grievance Handling Officer</Link></li>
+                <li><Link href={localize("/compliance-officer", lang)} className="hover:text-secondary-400 transition-colors">Compliance Officer</Link></li>
+                <li><Link href={localize("/write-to-us", lang)} className="hover:text-secondary-400 transition-colors">Write to Us / Feedback</Link></li>
+                <li><Link href={localize("/beware-of-digital-fraud", lang)} className="hover:text-secondary-400 transition-colors">Beware of Digital Fraud</Link></li>
               </ul>
-
-              <h3 className="mb-3 mt-6 text-xs font-bold uppercase tracking-[0.12em] text-white/60">
-                {lang === "en" ? "Newsletter" : "न्यूजलेटर"}
-              </h3>
-              <NewsletterForm />
+              <div className="mt-4">
+                <NewsletterForm />
+              </div>
             </div>
 
             <div>
               <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.12em] text-white/60">
-                {lang === "en" ? "Mobile App" : "मोबाइल एप"}
+                {isNp ? "मोबाइल एप डाउनलोड" : "Download Mobile Banking"}
               </h3>
-              <p className="mb-4 text-sm text-gray-500">
-                {lang === "en"
-                  ? "Download the RFL Smart app for mobile banking, QR payments, and more."
-                  : "मोबाइल बैंकिङ, QR भुक्तानी र थप कुराहरूको लागि RFL Smart एप डाउनलोड गर्नुहोस्।"}
+              <p className="mb-4 text-xs leading-relaxed text-gray-400">
+                {isNp
+                  ? "स्मार्ट मोबाइल बैंकिङ, QR भुक्तानी र फण्ड ट्रान्सफरको लागि RFL Smart एप।"
+                  : "Enjoy 24/7 mobile banking, instant QR scanning, and bill payments."}
               </p>
               <div className="flex flex-col gap-2.5">
                 <a
                   href="https://play.google.com/store/apps/details?id=com.f1soft.reliancefinance"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-3 rounded-xl bg-white/8 px-4 py-3 text-sm text-white transition-all hover:bg-primary-600 hover:-translate-y-0.5"
+                  className="inline-flex items-center gap-3 rounded-xl bg-white/10 px-4 py-3 text-sm text-white transition-all hover:bg-primary-600 hover:-translate-y-0.5 border border-white/15"
                 >
                   <svg className="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M17.523 12.88l-4.463-4.462-2.073 2.074 3.416 3.416-3.416 3.416 2.073 2.074 4.463-4.462a.586.586 0 0 0 0-.826zM5.578 6.443a.61.61 0 0 0-.61.61v9.895a.61.61 0 0 0 .61.61.63.63 0 0 0 .433-.18l4.734-4.734-4.734-4.734a.613.613 0 0 0-.433-.18z" />
                   </svg>
                   <span>
-                    <span className="block text-[0.65rem] uppercase tracking-wide text-gray-400">{lang === "en" ? "Get it on" : "डाउनलोड"}</span>
+                    <span className="block text-[0.65rem] uppercase tracking-wide text-gray-400">Get it on</span>
                     <strong className="block text-sm">Google Play</strong>
                   </span>
                 </a>
@@ -241,11 +282,11 @@ export default function Footer() {
                   href="https://apps.apple.com/np/app/reliance-finance-smart/id1554035637"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-3 rounded-xl bg-white/8 px-4 py-3 text-sm text-white transition-all hover:bg-primary-600 hover:-translate-y-0.5"
+                  className="inline-flex items-center gap-3 rounded-xl bg-white/10 px-4 py-3 text-sm text-white transition-all hover:bg-primary-600 hover:-translate-y-0.5 border border-white/15"
                 >
                   <Apple className="h-5 w-5 shrink-0" />
                   <span>
-                    <span className="block text-[0.65rem] uppercase tracking-wide text-gray-400">{lang === "en" ? "Download on the" : "डाउनलोड"}</span>
+                    <span className="block text-[0.65rem] uppercase tracking-wide text-gray-400">Download on the</span>
                     <strong className="block text-sm">App Store</strong>
                   </span>
                 </a>
@@ -254,14 +295,17 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="border-t border-white/8">
-          <div className="container-page flex flex-col items-center justify-between gap-2 py-4 text-xs text-gray-600 md:flex-row">
-            <span>© {new Date().getFullYear()} Reliance Finance Limited. {lang === "en" ? "All rights reserved." : "सर्वाधिकार सुरक्षित।"}</span>
-            <div className="flex gap-5">
-              <Link href={`/${lang}/about/privacy-policy`} className="transition-colors hover:text-white">{lang === "en" ? "Privacy Policy" : "गोपनीयता नीति"}</Link>
-              <Link href={`/${lang}/faq`} className="transition-colors hover:text-white">{lang === "en" ? "FAQ" : "प्रायः सोधिने प्रश्न"}</Link>
-              <Link href={`/${lang}/sitemap`} className="transition-colors hover:text-white">{lang === "en" ? "Sitemap" : "साइट नक्सा"}</Link>
+        {/* Regulatory Disclosure & Copyright Bar */}
+        <div className="border-t border-white/10 bg-black/40">
+          <div className="container-page flex flex-col items-center justify-between gap-3 py-4 text-xs text-gray-500 md:flex-row">
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="h-4 w-4 text-secondary-500" />
+              <span>© {new Date().getFullYear()} Reliance Finance Limited. Regulated Class &quot;C&quot; Institution by Nepal Rastra Bank.</span>
+            </div>
+            <div className="flex gap-5 text-gray-400">
+              <Link href={localize("/about/privacy-policy", lang)} className="hover:text-white transition-colors">Privacy Policy</Link>
+              <Link href={localize("/faq", lang)} className="hover:text-white transition-colors">FAQ</Link>
+              <Link href={localize("/sitemap", lang)} className="hover:text-white transition-colors">Sitemap</Link>
             </div>
           </div>
         </div>

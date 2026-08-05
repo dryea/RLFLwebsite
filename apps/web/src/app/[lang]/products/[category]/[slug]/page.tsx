@@ -210,7 +210,7 @@ export default function ProductDetailPage() {
                 </div>
               )}
 
-              <div className="rounded-xl border bg-accent-50 p-6 shadow-sm">
+              <div className="rounded-xl border bg-primary-50/60 p-6 shadow-sm">
                 <h3 className="mb-2 font-semibold text-gray-900">
                   {lang === "en" ? "Interested?" : "चासो छ?"}
                 </h3>
@@ -218,10 +218,17 @@ export default function ProductDetailPage() {
                   {lang === "en" ? "Apply online or visit our nearest branch." : "अनलाइन आवेदन गर्नुहोस् वा हाम्रो नजिकको शाखामा जानुहोस्।"}
                 </p>
                 <div className="flex flex-col gap-2">
-                  <Link href={`/${lang}/loan-enquiry`} className="rounded-lg bg-accent-500 px-4 py-2 text-center text-sm font-semibold text-white transition-colors hover:bg-accent-600">
+                  <Link
+                    href={
+                      category === "savings" || category === "fixed" || category === "deposits"
+                        ? `/${lang}/open-account?product=${slug}`
+                        : `/${lang}/loan-enquiry?product=${slug}`
+                    }
+                    className="rounded-xl bg-secondary-500 px-4 py-2.5 text-center text-sm font-bold text-gray-900 shadow-sm transition-all hover:bg-secondary-400 hover:shadow-md"
+                  >
                     {lang === "en" ? "Apply Now" : "अहिले नै आवेदन दिनुहोस्"}
                   </Link>
-                  <Link href={`/${lang}/contact`} className="rounded-lg border bg-white px-4 py-2 text-center text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50">
+                  <Link href={`/${lang}/contact`} className="rounded-xl border bg-white px-4 py-2.5 text-center text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50">
                     {lang === "en" ? "Contact Us" : "सम्पर्क गर्नुहोस्"}
                   </Link>
                 </div>

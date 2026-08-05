@@ -57,8 +57,8 @@ export default async function MilestonesPage({ params }: { params: Promise<{ lan
 
   return (
     <div>
-      <section className="bg-gradient-to-br from-primary-800 to-primary-900 px-4 py-16 text-white">
-        <div className="mx-auto max-w-6xl">
+      <section className="bg-gradient-to-br from-primary-800 to-primary-900 py-16 text-white">
+        <div className="container-page">
           <h1 className="mb-4 text-4xl font-bold">
             {lang === "en" ? "Milestones" : "कोशेढुङ्गाहरू"}
           </h1>
@@ -70,7 +70,7 @@ export default async function MilestonesPage({ params }: { params: Promise<{ lan
         </div>
       </section>
 
-      <section className="mx-auto max-w-4xl px-4 py-12">
+      <section className="container-page py-12">
         <div className="relative">
           <div className="absolute left-6 top-0 h-full w-0.5 bg-primary-200" />
           <div className="space-y-10">

@@ -63,7 +63,7 @@ export default async function BewareOfDigitalFraudPage({ params }: { params: Pro
 
       <section className="py-12">
         <div className="container-page">
-          <div className="mx-auto max-w-4xl">
+          <div className="mx-auto max-w-3xl">
             {cmsHtml && <div className="prose max-w-none text-lg leading-relaxed text-gray-700" dangerouslySetInnerHTML={{ __html: cmsHtml }} />}
             {!cmsHtml && <p className="text-lg leading-relaxed text-gray-600">{content.description}</p>}
 
@@ -81,7 +81,7 @@ export default async function BewareOfDigitalFraudPage({ params }: { params: Pro
               <h2 className="text-lg font-bold text-gray-900">{lang === "en" ? "Report Fraud" : "ठगी रिपोर्ट गर्नुहोस्"}</h2>
               <p className="mt-2 text-gray-600">{content.contact}</p>
             </div>
-          </div>
+        </div>
         </div>
       </section>
     </>

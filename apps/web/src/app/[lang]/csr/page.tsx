@@ -56,11 +56,10 @@ export default async function CSRPage({ params }: { params: Promise<{ lang: stri
       </section>
 
       <section className="py-12">
-        <div className="container-page">
-          <div className="mx-auto max-w-4xl">
-            {cmsHtml && (
-              <div className="prose max-w-none text-lg leading-relaxed text-gray-600" dangerouslySetInnerHTML={{ __html: cmsHtml }} />
-            )}
+        <div className="container-page space-y-8">
+          {cmsHtml && (
+            <div className="prose max-w-none text-lg leading-relaxed text-gray-600" dangerouslySetInnerHTML={{ __html: cmsHtml }} />
+          )}
             {!cmsHtml && (
               <p className="text-lg leading-relaxed text-gray-600">
                 {content.description}
@@ -76,7 +75,6 @@ export default async function CSRPage({ params }: { params: Promise<{ lang: stri
                 </div>
               ))}
             </div>
-          </div>
         </div>
       </section>
     </>

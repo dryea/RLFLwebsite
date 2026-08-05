@@ -62,11 +62,10 @@ export default async function GrievancePage({ params }: { params: Promise<{ lang
       </section>
 
       <section className="py-12">
-        <div className="container-page">
-          <div className="mx-auto max-w-4xl">
-            {cmsHtml && (
-              <div className="prose max-w-none mb-8 rounded-xl border bg-white p-6 shadow-sm" dangerouslySetInnerHTML={{ __html: cmsHtml }} />
-            )}
+        <div className="container-page space-y-8">
+          {cmsHtml && (
+            <div className="prose max-w-none rounded-xl border bg-white p-6 shadow-sm" dangerouslySetInnerHTML={{ __html: cmsHtml }} />
+          )}
             <div className="rounded-xl border bg-white p-6 shadow-sm">
               <h2 className="text-xl font-bold text-gray-900">{content.officerName}</h2>
               <p className="text-sm text-primary-700">{content.officerRole}</p>
@@ -97,7 +96,6 @@ export default async function GrievancePage({ params }: { params: Promise<{ lang
               </p>
               <GrievanceForm lang={lang} />
             </div>
-          </div>
         </div>
       </section>
     </>

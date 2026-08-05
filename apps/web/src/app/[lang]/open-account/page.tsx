@@ -149,7 +149,7 @@ function OpenAccountFormContent() {
       </section>
 
       <section className="py-10">
-        <div className="container-page max-w-4xl">
+        <div className="container-page max-w-3xl">
           <div className="mb-8">
             <Stepper steps={steps} current={step} />
           </div>

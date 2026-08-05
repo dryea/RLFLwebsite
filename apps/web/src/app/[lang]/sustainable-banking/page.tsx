@@ -58,7 +58,7 @@ export default async function SustainableBankingPage({ params }: { params: Promi
 
       <section className="py-12">
         <div className="container-page">
-          <div className="mx-auto max-w-4xl">
+          <div className="mx-auto max-w-3xl">
             {cmsHtml && (
               <div className="prose max-w-none text-lg leading-relaxed text-gray-600" dangerouslySetInnerHTML={{ __html: cmsHtml }} />
             )}
@@ -84,7 +84,7 @@ export default async function SustainableBankingPage({ params }: { params: Promi
               </h2>
               <p className="mt-2 text-gray-600">{langContent.commitment}</p>
             </div>
-          </div>
+        </div>
         </div>
       </section>
     </>

@@ -22,8 +22,8 @@ export default async function IntroductionPage({ params }: { params: Promise<{ l
 
   return (
     <div>
-      <section className="bg-gradient-to-br from-primary-800 to-primary-900 px-4 py-16 text-white">
-        <div className="mx-auto max-w-6xl">
+      <section className="bg-gradient-to-br from-primary-800 to-primary-900 py-16 text-white">
+        <div className="container-page">
           <h1 className="mb-4 text-4xl font-bold">
             {lang === "en" ? "Introduction" : "परिचय"}
           </h1>
@@ -35,7 +35,7 @@ export default async function IntroductionPage({ params }: { params: Promise<{ l
         </div>
       </section>
 
-      <section className="mx-auto max-w-4xl px-4 py-12">
+      <section className="container-page py-12">
         {page ? (
           <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: page.content || page.body || "" }} />
         ) : (

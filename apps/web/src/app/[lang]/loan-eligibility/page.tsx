@@ -50,7 +50,7 @@ export default function LoanEligibilityPage() {
 
       <section className="py-10">
         <div className="container-page">
-          <div className="mx-auto max-w-4xl">
+          <div className="mx-auto max-w-3xl">
             <div className="grid gap-6 lg:grid-cols-2">
               <div className="rounded-2xl border bg-white p-6 shadow-sm md:p-8">
                 <h2 className="mb-5 font-heading text-lg font-bold text-gray-900">

@@ -66,9 +66,8 @@ export default async function InformationOfficerPage({ params }: { params: Promi
       </section>
 
       <section className="py-12">
-        <div className="container-page">
-          <div className="mx-auto max-w-4xl">
-            {cmsHtml && <div className="prose max-w-none mb-8 rounded-xl border bg-white p-6 shadow-sm" dangerouslySetInnerHTML={{ __html: cmsHtml }} />}
+        <div className="container-page space-y-8">
+          {cmsHtml && <div className="prose max-w-none rounded-xl border bg-white p-6 shadow-sm" dangerouslySetInnerHTML={{ __html: cmsHtml }} />}
             <div className="rounded-xl border bg-white p-6 shadow-sm">
               <h2 className="text-xl font-bold text-gray-900">{content.officerName}</h2>
               <p className="mt-4 text-gray-600">{content.about}</p>
@@ -91,7 +90,6 @@ export default async function InformationOfficerPage({ params }: { params: Promi
               <h2 className="text-lg font-bold text-gray-900">{lang === "en" ? "How to Request Information" : "सूचना कसरी माग्ने"}</h2>
               <p className="mt-2 text-gray-600">{content.howToRequest}</p>
             </div>
-          </div>
         </div>
       </section>
     </>

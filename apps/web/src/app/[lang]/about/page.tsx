@@ -24,8 +24,8 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: st
 
   return (
     <div>
-      <section className="bg-gradient-to-br from-primary-800 to-primary-900 px-4 py-16 text-white">
-        <div className="mx-auto max-w-6xl">
+      <section className="bg-gradient-to-br from-primary-800 to-primary-900 py-16 text-white">
+        <div className="container-page">
           <h1 className="mb-4 text-4xl font-bold">
             {lang === "en" ? "About Us" : "हाम्रो बारेमा"}
           </h1>
@@ -37,8 +37,8 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: st
         </div>
       </section>
 
-      <section className="px-4 py-12">
-        <div className="mx-auto max-w-3xl">
+      <section className="py-12">
+        <div className="container-page max-w-3xl">
           <p className="mb-8 leading-relaxed text-gray-600">
             {lang === "en"
               ? "Reliance Finance Limited is a trusted financial institution in Nepal, committed to providing innovative banking solutions and exceptional customer service. With a wide range of products and services, we strive to meet the diverse needs of our customers."

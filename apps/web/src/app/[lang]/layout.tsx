@@ -41,10 +41,13 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       siteName: siteTitle,
       locale: lang === "np" ? "ne_NP" : "en_US",
       type: "website",
-      ...(seo.ogImage ? { images: [{ url: seo.ogImage }] } : {}),
+      ...(seo.ogImage
+        ? { images: [{ url: seo.ogImage }] }
+        : { images: [{ url: "https://rfil-web.sudeepdhakal.workers.dev/og-image.png", width: 1200, height: 630, alt: siteTitle }] }),
     },
     twitter: {
       card: (seo.twitterCardType as any) || "summary_large_image",
+      ...(seo.ogImage ? { images: [seo.ogImage] } : { images: ["https://rfil-web.sudeepdhakal.workers.dev/og-image.png"] }),
     },
     robots: {
       index: seo.robotsIndex !== false,

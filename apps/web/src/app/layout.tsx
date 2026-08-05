@@ -13,12 +13,34 @@ export const metadata: Metadata = {
     template: "%s | Reliance Finance Limited",
   },
   description: "Reliance Finance Limited — Your trusted financial partner in Nepal",
+  metadataBase: new URL("https://rfil-web.sudeepdhakal.workers.dev"),
   icons: {
     icon: [
       { url: "/favicon.ico" },
       { url: "/favicon.png", type: "image/png" },
     ],
     apple: "/favicon.png",
+  },
+  openGraph: {
+    type: "website",
+    siteName: "Reliance Finance Limited",
+    title: "Reliance Finance Limited",
+    description: "Your trusted financial partner in Nepal — savings, loans, fixed deposits, and digital banking services.",
+    url: "https://rfil-web.sudeepdhakal.workers.dev",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Reliance Finance Limited",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Reliance Finance Limited",
+    description: "Your trusted financial partner in Nepal — savings, loans, fixed deposits, and digital banking services.",
+    images: ["/og-image.png"],
   },
 };
 

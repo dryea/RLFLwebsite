@@ -27,16 +27,9 @@ export interface SeoGlobalSettings {
   twitterCardType?: string;
 }
 
-const cache = new Map<string, SeoGlobalSettings>();
-
 export async function getSeoSettings(): Promise<SeoGlobalSettings> {
-  const cached = cache.get("settings");
-  if (cached) return cached;
-
   try {
-    const data = await serverFetchAPI("/api/seo/settings");
-    cache.set("settings", data);
-    return data as SeoGlobalSettings;
+    return (await serverFetchAPI("/api/seo/settings")) as SeoGlobalSettings;
   } catch {
     return {};
   }

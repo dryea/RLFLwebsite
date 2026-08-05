@@ -157,6 +157,7 @@ export const redirects: Record<string, string> = {
   "/downloads": "/en/downloads",
   "/emi": "/en/emi-calculator",
   "/news": "/en/publications/news",
+  "/en/news": "/en/publications/news",
   "/products": "/en/products",
   "/about": "/en/about",
   "/banking-hours": "/en/banking-hours",

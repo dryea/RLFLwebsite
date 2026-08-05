@@ -37,7 +37,7 @@ export default async function StrategicFrameworkPage({ params }: { params: Promi
 
       <section className="container-page py-12">
         {page ? (
-          <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: page.content || page.body || "" }} />
+          <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: (lang === "np" && page.contentNp ? page.contentNp : page.content) || page.body || "" }} />
         ) : (
           <div className="space-y-10">
             <div className="rounded-xl border bg-white p-8 shadow-sm">

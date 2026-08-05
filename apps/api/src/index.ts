@@ -1560,16 +1560,28 @@ function buildNavTree(items: any[], parentId: number | null, locale = "en"): any
 // ── Email-enabled form submissions ──
 
 // ── Newsletter Subscription (double opt-in) ──
+const ALLOWED_PREFS = ["notices", "news", "events", "rates", "promotions"];
 app.post("/api/newsletter", async (c) => {
   const db = createDb(c.env.DB);
-  const { email, language } = await c.req.json().catch(() => ({})) as { email?: string; language?: string };
+  const { email, language, preference, preferences } = await c.req.json().catch(() => ({})) as { email?: string; language?: string; preference?: string; preferences?: string[] };
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return c.json({ error: "Valid email required" }, 400);
   }
+  // Normalize preferences
+  let prefs: string[] = Array.isArray(preferences) ? preferences : preference ? [preference] : ["newsletter"];
+  prefs = prefs.filter((p) => ALLOWED_PREFS.includes(p) || p === "newsletter");
+  if (prefs.length === 0) prefs = ["newsletter"];
+
   const existing = await db.select().from(newsletterSubscribers).where(eq(newsletterSubscribers.email, email)).get();
   if (existing) {
-    if (existing.isActive) return c.json({ message: "Already subscribed" }, 200);
-    await db.update(newsletterSubscribers).set({ isActive: true, subscribedAt: new Date().toISOString(), language: language || existing.language || "en" })
+    if (existing.isActive) {
+      // Merge new preferences into existing
+      const merged = Array.from(new Set([...(existing.preferences || []), ...prefs]));
+      await db.update(newsletterSubscribers).set({ preferences: merged, language: language || existing.language || "en" })
+        .where(eq(newsletterSubscribers.id, existing.id)).run();
+      return c.json({ message: "Preferences updated" }, 200);
+    }
+    await db.update(newsletterSubscribers).set({ isActive: true, subscribedAt: new Date().toISOString(), language: language || existing.language || "en", preferences: prefs })
       .where(eq(newsletterSubscribers.id, existing.id)).run();
     return c.json({ message: "Re-subscribed" }, 200);
   }
@@ -1577,6 +1589,7 @@ app.post("/api/newsletter", async (c) => {
     email,
     language: language || "en",
     isActive: true,
+    preferences: prefs,
   }).run();
 
   try {
@@ -1596,7 +1609,7 @@ app.post("/api/newsletter", async (c) => {
     }]);
   } catch (e) { console.error("Newsletter email error:", e); }
 
-  return c.json({ message: "Subscribed" }, 201);
+  return c.json({ message: "Subscribed", preferences: prefs }, 201);
 });
 
 app.post("/api/contact", async (c) => {

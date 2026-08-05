@@ -471,6 +471,7 @@ export const newsletterSubscribers = sqliteTable("newsletter_subscribers", {
   id: int("id").primaryKey({ autoIncrement: true }),
   email: text("email").notNull().unique(),
   language: text("language").default("en"),
+  preferences: text("preferences", { mode: "json" }).$type<string[]>(),
   isActive: int("is_active", { mode: "boolean" }).default(true),
   subscribedAt: text("subscribed_at").default(sql`CURRENT_TIMESTAMP`),
   unsubscribedAt: text("unsubscribed_at"),

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Calendar, Newspaper, ArrowRight } from "lucide-react";
 import { getNews } from "@/lib/public-api";
 import { useLang } from "@/contexts/LanguageContext";
+import OptimizedImage from "@/components/ui/OptimizedImage";
 
 export default function NewsListPage() {
   const lang = useLang();
@@ -44,7 +45,7 @@ export default function NewsListPage() {
                 >
                   {article.coverImage && (
                     <div className="h-32 w-full shrink-0 overflow-hidden rounded-lg sm:h-24 sm:w-40">
-                      <img src={article.coverImage} alt={`${article.title} — Reliance Finance Limited news`} width={160} height={96} className="h-full w-full object-cover" loading="lazy" />
+                      <OptimizedImage src={article.coverImage} alt={`${article.title} — Reliance Finance Limited news`} width={320} height={192} loading="lazy" className="h-full w-full object-cover" />
                     </div>
                   )}
                   <div className="flex flex-1 flex-col justify-between">

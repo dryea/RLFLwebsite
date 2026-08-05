@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useABTest } from "@/hooks/useABTest";
 import { localize } from "@/lib/localize";
 
 interface Slide {
@@ -88,6 +89,9 @@ export default function HeroSlider({ slides, lang }: { slides: Slide[]; lang: st
   const [current, setCurrent] = useState(0);
   const [progressKey, setProgressKey] = useState(0);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // A/B test: which CTA variant to show on the first slide
+  const { variant: ctaVariant, trackConversion } = useABTest("hero_cta");
 
   const goTo = useCallback((index: number) => {
     setCurrent(index);
@@ -186,9 +190,12 @@ export default function HeroSlider({ slides, lang }: { slides: Slide[]; lang: st
                 {allSlides[current].ctaPrimaryText && (
                   <Link
                     href={localize(allSlides[current].ctaPrimaryLink || "#", lang)}
+                    onClick={trackConversion}
                     className="btn btn-secondary"
                   >
-                    {allSlides[current].ctaPrimaryText}
+                    {current === 0 && ctaVariant === "b"
+                      ? (lang === "en" ? "Start Saving Today" : "आजै बचत सुरु गर्नुहोस्")
+                      : allSlides[current].ctaPrimaryText}
                   </Link>
                 )}
                 {allSlides[current].ctaSecondaryText && (

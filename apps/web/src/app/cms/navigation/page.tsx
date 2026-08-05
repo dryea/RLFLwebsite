@@ -1,9 +1,30 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Menu, Plus, ChevronRight, ChevronDown, GripVertical, Trash2, Edit3, Image as ImageIcon, ExternalLink, Save, X } from "lucide-react";
+import {
+  Menu,
+  Plus,
+  ChevronRight,
+  ChevronDown,
+  GripVertical,
+  Trash2,
+  Edit3,
+  ExternalLink,
+  Save,
+  X,
+  ArrowUp,
+  ArrowDown,
+  CornerDownRight,
+  CornerUpLeft,
+  Check,
+  FolderOpen,
+  Folder,
+  Eye,
+  Layers,
+  Sparkles,
+} from "lucide-react";
 import CMSLayout from "@/components/cms/CMSLayout";
-import { getCmsUser, getCmsToken } from "@/lib/cms-auth";
+import { getCmsToken } from "@/lib/cms-auth";
 
 interface NavItem {
   id: number;
@@ -37,76 +58,178 @@ function authHeaders() {
 function NavItemRow({
   item,
   depth,
+  index,
+  totalSiblings,
   expanded,
   onToggle,
   onEdit,
   onDelete,
   onAddChild,
+  onMoveUp,
+  onMoveDown,
+  onIndent,
+  onOutdent,
 }: {
   item: NavItem;
   depth: number;
+  index: number;
+  totalSiblings: number;
   expanded: Set<number>;
   onToggle: (id: number) => void;
   onEdit: (item: NavItem) => void;
   onDelete: (id: number) => void;
   onAddChild: (parentId: number) => void;
+  onMoveUp: (item: NavItem) => void;
+  onMoveDown: (item: NavItem) => void;
+  onIndent: (item: NavItem) => void;
+  onOutdent: (item: NavItem) => void;
 }) {
   const hasChildren = item.children && item.children.length > 0;
   const isExpanded = expanded.has(item.id);
 
   return (
-    <>
+    <div className="space-y-1">
       <div
-        className={`flex items-center gap-2 rounded-lg border bg-white px-3 py-2.5 shadow-sm transition-all hover:shadow-md`}
-        style={{ marginLeft: `${depth * 24}px` }}
+        className={`group flex items-center justify-between gap-3 rounded-2xl border bg-white p-3 shadow-sm transition-all duration-200 hover:border-primary-300 hover:shadow-md ${
+          !item.isActive ? "opacity-60 bg-gray-50/80" : ""
+        }`}
+        style={{ marginLeft: `${depth * 28}px` }}
       >
-        <GripVertical className="h-4 w-4 shrink-0 cursor-grab text-gray-300" />
-        {hasChildren ? (
-          <button onClick={() => onToggle(item.id)} className="shrink-0 p-0.5 text-gray-400 hover:text-gray-700">
-            {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
-          </button>
-        ) : (
-          <div className="w-5" />
-        )}
-        {item.imageUrl && (
-          <img src={item.imageUrl} alt={item.imageAlt || item.label} className="h-8 w-8 shrink-0 rounded object-cover" />
-        )}
-        <div className="min-w-0 flex-1">
-          <span className="text-sm font-medium text-gray-900">{item.label}</span>
-          {item.href && <span className="ml-2 text-xs text-gray-400">{item.href}</span>}
-          {item.description && <p className="mt-0.5 truncate text-xs text-gray-500">{item.description}</p>}
+        {/* Left Side: Drag Grip, Expand Toggle, Label & Path */}
+        <div className="flex items-center gap-2.5 min-w-0 flex-1">
+          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-xs font-mono font-bold text-gray-500">
+            #{item.sortOrder || index + 1}
+          </span>
+
+          {hasChildren ? (
+            <button
+              onClick={() => onToggle(item.id)}
+              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary-50 text-primary-700 transition-colors hover:bg-primary-100"
+              title={isExpanded ? "Collapse" : "Expand"}
+            >
+              {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+            </button>
+          ) : (
+            <span className="h-7 w-7 shrink-0 flex items-center justify-center text-gray-300">
+              {depth > 0 ? <CornerDownRight className="h-3.5 w-3.5" /> : <span className="h-1.5 w-1.5 rounded-full bg-gray-300" />}
+            </span>
+          )}
+
+          {item.imageUrl && (
+            <img src={item.imageUrl} alt={item.imageAlt || item.label} className="h-8 w-8 shrink-0 rounded-lg object-cover border" />
+          )}
+
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-bold text-gray-900 truncate">{item.label}</span>
+              {item.isOpenInNewTab && (
+                <span className="inline-flex items-center gap-1 rounded bg-blue-50 px-1.5 py-0.5 text-[10px] font-bold text-blue-600">
+                  New Tab <ExternalLink className="h-2.5 w-2.5" />
+                </span>
+              )}
+              {!item.isActive && (
+                <span className="rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold text-amber-800">
+                  Hidden
+                </span>
+              )}
+            </div>
+            {item.href && <p className="text-xs font-mono text-gray-400 truncate">{item.href}</p>}
+          </div>
         </div>
-        <div className="flex items-center gap-1">
-          {!item.isActive && <span className="rounded bg-yellow-100 px-1.5 py-0.5 text-[10px] font-medium text-yellow-700">Hidden</span>}
-          {item.isOpenInNewTab && <ExternalLink className="h-3.5 w-3.5 text-gray-400" />}
-          <button onClick={() => onAddChild(item.id)} className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700" title="Add child">
-            <Plus className="h-3.5 w-3.5" />
+
+        {/* Right Side: Reordering Arrows, Indent/Outdent & Action Buttons */}
+        <div className="flex items-center gap-1 shrink-0">
+          {/* Quick Reorder Controls */}
+          <div className="flex items-center gap-0.5 rounded-xl border border-gray-200 bg-gray-50/80 p-0.5">
+            <button
+              onClick={() => onMoveUp(item)}
+              disabled={index === 0}
+              className="flex h-7 w-7 items-center justify-center rounded-lg text-gray-600 transition-colors hover:bg-white hover:text-primary-700 disabled:opacity-30"
+              title="Move Up"
+            >
+              <ArrowUp className="h-3.5 w-3.5" />
+            </button>
+            <button
+              onClick={() => onMoveDown(item)}
+              disabled={index === totalSiblings - 1}
+              className="flex h-7 w-7 items-center justify-center rounded-lg text-gray-600 transition-colors hover:bg-white hover:text-primary-700 disabled:opacity-30"
+              title="Move Down"
+            >
+              <ArrowDown className="h-3.5 w-3.5" />
+            </button>
+            {index > 0 && (
+              <button
+                onClick={() => onIndent(item)}
+                className="flex h-7 w-7 items-center justify-center rounded-lg text-gray-600 transition-colors hover:bg-white hover:text-primary-700"
+                title="Make Child of Item Above (Indent)"
+              >
+                <CornerDownRight className="h-3.5 w-3.5" />
+              </button>
+            )}
+            {depth > 0 && (
+              <button
+                onClick={() => onOutdent(item)}
+                className="flex h-7 w-7 items-center justify-center rounded-lg text-gray-600 transition-colors hover:bg-white hover:text-primary-700"
+                title="Promote to Parent Level (Outdent)"
+              >
+                <CornerUpLeft className="h-3.5 w-3.5" />
+              </button>
+            )}
+          </div>
+
+          {/* Add Sub-Item */}
+          <button
+            onClick={() => onAddChild(item.id)}
+            className="flex h-8 w-8 items-center justify-center rounded-xl bg-gray-100 text-gray-600 transition-colors hover:bg-primary-50 hover:text-primary-700"
+            title="Add Sub-Item under this item"
+          >
+            <Plus className="h-4 w-4" />
           </button>
-          <button onClick={() => onEdit(item)} className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700" title="Edit">
-            <Edit3 className="h-3.5 w-3.5" />
+
+          {/* Edit Item */}
+          <button
+            onClick={() => onEdit(item)}
+            className="flex h-8 w-8 items-center justify-center rounded-xl bg-gray-100 text-gray-600 transition-colors hover:bg-primary-50 hover:text-primary-700"
+            title="Edit Item Details"
+          >
+            <Edit3 className="h-4 w-4" />
           </button>
-          <button onClick={() => onDelete(item.id)} className="rounded p-1 text-gray-400 hover:bg-red-50 hover:text-red-600" title="Delete">
-            <Trash2 className="h-3.5 w-3.5" />
+
+          {/* Delete Item */}
+          <button
+            onClick={() => onDelete(item.id)}
+            className="flex h-8 w-8 items-center justify-center rounded-xl bg-gray-100 text-gray-600 transition-colors hover:bg-red-50 hover:text-red-600"
+            title="Delete Item"
+          >
+            <Trash2 className="h-4 w-4" />
           </button>
         </div>
       </div>
+
+      {/* Render Child Sub-Items recursively */}
       {hasChildren && isExpanded && (
-        <div className="mt-1 space-y-1">
-          {item.children!.map((child) => (
+        <div className="space-y-1">
+          {item.children!.map((child, idx) => (
             <NavItemRow
               key={child.id}
               item={child}
               depth={depth + 1}
+              index={idx}
+              totalSiblings={item.children!.length}
               expanded={expanded}
               onToggle={onToggle}
               onEdit={onEdit}
               onDelete={onDelete}
               onAddChild={onAddChild}
+              onMoveUp={onMoveUp}
+              onMoveDown={onMoveDown}
+              onIndent={onIndent}
+              onOutdent={onOutdent}
             />
           ))}
         </div>
       )}
-    </>
+    </div>
   );
 }
 
@@ -127,66 +250,137 @@ function ItemForm({
     imageUrl: item?.imageUrl || "",
     imageAlt: item?.imageAlt || "",
     description: item?.description || "",
-    parentId: item?.parentId || null as number | null,
+    parentId: item?.parentId || (null as number | null),
     sortOrder: item?.sortOrder || 0,
     isOpenInNewTab: item?.isOpenInNewTab || false,
     isActive: item?.isActive !== false,
   });
 
   return (
-    <div className="rounded-xl border bg-white p-5 shadow-sm">
-      <h3 className="mb-4 text-sm font-semibold text-gray-900">{item?.id ? "Edit Item" : "Add Item"}</h3>
+    <div className="rounded-3xl border border-primary-100 bg-white p-6 shadow-xl ring-1 ring-black/5">
+      <div className="mb-4 flex items-center justify-between border-b pb-3">
+        <h3 className="flex items-center gap-2 font-heading text-base font-bold text-gray-900">
+          <Sparkles className="h-4 w-4 text-primary-600" />
+          {item?.id ? "Edit Navigation Item" : "Create Navigation Item"}
+        </h3>
+        <button onClick={onCancel} className="rounded-full p-1 text-gray-400 hover:bg-gray-100">
+          <X className="h-5 w-5" />
+        </button>
+      </div>
+
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label className="mb-1 block text-xs font-medium text-gray-600">Label *</label>
-          <input value={form.label} onChange={(e) => setForm({ ...form, label: e.target.value })} className="w-full rounded-lg border px-3 py-2 text-sm outline-none focus:border-primary-500" />
+          <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-gray-700">Item Label *</label>
+          <input
+            value={form.label}
+            onChange={(e) => setForm({ ...form, label: e.target.value })}
+            placeholder="e.g. Savings Accounts"
+            className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
+          />
         </div>
+
         <div>
-          <label className="mb-1 block text-xs font-medium text-gray-600">URL</label>
-          <input value={form.href} onChange={(e) => setForm({ ...form, href: e.target.value })} placeholder="/about" className="w-full rounded-lg border px-3 py-2 text-sm outline-none focus:border-primary-500" />
+          <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-gray-700">Destination URL Path</label>
+          <input
+            value={form.href || ""}
+            onChange={(e) => setForm({ ...form, href: e.target.value })}
+            placeholder="e.g. /products/savings"
+            className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100 font-mono"
+          />
         </div>
+
         <div>
-          <label className="mb-1 block text-xs font-medium text-gray-600">Image URL</label>
-          <input value={form.imageUrl} onChange={(e) => setForm({ ...form, imageUrl: e.target.value })} placeholder="https://..." className="w-full rounded-lg border px-3 py-2 text-sm outline-none focus:border-primary-500" />
-        </div>
-        <div>
-          <label className="mb-1 block text-xs font-medium text-gray-600">Image Alt Text</label>
-          <input value={form.imageAlt} onChange={(e) => setForm({ ...form, imageAlt: e.target.value })} className="w-full rounded-lg border px-3 py-2 text-sm outline-none focus:border-primary-500" />
-        </div>
-        <div className="sm:col-span-2">
-          <label className="mb-1 block text-xs font-medium text-gray-600">Description (shown in mega menu)</label>
-          <input value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="w-full rounded-lg border px-3 py-2 text-sm outline-none focus:border-primary-500" />
-        </div>
-        <div>
-          <label className="mb-1 block text-xs font-medium text-gray-600">Parent Item</label>
-          <select value={form.parentId || ""} onChange={(e) => setForm({ ...form, parentId: e.target.value ? parseInt(e.target.value) : null })} className="w-full rounded-lg border px-3 py-2 text-sm outline-none focus:border-primary-500">
-            <option value="">None (top level)</option>
+          <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-gray-700">Parent Menu Level</label>
+          <select
+            value={form.parentId || ""}
+            onChange={(e) => setForm({ ...form, parentId: e.target.value ? parseInt(e.target.value) : null })}
+            className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
+          >
+            <option value="">Top Level (Root Category)</option>
             {parentOptions.map((opt) => (
-              <option key={opt.id} value={opt.id}>{"".repeat(opt.depth)}{"└ "}{opt.label}</option>
+              <option key={opt.id} value={opt.id}>
+                {"\u00A0\u00A0".repeat(opt.depth)}└ {opt.label}
+              </option>
             ))}
           </select>
         </div>
+
         <div>
-          <label className="mb-1 block text-xs font-medium text-gray-600">Sort Order</label>
-          <input type="number" value={form.sortOrder} onChange={(e) => setForm({ ...form, sortOrder: parseInt(e.target.value) || 0 })} className="w-full rounded-lg border px-3 py-2 text-sm outline-none focus:border-primary-500" />
+          <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-gray-700">Display Sort Order</label>
+          <input
+            type="number"
+            value={form.sortOrder}
+            onChange={(e) => setForm({ ...form, sortOrder: parseInt(e.target.value) || 0 })}
+            className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100 font-mono"
+          />
+        </div>
+
+        <div className="sm:col-span-2">
+          <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-gray-700">Description (Shown inside MegaMenu card)</label>
+          <input
+            value={form.description || ""}
+            onChange={(e) => setForm({ ...form, description: e.target.value })}
+            placeholder="e.g. High-yield savings accounts with daily interest calculation"
+            className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
+          />
+        </div>
+
+        <div>
+          <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-gray-700">Thumbnail Image URL</label>
+          <input
+            value={form.imageUrl || ""}
+            onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
+            placeholder="https://..."
+            className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100 font-mono text-xs"
+          />
+        </div>
+
+        <div>
+          <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-gray-700">Image Alt Tag</label>
+          <input
+            value={form.imageAlt || ""}
+            onChange={(e) => setForm({ ...form, imageAlt: e.target.value })}
+            placeholder="e.g. Savings account banner"
+            className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
+          />
         </div>
       </div>
-      <div className="mt-4 flex items-center gap-4">
-        <label className="flex items-center gap-2 text-sm text-gray-600">
-          <input type="checkbox" checked={form.isOpenInNewTab} onChange={(e) => setForm({ ...form, isOpenInNewTab: e.target.checked })} className="rounded" />
-          Open in new tab
+
+      <div className="mt-5 flex flex-wrap items-center gap-6 border-t pt-4">
+        <label className="flex items-center gap-2 text-xs font-bold text-gray-700 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={form.isOpenInNewTab}
+            onChange={(e) => setForm({ ...form, isOpenInNewTab: e.target.checked })}
+            className="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+          />
+          Open in New Window / Tab
         </label>
-        <label className="flex items-center gap-2 text-sm text-gray-600">
-          <input type="checkbox" checked={form.isActive} onChange={(e) => setForm({ ...form, isActive: e.target.checked })} className="rounded" />
-          Active
+
+        <label className="flex items-center gap-2 text-xs font-bold text-gray-700 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={form.isActive}
+            onChange={(e) => setForm({ ...form, isActive: e.target.checked })}
+            className="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+          />
+          Visible / Active
         </label>
       </div>
-      <div className="mt-4 flex gap-2">
-        <button onClick={() => onSave(form)} disabled={!form.label} className="inline-flex items-center gap-1.5 rounded-lg bg-primary-700 px-4 py-2 text-sm font-medium text-white hover:bg-primary-800 disabled:opacity-50">
-          <Save className="h-3.5 w-3.5" /> Save
+
+      <div className="mt-6 flex justify-end gap-3 border-t pt-4">
+        <button
+          onClick={onCancel}
+          className="rounded-xl border border-gray-200 px-5 py-2.5 text-xs font-bold text-gray-600 hover:bg-gray-50"
+        >
+          Cancel
         </button>
-        <button onClick={onCancel} className="inline-flex items-center gap-1.5 rounded-lg border px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50">
-          <X className="h-3.5 w-3.5" /> Cancel
+        <button
+          onClick={() => onSave(form)}
+          disabled={!form.label}
+          className="inline-flex items-center gap-2 rounded-xl bg-primary-700 px-6 py-2.5 text-xs font-bold text-white shadow-md hover:bg-primary-800 disabled:opacity-50"
+        >
+          <Save className="h-4 w-4" /> Save Navigation Item
         </button>
       </div>
     </div>
@@ -201,11 +395,23 @@ export default function CmsNavigationPage() {
   const [editing, setEditing] = useState<Partial<NavItem> | null>(null);
   const [newMenu, setNewMenu] = useState({ name: "", slug: "", locale: "en" });
   const [showNewMenu, setShowNewMenu] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
 
   const fetchMenus = useCallback(async () => {
     const res = await fetch(`${API}/api/cms/navigation`, { headers: authHeaders() });
-    if (res.ok) setMenus(await res.json());
-  }, []);
+    if (res.ok) {
+      const data = await res.json();
+      setMenus(data);
+      if (data.length > 0 && !selectedMenu) {
+        setSelectedMenu(data[0]);
+      }
+    }
+  }, [selectedMenu]);
 
   const fetchItems = useCallback(async (menuId: number) => {
     const res = await fetch(`${API}/api/cms/navigation/${menuId}`, { headers: authHeaders() });
@@ -216,7 +422,9 @@ export default function CmsNavigationPage() {
     }
   }, []);
 
-  useEffect(() => { fetchMenus(); }, [fetchMenus]);
+  useEffect(() => {
+    fetchMenus();
+  }, [fetchMenus]);
 
   useEffect(() => {
     if (selectedMenu) fetchItems(selectedMenu.id);
@@ -233,6 +441,89 @@ export default function CmsNavigationPage() {
     return result;
   }
 
+  // Find siblings list of a target item
+  function findSiblings(itemList: NavItem[], targetId: number): NavItem[] | null {
+    if (itemList.some((i) => i.id === targetId)) return itemList;
+    for (const item of itemList) {
+      if (item.children) {
+        const sub = findSiblings(item.children, targetId);
+        if (sub) return sub;
+      }
+    }
+    return null;
+  }
+
+  // Reorder items by swapping sortOrder
+  async function handleMove(item: NavItem, direction: "up" | "down") {
+    const siblings = findSiblings(items, item.id);
+    if (!siblings) return;
+
+    const idx = siblings.findIndex((i) => i.id === item.id);
+    const targetIdx = direction === "up" ? idx - 1 : idx + 1;
+    if (targetIdx < 0 || targetIdx >= siblings.length) return;
+
+    const siblingItem = siblings[targetIdx];
+    const newOrder1 = siblingItem.sortOrder || targetIdx + 1;
+    const newOrder2 = item.sortOrder || idx + 1;
+
+    // Send batch reorder to API
+    const reorderPayload = [
+      { id: item.id, sortOrder: newOrder1, parentId: item.parentId },
+      { id: siblingItem.id, sortOrder: newOrder2, parentId: siblingItem.parentId },
+    ];
+
+    const res = await fetch(`${API}/api/cms/nav-items/reorder`, {
+      method: "PUT",
+      headers: authHeaders(),
+      body: JSON.stringify({ items: reorderPayload }),
+    });
+
+    if (res.ok) {
+      showToast(`Moved "${item.label}" ${direction}`);
+      if (selectedMenu) fetchItems(selectedMenu.id);
+    }
+  }
+
+  // Indent: Make child of sibling item directly above
+  async function handleIndent(item: NavItem) {
+    const siblings = findSiblings(items, item.id);
+    if (!siblings) return;
+    const idx = siblings.findIndex((i) => i.id === item.id);
+    if (idx <= 0) return;
+
+    const newParent = siblings[idx - 1];
+    const res = await fetch(`${API}/api/cms/nav-items/${item.id}`, {
+      method: "PUT",
+      headers: authHeaders(),
+      body: JSON.stringify({ parentId: newParent.id, sortOrder: 99 }),
+    });
+
+    if (res.ok) {
+      showToast(`Moved "${item.label}" under "${newParent.label}"`);
+      if (selectedMenu) fetchItems(selectedMenu.id);
+    }
+  }
+
+  // Outdent: Move up one parent level
+  async function handleOutdent(item: NavItem) {
+    if (!item.parentId) return;
+
+    // Find parent object to get grandparent id
+    const parentObj = flattenItems(items).find((i) => i.id === item.parentId);
+    const grandParentId = parentObj ? null : null; // Outdent to top or grandparent
+
+    const res = await fetch(`${API}/api/cms/nav-items/${item.id}`, {
+      method: "PUT",
+      headers: authHeaders(),
+      body: JSON.stringify({ parentId: grandParentId, sortOrder: 99 }),
+    });
+
+    if (res.ok) {
+      showToast(`Promoted "${item.label}" to higher menu level`);
+      if (selectedMenu) fetchItems(selectedMenu.id);
+    }
+  }
+
   async function createMenu() {
     if (!newMenu.name || !newMenu.slug) return;
     const res = await fetch(`${API}/api/cms/navigation`, {
@@ -243,6 +534,7 @@ export default function CmsNavigationPage() {
     if (res.ok) {
       setNewMenu({ name: "", slug: "", locale: "en" });
       setShowNewMenu(false);
+      showToast("Menu created successfully");
       fetchMenus();
     }
   }
@@ -256,82 +548,182 @@ export default function CmsNavigationPage() {
     const res = await fetch(url, { method, headers: authHeaders(), body: JSON.stringify(body) });
     if (res.ok) {
       setEditing(null);
+      showToast(editing?.id ? "Item updated" : "Item created");
       if (selectedMenu) fetchItems(selectedMenu.id);
     }
   }
 
   async function deleteItem(id: number) {
-    if (!confirm("Delete this item and all children?")) return;
+    if (!confirm("Delete this navigation item and all sub-items?")) return;
     const res = await fetch(`${API}/api/cms/nav-items/${id}`, { method: "DELETE", headers: authHeaders() });
-    if (res.ok && selectedMenu) fetchItems(selectedMenu.id);
+    if (res.ok) {
+      showToast("Item deleted");
+      if (selectedMenu) fetchItems(selectedMenu.id);
+    }
   }
 
   async function deleteMenu(id: number) {
-    if (!confirm("Delete this menu and all items?")) return;
+    if (!confirm("Delete this entire menu structure?")) return;
     const res = await fetch(`${API}/api/cms/navigation/${id}`, { method: "DELETE", headers: authHeaders() });
     if (res.ok) {
       setSelectedMenu(null);
+      showToast("Menu deleted");
       fetchMenus();
     }
   }
 
+  const expandAll = () => {
+    const allIds = new Set<number>();
+    const collect = (list: NavItem[]) => {
+      list.forEach((i) => {
+        allIds.add(i.id);
+        if (i.children) collect(i.children);
+      });
+    };
+    collect(items);
+    setExpanded(allIds);
+  };
+
+  const collapseAll = () => setExpanded(new Set());
+
   return (
     <CMSLayout>
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="flex items-center gap-2 text-xl font-bold text-gray-900">
-          <Menu className="h-5 w-5" /> Navigation Manager
-        </h1>
-        <button onClick={() => setShowNewMenu(true)} className="inline-flex items-center gap-1.5 rounded-lg bg-primary-700 px-4 py-2 text-sm font-medium text-white hover:bg-primary-800">
-          <Plus className="h-4 w-4" /> New Menu
+      {/* Toast Notification */}
+      {toastMessage && (
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-2xl bg-slate-900 px-5 py-3 text-xs font-bold text-white shadow-2xl animate-fade-up">
+          <Check className="h-4 w-4 text-emerald-400" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
+      {/* Header Bar */}
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h1 className="flex items-center gap-2 text-xl font-extrabold text-gray-900">
+            <Menu className="h-6 w-6 text-primary-700" /> Navigation Hierarchy Manager
+          </h1>
+          <p className="mt-1 text-xs text-gray-500">
+            Easily reorder, nest, edit, or create navigation links for main site & mobile menus.
+          </p>
+        </div>
+
+        <button
+          onClick={() => setShowNewMenu(true)}
+          className="inline-flex items-center gap-2 rounded-xl bg-primary-700 px-4 py-2.5 text-xs font-bold text-white shadow-md transition-all hover:bg-primary-800"
+        >
+          <Plus className="h-4 w-4" /> Create New Menu
         </button>
       </div>
 
+      {/* Create Menu Modal / Form */}
       {showNewMenu && (
-        <div className="mb-6 rounded-xl border bg-white p-4 shadow-sm">
-          <h3 className="mb-3 text-sm font-semibold">Create New Menu</h3>
-          <div className="flex gap-3">
-            <input value={newMenu.name} onChange={(e) => setNewMenu({ ...newMenu, name: e.target.value })} placeholder="Menu name" className="rounded-lg border px-3 py-2 text-sm outline-none focus:border-primary-500" />
-            <input value={newMenu.slug} onChange={(e) => setNewMenu({ ...newMenu, slug: e.target.value })} placeholder="main-nav" className="rounded-lg border px-3 py-2 text-sm outline-none focus:border-primary-500" />
-            <select value={newMenu.locale} onChange={(e) => setNewMenu({ ...newMenu, locale: e.target.value })} className="rounded-lg border px-3 py-2 text-sm outline-none focus:border-primary-500">
-              <option value="en">English</option>
-              <option value="np">Nepali</option>
+        <div className="mb-6 rounded-2xl border border-primary-100 bg-white p-5 shadow-lg">
+          <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-gray-800">Create New Navigation Structure</h3>
+          <div className="flex flex-wrap gap-3">
+            <input
+              value={newMenu.name}
+              onChange={(e) => setNewMenu({ ...newMenu, name: e.target.value })}
+              placeholder="Menu Name (e.g. Header Main Nav)"
+              className="rounded-xl border px-4 py-2 text-xs outline-none focus:border-primary-500"
+            />
+            <input
+              value={newMenu.slug}
+              onChange={(e) => setNewMenu({ ...newMenu, slug: e.target.value })}
+              placeholder="Slug (e.g. main-nav)"
+              className="rounded-xl border px-4 py-2 text-xs outline-none focus:border-primary-500 font-mono"
+            />
+            <select
+              value={newMenu.locale}
+              onChange={(e) => setNewMenu({ ...newMenu, locale: e.target.value })}
+              className="rounded-xl border px-4 py-2 text-xs outline-none focus:border-primary-500"
+            >
+              <option value="en">English (en)</option>
+              <option value="np">Nepali (np)</option>
             </select>
-            <button onClick={createMenu} className="rounded-lg bg-primary-700 px-4 py-2 text-sm font-medium text-white hover:bg-primary-800">Create</button>
-            <button onClick={() => setShowNewMenu(false)} className="rounded-lg border px-4 py-2 text-sm text-gray-600 hover:bg-gray-50">Cancel</button>
+            <button onClick={createMenu} className="rounded-xl bg-primary-700 px-5 py-2 text-xs font-bold text-white hover:bg-primary-800">
+              Create Menu
+            </button>
+            <button onClick={() => setShowNewMenu(false)} className="rounded-xl border px-4 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-50">
+              Cancel
+            </button>
           </div>
         </div>
       )}
 
-      <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
-        <div className="space-y-2">
-          <h2 className="text-sm font-semibold text-gray-700">Menus</h2>
-          {menus.map((menu) => (
-            <div
-              key={menu.id}
-              className={`flex items-center justify-between rounded-lg border px-4 py-3 transition-all ${selectedMenu?.id === menu.id ? "border-primary-300 bg-primary-50 shadow-sm" : "bg-white hover:shadow-sm"}`}
-            >
-              <button onClick={() => setSelectedMenu(menu)} className="flex-1 text-left">
-                <p className="text-sm font-medium text-gray-900">{menu.name}</p>
-                <p className="text-xs text-gray-500">/{menu.slug} · {menu.locale}</p>
-              </button>
-              <button onClick={() => deleteMenu(menu.id)} className="rounded p-1 text-gray-400 hover:text-red-500">
-                <Trash2 className="h-3.5 w-3.5" />
-              </button>
-            </div>
-          ))}
-          {menus.length === 0 && <p className="text-sm text-gray-500">No menus yet. Create one to get started.</p>}
+      {/* Main Grid: Menu Selector & Reorder Workspace */}
+      <div className="grid gap-6 lg:grid-cols-[260px_1fr]">
+        {/* Left Column: Menu Selector Cards */}
+        <div className="space-y-3">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-gray-400">Navigation Menus</h2>
+          <div className="space-y-2">
+            {menus.map((menu) => {
+              const isSelected = selectedMenu?.id === menu.id;
+              return (
+                <div
+                  key={menu.id}
+                  className={`group flex items-center justify-between rounded-2xl border p-3.5 transition-all cursor-pointer ${
+                    isSelected
+                      ? "border-primary-500 bg-primary-50 shadow-md ring-1 ring-primary-500/20"
+                      : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm"
+                  }`}
+                  onClick={() => setSelectedMenu(menu)}
+                >
+                  <div className="min-w-0 flex-1">
+                    <p className={`text-xs font-extrabold ${isSelected ? "text-primary-800" : "text-gray-900"}`}>{menu.name}</p>
+                    <p className="text-[11px] font-mono text-gray-400">/{menu.slug} · {menu.locale.toUpperCase()}</p>
+                  </div>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deleteMenu(menu.id);
+                    }}
+                    className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
+                    title="Delete Menu"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              );
+            })}
+          </div>
         </div>
 
+        {/* Right Column: Reorder & Edit Tree */}
         <div>
           {selectedMenu ? (
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h2 className="text-sm font-semibold text-gray-700">{selectedMenu.name} Items</h2>
-                <button onClick={() => setEditing({ navigationId: selectedMenu.id })} className="inline-flex items-center gap-1 rounded-lg border px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50">
-                  <Plus className="h-3 w-3" /> Add Item
-                </button>
+              {/* Toolbar */}
+              <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+                <div className="flex items-center gap-3">
+                  <h2 className="text-sm font-bold text-gray-900">{selectedMenu.name} Items</h2>
+                  <span className="rounded-full bg-primary-100 px-2.5 py-0.5 text-xs font-mono font-bold text-primary-800">
+                    {items.length} items
+                  </span>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    onClick={expandAll}
+                    className="inline-flex items-center gap-1 rounded-xl border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600 hover:bg-gray-50"
+                  >
+                    <FolderOpen className="h-3.5 w-3.5" /> Expand All
+                  </button>
+                  <button
+                    onClick={collapseAll}
+                    className="inline-flex items-center gap-1 rounded-xl border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600 hover:bg-gray-50"
+                  >
+                    <Folder className="h-3.5 w-3.5" /> Collapse All
+                  </button>
+                  <button
+                    onClick={() => setEditing({ navigationId: selectedMenu.id })}
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-primary-700 px-4 py-1.5 text-xs font-bold text-white shadow-sm hover:bg-primary-800"
+                  >
+                    <Plus className="h-3.5 w-3.5" /> Add Top Item
+                  </button>
+                </div>
               </div>
 
+              {/* Edit Drawer Form */}
               {editing && (
                 <ItemForm
                   item={editing}
@@ -341,12 +733,15 @@ export default function CmsNavigationPage() {
                 />
               )}
 
+              {/* Items Tree Rows */}
               <div className="space-y-1.5">
-                {items.map((item) => (
+                {items.map((item, idx) => (
                   <NavItemRow
                     key={item.id}
                     item={item}
                     depth={0}
+                    index={idx}
+                    totalSiblings={items.length}
                     expanded={expanded}
                     onToggle={(id) => {
                       const next = new Set(expanded);
@@ -356,19 +751,24 @@ export default function CmsNavigationPage() {
                     onEdit={(item) => setEditing(item)}
                     onDelete={deleteItem}
                     onAddChild={(parentId) => setEditing({ navigationId: selectedMenu.id, parentId })}
+                    onMoveUp={(item) => handleMove(item, "up")}
+                    onMoveDown={(item) => handleMove(item, "down")}
+                    onIndent={handleIndent}
+                    onOutdent={handleOutdent}
                   />
                 ))}
+
                 {items.length === 0 && !editing && (
-                  <div className="rounded-xl border-2 border-dashed p-12 text-center text-gray-500">
+                  <div className="rounded-3xl border-2 border-dashed border-gray-200 p-12 text-center text-gray-400">
                     <Menu className="mx-auto mb-3 h-10 w-10 text-gray-300" />
-                    <p className="text-sm">No items yet. Click "Add Item" to build your navigation.</p>
+                    <p className="text-sm font-semibold">No menu items found. Click "Add Top Item" to get started.</p>
                   </div>
                 )}
               </div>
             </div>
           ) : (
-            <div className="flex h-64 items-center justify-center rounded-xl border-2 border-dashed text-gray-400">
-              <p className="text-sm">Select a menu to manage its items</p>
+            <div className="flex h-64 items-center justify-center rounded-3xl border-2 border-dashed border-gray-200 text-gray-400">
+              <p className="text-sm font-semibold">Select a menu on the left to manage its structure</p>
             </div>
           )}
         </div>

@@ -90,10 +90,6 @@ export default function Header({ lang, initialNavData }: HeaderProps) {
               <Mail className="h-3 w-3 text-secondary-400" />
               info@reliancenepal.com.np
             </a>
-            <div className="hidden lg:flex items-center gap-2 border-l border-slate-800 pl-4 text-[11px] text-slate-400">
-              <span className="inline-block h-2 w-2 rounded-full bg-emerald-400" />
-              <span>{isNp ? "नेपाल राष्ट्र बैंकबाट 'ग' वर्गको इजाजतपत्र प्राप्त" : "NRB Licensed 'C' Class Financial Institution"}</span>
-            </div>
           </div>
 
           <div className="flex items-center gap-3">

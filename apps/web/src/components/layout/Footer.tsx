@@ -298,9 +298,8 @@ export default function Footer() {
         {/* Regulatory Disclosure & Copyright Bar */}
         <div className="border-t border-white/10 bg-black/40">
           <div className="container-page flex flex-col items-center justify-between gap-3 py-4 text-xs text-gray-500 md:flex-row">
-            <div className="flex items-center gap-2">
-              <ShieldCheck className="h-4 w-4 text-secondary-500" />
-              <span>© {new Date().getFullYear()} Reliance Finance Limited. Regulated Class &quot;C&quot; Institution by Nepal Rastra Bank.</span>
+            <div>
+              <span>© {new Date().getFullYear()} Reliance Finance Limited. All rights reserved.</span>
             </div>
             <div className="flex gap-5 text-gray-400">
               <Link href={localize("/about/privacy-policy", lang)} className="hover:text-white transition-colors">Privacy Policy</Link>

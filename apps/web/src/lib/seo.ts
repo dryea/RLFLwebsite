@@ -1,4 +1,4 @@
-import { serverFetchAPI } from "@/lib/server-api";
+import { serverFetchAPI, serverFetchAPIRevalidate } from "@/lib/server-api";
 
 export interface SeoGlobalSettings {
   siteTitle?: string;
@@ -29,7 +29,7 @@ export interface SeoGlobalSettings {
 
 export async function getSeoSettings(): Promise<SeoGlobalSettings> {
   try {
-    return (await serverFetchAPI("/api/seo/settings")) as SeoGlobalSettings;
+    return (await serverFetchAPIRevalidate("/api/seo/settings")) as SeoGlobalSettings;
   } catch {
     return {};
   }

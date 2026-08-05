@@ -1,6 +1,8 @@
 import { MetadataRoute } from "next";
-import { serverFetchAPI } from "@/lib/server-api";
+import { serverFetchAPIRevalidate } from "@/lib/server-api";
 import { getSeoSettings } from "@/lib/seo";
+
+const BUILD_DATE = new Date("2026-08-05");
 
 const staticRoutes = [
   "", "about", "services", "branches", "contact", "emi-calculator",
@@ -14,6 +16,10 @@ const staticRoutes = [
   "beware-of-digital-fraud", "write-to-us", "auction-notice",
 ];
 
+const categorySlugById: Record<number, string> = { 1: "savings", 2: "fixed-deposits", 3: "loans" };
+
+export const dynamic = "force-static";
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const settings = await getSeoSettings();
   const siteUrl = settings.siteUrl || "https://reliancenepal.com.np";
@@ -23,7 +29,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     for (const route of staticRoutes) {
       urls.push({
         url: `${siteUrl}/${lang}/${route}`,
-        lastModified: new Date(),
+        lastModified: BUILD_DATE,
         changeFrequency: route === "" ? "weekly" : "monthly",
         priority: route === "" ? 1.0 : 0.8,
       });
@@ -32,13 +38,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   try {
     if (settings.sitemapIncludeProducts !== false) {
-      const products = await serverFetchAPI("/api/products");
+      const products = await serverFetchAPIRevalidate("/api/products");
       if (Array.isArray(products)) {
         for (const p of products) {
           for (const lang of ["en", "np"]) {
             urls.push({
-              url: `${siteUrl}/${lang}/products/${p.slug}`,
-              lastModified: p.updatedAt ? new Date(p.updatedAt) : new Date(),
+              url: `${siteUrl}/${lang}/products/${categorySlugById[Number(p.categoryId)] || "savings"}/${p.slug}`,
+              lastModified: p.updatedAt || BUILD_DATE,
               changeFrequency: "monthly",
               priority: 0.7,
             });
@@ -48,13 +54,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
 
     if (settings.sitemapIncludeServices !== false) {
-      const services = await serverFetchAPI("/api/services");
+      const services = await serverFetchAPIRevalidate("/api/services");
       if (Array.isArray(services)) {
         for (const s of services) {
           for (const lang of ["en", "np"]) {
             urls.push({
               url: `${siteUrl}/${lang}/services/${s.slug}`,
-              lastModified: new Date(),
+              lastModified: BUILD_DATE,
               changeFrequency: "monthly",
               priority: 0.7,
             });
@@ -64,13 +70,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
 
     if (settings.sitemapIncludeNews !== false) {
-      const news = await serverFetchAPI("/api/news");
+      const news = await serverFetchAPIRevalidate("/api/news");
       if (Array.isArray(news)) {
         for (const n of news) {
           for (const lang of ["en", "np"]) {
             urls.push({
               url: `${siteUrl}/${lang}/news/${n.slug}`,
-              lastModified: n.publishedAt ? new Date(n.publishedAt) : new Date(),
+              lastModified: n.publishedAt || BUILD_DATE,
               changeFrequency: "monthly",
               priority: 0.6,
             });

@@ -23,7 +23,7 @@ export default async function LangBankingHoursPage({ params }: { params: Promise
         <div className="container-page"><h1 className="text-3xl font-bold">{isNp ? "बैंकिङ समय" : "Banking Hours"}</h1></div>
       </section>
       <section className="py-12">
-        <div className="container-page max-w-2xl">
+        <div className="container-page">
           <div className="rounded-xl border bg-white p-8 shadow-sm">
             <div className="mb-6 flex items-center gap-3 text-primary-700">
               <Clock className="h-8 w-8" />

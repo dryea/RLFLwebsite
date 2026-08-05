@@ -47,7 +47,7 @@ export default async function PrivacyPolicyPage({ params }: { params: Promise<{ 
       </section>
 
       <section className="py-12">
-        <div className="container-page max-w-3xl">
+        <div className="container-page">
           <div className="mb-8 rounded-xl border bg-white p-6 text-sm leading-relaxed text-gray-500 shadow-sm">
             <p><strong>{lang === "en" ? "Last updated:" : "पछिल्लो अद्यावधिक:"}</strong> {lang === "en" ? "January 2025" : "जनवरी २०२५"}</p>
             <p className="mt-2">

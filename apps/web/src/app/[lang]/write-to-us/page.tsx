@@ -49,7 +49,7 @@ export default function WriteToUsPage() {
       </section>
 
       <section className="py-12">
-        <div className="container-page max-w-2xl">
+        <div className="container-page">
           {submitted ? (
             <div className="rounded-2xl border bg-white p-8 text-center shadow-sm">
               <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">

@@ -31,7 +31,7 @@ export default function CalculatorHubPage() {
       </section>
 
       <section className="py-10">
-        <div className="container-page max-w-5xl">
+        <div className="container-page">
           {/* Tabs */}
           <div className="mb-8 flex flex-wrap gap-2">
             {tabs.map((t) => (

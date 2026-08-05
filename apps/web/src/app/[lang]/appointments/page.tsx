@@ -61,7 +61,7 @@ export default function AppointmentPage() {
       </section>
 
       <section className="py-10">
-        <div className="container-page max-w-2xl">
+        <div className="container-page">
           <form onSubmit={submit} className="space-y-5 rounded-2xl border bg-white p-6 shadow-sm md:p-8">
             <div className="grid gap-4 sm:grid-cols-2">
               <div>

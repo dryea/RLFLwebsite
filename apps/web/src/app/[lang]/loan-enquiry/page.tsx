@@ -53,7 +53,7 @@ export default function LangLoanEnquiryPage() {
       </section>
 
       <section className="py-10">
-        <div className="container-page max-w-3xl">
+        <div className="container-page">
           <form onSubmit={handleSubmit} className="space-y-5 rounded-xl border bg-white p-6 shadow-sm">
             <div className="grid gap-5 md:grid-cols-2">
               <div>

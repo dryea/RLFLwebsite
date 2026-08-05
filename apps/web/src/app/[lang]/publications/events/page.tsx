@@ -48,7 +48,7 @@ export default function EventsListPage() {
       </section>
 
       <section className="py-12">
-        <div className="container-page max-w-4xl">
+        <div className="container-page">
           {events.length === 0 ? (
             <div className="rounded-xl border-2 border-dashed p-12 text-center text-gray-500">
               <Calendar className="mx-auto mb-3 h-10 w-10 text-gray-300" />

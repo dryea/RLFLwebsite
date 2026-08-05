@@ -88,7 +88,7 @@ export default function OpenAccountPage() {
       </section>
 
       <section className="py-10">
-        <div className="container-page max-w-2xl">
+        <div className="container-page">
           <div className="mb-8">
             <Stepper steps={steps} current={step} />
           </div>

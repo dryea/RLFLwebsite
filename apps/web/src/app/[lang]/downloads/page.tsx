@@ -23,7 +23,7 @@ export default function LangDownloadsPage() {
         </div>
       </section>
       <section className="py-12">
-        <div className="container-page max-w-3xl">
+        <div className="container-page">
           <div className="space-y-3">
             {items.map((item: any) => (
               <a key={item.id} href={item.fileUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between rounded-lg border bg-white px-6 py-4 shadow-sm transition-shadow hover:shadow-md">

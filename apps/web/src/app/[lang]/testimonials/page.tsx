@@ -47,7 +47,7 @@ export default function TestimonialsPage() {
       </section>
 
       <section className="py-10">
-        <div className="container-page max-w-6xl">
+        <div className="container-page">
           {/* Rating summary */}
           {reviews.length > 0 && (
             <div className="mb-8 flex items-center gap-4 rounded-2xl border bg-white p-6 shadow-sm">

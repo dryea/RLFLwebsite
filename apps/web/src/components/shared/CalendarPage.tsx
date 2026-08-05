@@ -37,7 +37,7 @@ export default function CalendarPage({ lang = "en" }: { lang?: string }) {
 
   return (
     <section className="py-10">
-      <div className="container-page max-w-4xl">
+      <div className="container-page">
         <div className="mb-6 flex flex-wrap gap-2">
           {["all", "festival", "holiday", "event", "meeting"].map((t) => (
             <button

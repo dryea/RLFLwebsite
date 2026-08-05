@@ -15,7 +15,7 @@ export default function CareersPage() {
         <div className="container-page"><h1 className="text-3xl font-bold">Careers</h1><p className="mt-2 text-primary-100">Join the Reliance Finance team</p></div>
       </section>
       <section className="py-12">
-        <div className="container-page max-w-3xl">
+        <div className="container-page">
           {jobs.length === 0 ? (
             <div className="rounded-lg border-2 border-dashed p-12 text-center text-gray-500">
               <Briefcase className="mx-auto mb-2 h-10 w-10 text-gray-300" />

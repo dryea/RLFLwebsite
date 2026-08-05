@@ -37,7 +37,7 @@ export default function GoldSilverPage() {
       </section>
 
       <section className="py-10">
-        <div className="container-page max-w-3xl">
+        <div className="container-page">
           {/* Unit toggle */}
           <div className="mb-6 flex justify-end">
             <div className="flex overflow-hidden rounded-lg border">

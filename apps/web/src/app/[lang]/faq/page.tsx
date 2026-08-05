@@ -41,7 +41,7 @@ export default function LangFaqPage() {
         </div>
       </section>
       <section className="py-12">
-        <div className="container-page max-w-3xl">
+        <div className="container-page">
           <FaqAccordion faqs={faqs} />
         </div>
       </section>

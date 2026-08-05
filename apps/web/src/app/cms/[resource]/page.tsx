@@ -10,17 +10,17 @@ export default function CmsResourceListPage({ params }: { params: Promise<{ reso
   const { resource } = use(params);
   const config = cmsResources[resource];
 
-  if (!config) return <CMSLayout><div className="text-red-600">Resource not found</div></CMSLayout>;
-
   const fetchItems = useCallback(() => {
+    if (!config) return Promise.resolve([]);
     const method = `get${config.apiName}` as keyof typeof api;
     return (api as any)[method]();
-  }, [config.apiName]);
+  }, [config]);
 
   const handleDelete = useCallback((id: number) => {
+    if (!config) return Promise.resolve();
     const method = `delete${config.apiName}` as keyof typeof api;
     return (api as any)[method](id);
-  }, [config.apiName]);
+  }, [config]);
 
   if (!config) return <CMSLayout><div className="text-red-600">Resource not found</div></CMSLayout>;
 

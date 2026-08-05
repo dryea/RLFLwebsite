@@ -55,7 +55,7 @@ export default function ApplicationStatusPage() {
       </section>
 
       <section className="py-10">
-        <div className="container-page max-w-2xl">
+        <div className="container-page">
           <form onSubmit={lookup} className="rounded-2xl border bg-white p-6 shadow-sm md:p-8">
             <div className="mb-4 grid grid-cols-2 gap-2">
               <button type="button" onClick={() => setType("account")} className={`rounded-lg border px-4 py-2.5 text-sm font-medium ${type === "account" ? "border-primary-500 bg-primary-50 text-primary-700" : "border-gray-200 text-gray-600"}`}>

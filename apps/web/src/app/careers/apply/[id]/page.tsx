@@ -59,7 +59,7 @@ export default function ApplyPage() {
       </section>
 
       <section className="py-10">
-        <div className="container-page max-w-2xl">
+        <div className="container-page">
           <a href="/careers" className="mb-6 inline-flex items-center gap-1 text-sm text-gray-600 hover:text-primary-700">
             <ArrowLeft className="h-4 w-4" /> Back to Careers
           </a>

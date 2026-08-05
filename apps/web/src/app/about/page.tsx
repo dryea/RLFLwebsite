@@ -19,7 +19,7 @@ export default function AboutPage() {
         <div className="container-page"><h1 className="text-3xl font-bold">About Us</h1><p className="mt-2 text-primary-100">Learn more about Reliance Finance</p></div>
       </section>
       <section className="py-12">
-        <div className="container-page max-w-3xl">
+        <div className="container-page">
           <p className="mb-8 leading-relaxed text-gray-600">
             Reliance Finance Limited is a trusted financial institution in Nepal, committed to providing innovative banking solutions
             and exceptional customer service. With a wide range of products and services, we strive to meet the diverse needs of our customers.

@@ -36,7 +36,7 @@ export default function PartnerPage() {
       </section>
 
       <section className="py-12">
-        <div className="container-page max-w-5xl">
+        <div className="container-page">
           <div className="mb-10 rounded-xl border bg-white p-8 text-center shadow-sm">
             <p className="text-lg leading-relaxed text-gray-600">
               {isNp

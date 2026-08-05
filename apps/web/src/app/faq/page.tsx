@@ -17,7 +17,7 @@ export default function FaqPage() {
         <div className="container-page"><h1 className="text-3xl font-bold">Frequently Asked Questions</h1><p className="mt-2 text-primary-100">Find answers to common questions</p></div>
       </section>
       <section className="py-12">
-        <div className="container-page max-w-3xl">
+        <div className="container-page">
           <FaqAccordion faqs={faqs} />
         </div>
       </section>

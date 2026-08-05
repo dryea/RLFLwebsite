@@ -38,7 +38,7 @@ export default function SitemapPage() {
       </section>
 
       <section className="py-12">
-        <div className="container-page max-w-4xl">
+        <div className="container-page">
           <div className="columns-2 gap-6 sm:columns-3 md:columns-4">
             {allLinks.map((link) => (
               <Link

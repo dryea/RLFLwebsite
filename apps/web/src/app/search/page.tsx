@@ -27,7 +27,7 @@ export default function SearchPage() {
         <div className="container-page"><h1 className="text-3xl font-bold">Search</h1></div>
       </section>
       <section className="py-12">
-        <div className="container-page max-w-3xl">
+        <div className="container-page">
           <form onSubmit={handleSubmit} className="relative mb-8" role="search">
             <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
             <label htmlFor="site-search" className="sr-only">Search pages, products, news</label>

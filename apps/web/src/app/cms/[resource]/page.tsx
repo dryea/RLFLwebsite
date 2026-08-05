@@ -10,6 +10,8 @@ export default function CmsResourceListPage({ params }: { params: Promise<{ reso
   const { resource } = use(params);
   const config = cmsResources[resource];
 
+  if (!config) return <CMSLayout><div className="text-red-600">Resource not found</div></CMSLayout>;
+
   const fetchItems = useCallback(() => {
     const method = `get${config.apiName}` as keyof typeof api;
     return (api as any)[method]();

@@ -9,6 +9,7 @@ import CSRGrid from "@/components/sections/CSRGrid";
 import AppBanner from "@/components/sections/AppBanner";
 import HeroQuickActions from "@/components/sections/HeroQuickActions";
 import HeroRatesWidget from "@/components/sections/HeroRatesWidget";
+import WhyChooseUs from "@/components/sections/WhyChooseUs";
 import HomepageSections from "@/components/sections/HomepageSections";
 
 export const revalidate = 60;
@@ -66,7 +67,10 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
       {/* 3. Live Rates Ticker */}
       <RatesTicker lang={lang} />
 
-      {/* 4–9: Main homepage sections */}
+      {/* 4. Why Choose Us — trust & benefits */}
+      <WhyChooseUs lang={lang} />
+
+      {/* 5–10: Main homepage sections */}
       <HomepageSections
         offerings={<OfferingsGrid offerings={data.offerings} lang={lang} />}
         about={

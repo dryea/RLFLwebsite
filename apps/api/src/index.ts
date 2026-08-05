@@ -1111,10 +1111,12 @@ app.post("/api/cms/nav-items", async (c) => {
     navigationId: data.navigationId,
     parentId: data.parentId || null,
     label: data.label,
+    labelNp: data.labelNp || null,
     href: data.href || null,
     imageUrl: data.imageUrl || null,
     imageAlt: data.imageAlt || null,
     description: data.description || null,
+    descriptionNp: data.descriptionNp || null,
     sortOrder: data.sortOrder || 0,
     isOpenInNewTab: data.isOpenInNewTab || false,
     isActive: data.isActive !== false,
@@ -1130,10 +1132,12 @@ app.put("/api/cms/nav-items/:id", async (c) => {
   const values: Record<string, any> = {};
   if (data.parentId !== undefined) values.parentId = data.parentId;
   if (data.label !== undefined) values.label = data.label;
+  if (data.labelNp !== undefined) values.labelNp = data.labelNp;
   if (data.href !== undefined) values.href = data.href;
   if (data.imageUrl !== undefined) values.imageUrl = data.imageUrl;
   if (data.imageAlt !== undefined) values.imageAlt = data.imageAlt;
   if (data.description !== undefined) values.description = data.description;
+  if (data.descriptionNp !== undefined) values.descriptionNp = data.descriptionNp;
   if (data.sortOrder !== undefined) values.sortOrder = data.sortOrder;
   if (data.isOpenInNewTab !== undefined) values.isOpenInNewTab = data.isOpenInNewTab;
   if (data.isActive !== undefined) values.isActive = data.isActive;
@@ -1526,25 +1530,30 @@ app.get("/api/navigation/:slug", async (c) => {
   const slug = c.req.param("slug");
   const locale = c.req.query("locale") || c.req.query("lang") || "en";
 
-  const menu = await db.select().from(navigation).where(and(eq(navigation.slug, slug), eq(navigation.locale, locale))).get();
+  // First check exact slug match
+  let menu = await db.select().from(navigation).where(and(eq(navigation.slug, slug), eq(navigation.locale, locale))).get();
   if (!menu) {
-    // Fallback to default locale if not found
-    const fallback = await db.select().from(navigation).where(and(eq(navigation.slug, slug), eq(navigation.locale, "en"))).get();
-    if (!fallback) return c.json([]);
-    const items = await db.select().from(navigationItems).where(and(eq(navigationItems.navigationId, fallback.id), eq(navigationItems.isActive, true))).orderBy(navigationItems.sortOrder).all();
-    return c.json(buildNavTree(items, null));
+    // Fallback to any menu with this slug
+    menu = await db.select().from(navigation).where(eq(navigation.slug, slug)).get();
+    if (!menu) return c.json([]);
   }
 
   const items = await db.select().from(navigationItems).where(and(eq(navigationItems.navigationId, menu.id), eq(navigationItems.isActive, true))).orderBy(navigationItems.sortOrder).all();
-  return c.json(buildNavTree(items, null));
+  return c.json(buildNavTree(items, null, locale));
 });
 
-function buildNavTree(items: any[], parentId: number | null): any[] {
+function buildNavTree(items: any[], parentId: number | null, locale = "en"): any[] {
   return items
     .filter(item => item.parentId === parentId)
     .map(item => ({
       ...item,
-      children: buildNavTree(items, item.id),
+      label: (locale === "np" && item.labelNp) ? item.labelNp : item.label,
+      description: (locale === "np" && item.descriptionNp) ? item.descriptionNp : item.description,
+      labelEn: item.label,
+      labelNp: item.labelNp,
+      descriptionEn: item.description,
+      descriptionNp: item.descriptionNp,
+      children: buildNavTree(items, item.id, locale),
     }));
 }
 

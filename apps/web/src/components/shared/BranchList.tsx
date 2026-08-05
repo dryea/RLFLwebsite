@@ -1,9 +1,15 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import dynamic from "next/dynamic";
 import { MapPin, Phone, Mail, User, List, Map as MapIcon, Search, Clock, Building } from "lucide-react";
-import BranchMap from "./BranchMap";
 import StaggerChildren, { StaggerItem } from "@/components/motion/StaggerChildren";
+
+// Lazy-load Leaflet map (heavy) only when map view is selected
+const BranchMap = dynamic(() => import("./BranchMap"), {
+  ssr: false,
+  loading: () => <div className="flex h-[500px] w-full items-center justify-center rounded-xl border bg-gray-50 text-sm text-gray-400">Loading map...</div>,
+});
 
 interface Branch {
   id: number;

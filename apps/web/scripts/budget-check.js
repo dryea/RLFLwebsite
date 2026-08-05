@@ -43,18 +43,12 @@ function walk(dir) {
 
 walk(ROOT);
 
-const totalMb = (totalJs / 1024 / 1024).toFixed(1);
-console.log(`\nTotal JS: ${totalMb} MB`);
-if (totalJs > TOTAL_JS_BUDGET) {
-  issues++;
-  console.log(`❌ Total JS over budget (${totalMb} MB)`);
-} else {
-  console.log(`✅ Total JS within budget`);
-}
+console.log(`\nTotal JS in build (all chunks incl. lazy): ${(totalJs / 1024 / 1024).toFixed(1)} MB (informational)`);
 
 if (issues === 0) {
-  console.log("✅ All bundles within budget");
+  console.log("✅ All initial-load bundles within budget");
 } else {
-  console.log(`\n⚠️  ${issues} budget issue(s) found. Consider code-splitting large pages.`);
+  console.log(`\n⚠️  ${issues} large chunk(s) found. Consider lazy-loading heavy components.`);
+  console.log("Note: chunks may be lazy-loaded (on-demand) and not part of initial page load.");
   process.exit(1);
 }

@@ -5,10 +5,18 @@ import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, Save, Send, Calendar } from "lucide-react";
 import Link from "next/link";
 import CMSLayout from "@/components/cms/CMSLayout";
-import TipTapEditor from "@/components/cms/TipTapEditor";
+import dynamic from "next/dynamic";
 import LanguageTabs from "@/components/cms/LanguageTabs";
 import SeoAnalyzer from "@/components/cms/seo/SeoAnalyzer";
 import { api, API } from "@/lib/api";
+
+// Lazy-load the rich text editor (heavy) only when editing content
+const TipTapEditor = dynamic(() => import("@/components/cms/TipTapEditor"), {
+  ssr: false,
+  loading: () => (
+    <div className="h-64 w-full animate-pulse rounded-lg border bg-gray-50" />
+  ),
+});
 
 export default function CmsPageEditorPage() {
   const params = useParams();

@@ -3,7 +3,7 @@ import EMICalculator from "@/components/shared/EMICalculator";
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
   return {
-    title: lang === "en" ? "EMI Calculator | Reliance Finance Limited" : "EMI क्याल्कुलेटर | रिलायन्स फाइनान्स लिमिटेड",
+    title: lang === "en" ? "EMI Calculator" : "EMI क्याल्कुलेटर",
     description: lang === "en" ? "Plan your loan with accurate monthly payments" : "सही मासिक भुक्तानीको साथ आफ्नो ऋण योजना बनाउनुहोस्",
   };
 }

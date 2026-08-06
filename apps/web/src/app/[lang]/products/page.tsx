@@ -6,7 +6,13 @@ export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
-  return { title: lang === "en" ? "Our Products | Reliance Finance Limited" : "हाम्रा उत्पादनहरू | रिलायन्स फाइनान्स लिमिटेड" };
+  return {
+    title: lang === "en" ? "Our Products" : "हाम्रा उत्पादनहरू",
+    description:
+      lang === "en"
+        ? "Savings accounts, fixed deposits, and loan products from Reliance Finance Limited."
+        : "रिलायन्स फाइनान्स लिमिटेडका बचत खाता, मुद्दती निक्षेप र ऋण उत्पादनहरू।",
+  };
 }
 
 export default async function ProductsPage({ params }: { params: Promise<{ lang: string }> }) {

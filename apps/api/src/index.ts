@@ -1828,7 +1828,7 @@ app.put("/api/cms/applications/status", async (c) => {
     const existing = await db.select().from(loanApplications).where(eq(loanApplications.id, id)).get();
     if (!existing) return c.json({ error: "Not found" }, 404);
     const timeline = Array.isArray(existing.timeline) ? [...existing.timeline] : [];
-    timeline.push({ status, date: now, note: note || null });
+    timeline.push({ status, date: now, note: note || undefined });
     await db.update(loanApplications).set({ status, timeline, updatedAt: now }).where(eq(loanApplications.id, id)).run();
     customer = { email: existing.email, fullName: existing.fullName, referenceNo: existing.referenceNo, loanType: existing.loanType };
   } else {

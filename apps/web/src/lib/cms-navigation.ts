@@ -33,7 +33,7 @@ export const fallbackCMSNav: CMSNavItem[] = [
           { id: 222, label: "Management Team", labelNp: "व्यवस्थापन टोली", href: "/team/management-team", icon: "UserCheck", description: "Executive leadership team" },
           { id: 223, label: "Department Heads", labelNp: "विभाग प्रमुख", href: "/team/head-of-department", icon: "Users", description: "Departmental managers" },
           { id: 224, label: "Branch Managers", labelNp: "शाखा प्रबन्धक", href: "/team/branch-manager", icon: "Building", description: "Branch leadership across Nepal" },
-          { id: 225, label: "Committee of Directors", labelNp: "संचालक समिति समिति", href: "/committee-of-directors", icon: "ShieldCheck", description: "Board oversight sub-committees" },
+          { id: 225, label: "Committee of Directors", labelNp: "संचालक समिति", href: "/committee-of-directors", icon: "ShieldCheck", description: "Board oversight sub-committees" },
         ],
       },
       {

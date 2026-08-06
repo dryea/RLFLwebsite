@@ -18,6 +18,7 @@
     "@types/node": "^22.0.0",
     "happy-dom": "^20.11.1",
     "msw": "^2.15.0",
+    "next": "^15.5.22",
     "prettier": "^3.4.0",
     "prettier-plugin-tailwindcss": "^0.6.0",
     "turbo": "^2.4.0",
@@ -30,7 +31,6 @@
   ],
   "packageManager": "npm@11.9.0",
   "dependencies": {
-    "@next/swc-win32-x64-msvc": "^15.5.22",
     "@tiptap/extension-bullet-list": "^3.29.1",
     "@tiptap/extension-code-block": "^3.29.1",
     "@tiptap/extension-highlight": "^3.29.1",

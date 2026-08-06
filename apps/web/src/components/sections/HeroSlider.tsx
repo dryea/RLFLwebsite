@@ -122,6 +122,13 @@ export default function HeroSlider({ slides, lang }: { slides: Slide[]; lang: st
       style={{ minHeight: "clamp(540px, 75vh, 820px)" }}
       aria-label="Featured highlights"
     >
+      {/* Preload the first slide's background image for faster LCP */}
+      <link
+        rel="preload"
+        as="image"
+        href={optimizedBg(allSlides[0]?.imageUrl)}
+        fetchPriority="high"
+      />
       {/* Slides */}
       <AnimatePresence initial={false} mode="sync">
         <motion.div

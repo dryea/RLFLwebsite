@@ -1,4 +1,5 @@
 import createMiddleware from "next-intl/middleware";
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { redirects } from "@/lib/redirects";
 import { routing } from "@/i18n/routing";
 import { NextResponse } from "next/server";
@@ -15,7 +16,18 @@ const REDIRECTS_TTL = 60_000;
 function loadCmsRedirects(): Promise<void> {
   if (redirectsFetchPromise) return redirectsFetchPromise;
   const api = process.env.NEXT_PUBLIC_API_URL || "https://rfil-api.sudeepdhakal.workers.dev";
-  redirectsFetchPromise = fetch(`${api}/api/seo/redirects`, { cache: "no-store" })
+  let doFetch: (url: string) => Promise<Response> = (url) => fetch(url, { cache: "no-store" });
+  try {
+    const { env } = getCloudflareContext();
+    const binding = (env as unknown as { API?: { fetch: (url: string, init?: RequestInit) => Promise<Response> } }).API;
+    if (binding && typeof binding.fetch === "function") {
+      // Service binding bypasses the edge; requires an absolute URL.
+      doFetch = (url) => binding.fetch(url);
+    }
+  } catch {
+    // Not running in the Cloudflare worker (next build / local dev)
+  }
+  redirectsFetchPromise = doFetch(`${api}/api/seo/redirects`)
     .then((r) => (r.ok ? r.json() : []))
     .then((data) => {
       cmsRedirectCache.clear();

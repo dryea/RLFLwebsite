@@ -3,12 +3,12 @@
   "main": "src/index.ts",
   "compatibility_date": "2026-07-01",
   "compatibility_flags": ["nodejs_compat"],
-  "migrations_dir": "drizzle",
   "d1_databases": [
     {
       "binding": "DB",
       "database_name": "rfil-db",
-      "database_id": "0d0bfcb4-7ac6-4e10-a62b-79f32d234c7c"
+      "database_id": "0d0bfcb4-7ac6-4e10-a62b-79f32d234c7c",
+      "migrations_dir": "drizzle"
     }
   ],
   "r2_buckets": [

@@ -167,7 +167,7 @@ export default function FDMaturityCalculator({ lang }: { lang: string }) {
         <div className="mb-6 flex items-center gap-6 rounded-xl border border-gray-100 bg-gray-50 p-4">
           <DonutChart
             segments={[
-              { value: principal, color: "#702B86", label: "Deposit" },
+              { value: principal, color: "#8E44AD", label: "Deposit" },
               { value: result.totalInterest, color: "#F2A900", label: "Interest" },
             ]}
             size={120}

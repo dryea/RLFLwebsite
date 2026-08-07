@@ -20,7 +20,7 @@ export default function AppBanner({ data, lang }: { data: AppBannerData | null; 
     <section className="overflow-hidden" aria-label="Mobile app download">
       <div
         className="relative"
-        style={{ background: "linear-gradient(135deg, #3a1345 0%, #702B86 50%, #5a226b 100%)" }}
+        style={{ background: "linear-gradient(135deg, #52216B 0%, #8E44AD 50%, #7B379B 100%)" }}
       >
         {/* Dot grid overlay */}
         <div

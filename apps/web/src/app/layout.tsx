@@ -53,7 +53,7 @@ export default function RootLayout({
     <html lang="en" className={`${outfit.variable} ${inter.variable} ${devanagari.variable} font-body antialiased overflow-x-clip`}>
       <head>
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#702B86" />
+        <meta name="theme-color" content="#8E44AD" />
       </head>
       <body className="flex min-h-screen flex-col overflow-x-clip">
         <ToastProvider>

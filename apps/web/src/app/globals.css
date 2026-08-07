@@ -10,7 +10,7 @@ html, body {
 :root {
   --bg-primary: #fff;
   --text-primary: #1F2937;
-  --color-primary: #702B86;
+  --color-primary: #8E44AD;
   --color-secondary: #F2A900;
 
   /* Semantic */
@@ -84,7 +84,7 @@ html, body {
   .section-header h2::after {
     content: '';
     @apply absolute bottom-0 left-1/2 h-1 w-16 -translate-x-1/2 rounded-full;
-    background: linear-gradient(90deg, #702B86, #F2A900);
+    background: linear-gradient(90deg, #8E44AD, #F2A900);
   }
 
   .section-header p {
@@ -140,10 +140,10 @@ html, body {
     width: 22px;
     height: 22px;
     border-radius: 50%;
-    background: #702B86;
+    background: #8E44AD;
     border: 3px solid #F2A900;
     cursor: pointer;
-    box-shadow: 0 2px 8px rgba(112, 43, 134, 0.3);
+    box-shadow: 0 2px 8px rgba(142, 68, 173, 0.3);
     transition: transform 0.15s ease;
   }
   .emi-slider::-webkit-slider-thumb:hover,
@@ -155,7 +155,7 @@ html, body {
     width: 22px;
     height: 22px;
     border-radius: 50%;
-    background: #702B86;
+    background: #8E44AD;
     border: 3px solid #F2A900;
     cursor: pointer;
   }

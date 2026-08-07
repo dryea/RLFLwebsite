@@ -2,11 +2,10 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 const sections = [
-  { slug: "introduction", en: "Introduction", np: "परिचय" },
-  { slug: "mission-goals", en: "Mission & Goals", np: "लक्ष्य र उद्देश्य" },
-  { slug: "strategic-framework", en: "Strategic Framework", np: "रणनीतिक ढाँचा" },
-  { slug: "milestones", en: "Milestones", np: "कोशेढुङ्गाहरू" },
-  { slug: "capital-structure", en: "Capital Structure", np: "पुँजी संरचना" },
+  { slug: "introduction", en: "Who We Are", np: "हामी को हौं", href: "/about/introduction" },
+  { slug: "board-of-directors", en: "Board of Directors", np: "संचालक समिति", href: "/team/board-of-directors" },
+  { slug: "management-team", en: "Management Team", np: "व्यवस्थापन टोली", href: "/team/management-team" },
+  { slug: "head-of-department", en: "Department Heads", np: "विभाग प्रमुखहरू", href: "/team/head-of-department" },
 ];
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
@@ -48,7 +47,7 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: st
             {sections.map((s) => (
               <Link
                 key={s.slug}
-                href={`/about/${s.slug}`}
+                href={`/${lang}${s.href}`}
                 className="flex items-center justify-between rounded-lg border bg-white px-6 py-4 transition-shadow hover:shadow-sm"
               >
                 <span className="font-medium text-gray-900">

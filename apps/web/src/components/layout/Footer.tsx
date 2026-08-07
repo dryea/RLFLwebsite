@@ -159,12 +159,10 @@ export default function Footer() {
                 {isNp ? "कम्पनी र सुशासन" : "About & Governance"}
               </h3>
               <ul className="space-y-2.5 text-sm">
-                <li><Link href={localize("/about/introduction", lang)} className="hover:text-secondary-400 transition-colors">Introduction</Link></li>
-                <li><Link href={localize("/about/mission-goals", lang)} className="hover:text-secondary-400 transition-colors">Mission & Goals</Link></li>
+                <li><Link href={localize("/about/introduction", lang)} className="hover:text-secondary-400 transition-colors">{isNp ? "हामी को हौं" : "Who We Are"}</Link></li>
                 <li><Link href={localize("/team/board-of-directors", lang)} className="hover:text-secondary-400 transition-colors">Board of Directors</Link></li>
                 <li><Link href={localize("/team/management-team", lang)} className="hover:text-secondary-400 transition-colors">Management Team</Link></li>
-                <li><Link href={localize("/csr", lang)} className="hover:text-secondary-400 transition-colors">CSR Initiatives</Link></li>
-                <li><Link href={localize("/faq", lang)} className="hover:text-secondary-400 transition-colors">FAQ</Link></li>
+                <li><Link href={localize("/team/head-of-department", lang)} className="hover:text-secondary-400 transition-colors">Department Heads</Link></li>
               </ul>
             </div>
 

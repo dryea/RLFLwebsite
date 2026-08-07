@@ -13,7 +13,7 @@ export default async function SavingsPage({ params }: { params: Promise<{ lang: 
 
   return (
     <>
-      <section className="section" style={{ background: "linear-gradient(rgba(112,43,134,0.85),rgba(62,12,78,0.95)),url('/assets/slider-savings.jpg') center/cover no-repeat", padding: "6rem 0" }}>
+      <section className="section" style={{ background: "linear-gradient(rgba(142,68,173,0.85),rgba(82,33,107,0.95)),url('/assets/slider-savings.jpg') center/cover no-repeat", padding: "6rem 0" }}>
         <div className="container-page text-center text-white">
           <h1 className="mb-2 text-white">{lang === "en" ? "Savings Deposit Accounts" : "बचत निक्षेप खाताहरू"}</h1>
           <p className="text-xs font-bold uppercase tracking-[0.15em] text-secondary-500">

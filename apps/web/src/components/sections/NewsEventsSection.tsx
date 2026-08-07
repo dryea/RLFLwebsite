@@ -114,7 +114,7 @@ export default function NewsEventsSection({ lang }: { lang: string }) {
                     style={{
                       backgroundImage: item.imageUrl
                         ? `url(${item.imageUrl})`
-                        : `linear-gradient(135deg, #702B86 0%, #5a226b 100%)`,
+                        : `linear-gradient(135deg, #8E44AD 0%, #7B379B 100%)`,
                     }}
                   >
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />

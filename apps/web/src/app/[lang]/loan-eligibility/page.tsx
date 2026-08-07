@@ -63,7 +63,7 @@ export default function LoanEligibilityPage() {
                       <label className="font-medium text-gray-700">{isNp ? "मासिक तलब" : "Monthly Salary"}</label>
                       <span className="font-bold text-primary-700">{fmt(salary)}</span>
                     </div>
-                    <input type="range" min={10000} max={1000000} step={5000} value={salary} onChange={(e) => { setSalary(Number(e.target.value)); setHasRun(true); }} className="w-full accent-[#702B86]" />
+                    <input type="range" min={10000} max={1000000} step={5000} value={salary} onChange={(e) => { setSalary(Number(e.target.value)); setHasRun(true); }} className="w-full accent-[#8E44AD]" />
                   </div>
 
                   <div>
@@ -71,7 +71,7 @@ export default function LoanEligibilityPage() {
                       <label className="font-medium text-gray-700">{isNp ? "अन्य मासिक ईएमआई" : "Other Monthly EMIs"}</label>
                       <span className="font-bold text-gray-700">{fmt(otherEmi)}</span>
                     </div>
-                    <input type="range" min={0} max={200000} step={5000} value={otherEmi} onChange={(e) => setOtherEmi(Number(e.target.value))} className="w-full accent-[#702B86]" />
+                    <input type="range" min={0} max={200000} step={5000} value={otherEmi} onChange={(e) => setOtherEmi(Number(e.target.value))} className="w-full accent-[#8E44AD]" />
                   </div>
 
                   <div>
@@ -79,7 +79,7 @@ export default function LoanEligibilityPage() {
                       <label className="font-medium text-gray-700">{isNp ? "अवधि" : "Tenure"}</label>
                       <span className="font-bold text-primary-700">{tenureYears} {isNp ? "वर्ष" : "years"}</span>
                     </div>
-                    <input type="range" min={1} max={25} step={1} value={tenureYears} onChange={(e) => setTenureYears(Number(e.target.value))} className="w-full accent-[#702B86]" />
+                    <input type="range" min={1} max={25} step={1} value={tenureYears} onChange={(e) => setTenureYears(Number(e.target.value))} className="w-full accent-[#8E44AD]" />
                   </div>
 
                   <div>

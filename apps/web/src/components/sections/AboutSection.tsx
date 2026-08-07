@@ -39,7 +39,7 @@ export default function AboutSection({
           </span>
           <h2 className="relative mb-6 pb-4 text-3xl font-bold text-primary-800 md:text-4xl">
             {isNp ? "एक दशक भन्दा बढीको विश्वसनीय वित्तीय साझेदार" : "Your Trusted Financial Partner for Over a Decade"}
-            <span className="absolute bottom-0 left-0 h-1 w-20 rounded-full" style={{ background: "linear-gradient(90deg, #702B86, #F2A900)" }} />
+            <span className="absolute bottom-0 left-0 h-1 w-20 rounded-full" style={{ background: "linear-gradient(90deg, #8E44AD, #F2A900)" }} />
           </h2>
           <p className="mb-5 text-base leading-relaxed text-gray-500">
             {isNp
@@ -65,7 +65,7 @@ export default function AboutSection({
                 >
                   <div
                     className="mb-1 text-2xl font-extrabold lg:text-3xl"
-                    style={{ background: "linear-gradient(135deg, #702B86, #F2A900)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}
+                    style={{ background: "linear-gradient(135deg, #8E44AD, #F2A900)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}
                   >
                     {isNumeric ? (
                       <CountUp target={numeric} suffix={stat.suffix || ""} compact={numeric >= 1000} />
@@ -94,7 +94,7 @@ export default function AboutSection({
           {/* Radial glow behind image */}
           <div
             className="absolute -inset-4 rounded-3xl opacity-30"
-            style={{ background: "radial-gradient(ellipse at center, #702B86 0%, transparent 70%)" }}
+            style={{ background: "radial-gradient(ellipse at center, #8E44AD 0%, transparent 70%)" }}
           />
           <img
             src={imageUrl || "/assets/about-building.jpg"}
@@ -105,7 +105,7 @@ export default function AboutSection({
           {/* Overlay card */}
           <div
             className="absolute -bottom-5 -left-5 max-w-[200px] rounded-2xl p-5 text-white shadow-2xl"
-            style={{ background: "linear-gradient(135deg, #702B86, #4a1a58)", transform: "rotate(-1.5deg)" }}
+            style={{ background: "linear-gradient(135deg, #8E44AD, #672C84)", transform: "rotate(-1.5deg)" }}
           >
             <div className="text-3xl font-extrabold text-secondary-400">B.S. 2066</div>
             <p className="mt-1.5 text-[11px] leading-relaxed text-white/80">

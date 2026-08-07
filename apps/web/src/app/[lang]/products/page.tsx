@@ -66,7 +66,7 @@ export default async function ProductsPage({ params }: { params: Promise<{ lang:
         className="section"
         style={{
           background:
-            "linear-gradient(rgba(112,43,134,0.85),rgba(62,12,78,0.95)),url('/assets/slider-savings.jpg') center/cover no-repeat",
+            "linear-gradient(rgba(142,68,173,0.85),rgba(82,33,107,0.95)),url('/assets/slider-savings.jpg') center/cover no-repeat",
           padding: "6rem 0",
         }}
       >

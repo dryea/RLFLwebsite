@@ -10,46 +10,10 @@ export const fallbackCMSNav: CMSNavItem[] = [
     labelNp: "बारे",
     href: "/about/introduction",
     children: [
-      {
-        id: 21,
-        label: "Organization & Strategy",
-        labelNp: "संस्था र रणनीति",
-        groupTitle: "Corporate Profile",
-        children: [
-          { id: 211, label: "Introduction", labelNp: "परिचय", href: "/about/introduction", icon: "Building2", description: "Our legacy, vision & core values" },
-          { id: 212, label: "Mission & Goals", labelNp: "लक्ष्य र उद्देश्य", href: "/about/mission-goals", icon: "Target", description: "Strategic principles guiding RFL" },
-          { id: 213, label: "Strategic Framework", labelNp: "रणनीतिक ढाँचा", href: "/about/strategic-framework", icon: "Sparkles", description: "Long-term operational roadmap" },
-          { id: 214, label: "Key Milestones", labelNp: "उपलब्धिहरू", href: "/about/milestones", icon: "Award", description: "Key achievements since B.S. 2066" },
-          { id: 215, label: "Capital Structure", labelNp: "पुँजी संरचना", href: "/about/capital-structure", icon: "PieChart", description: "Shareholding & paid-up capital" },
-        ],
-      },
-      {
-        id: 22,
-        label: "Leadership & Governance",
-        labelNp: "सुशासन र टोली",
-        groupTitle: "Leadership & Governance",
-        children: [
-          { id: 221, label: "Board of Directors", labelNp: "संचालक समिति", href: "/team/board-of-directors", icon: "Users", description: "Board leadership & guidance" },
-          { id: 222, label: "Management Team", labelNp: "व्यवस्थापन टोली", href: "/team/management-team", icon: "UserCheck", description: "Executive leadership team" },
-          { id: 223, label: "Department Heads", labelNp: "विभाग प्रमुख", href: "/team/head-of-department", icon: "Users", description: "Departmental managers" },
-          { id: 224, label: "Branch Managers", labelNp: "शाखा प्रबन्धक", href: "/team/branch-manager", icon: "Building", description: "Branch leadership across Nepal" },
-          { id: 225, label: "Committee of Directors", labelNp: "संचालक समिति", href: "/committee-of-directors", icon: "ShieldCheck", description: "Board oversight sub-committees" },
-        ],
-      },
-      {
-        id: 23,
-        label: "Compliance & Responsibility",
-        labelNp: "अनुपालन र उत्तरदायित्व",
-        groupTitle: "Compliance & Responsibility",
-        children: [
-          { id: 231, label: "Grievance Officer", labelNp: "गुनासो अधिकृत", href: "/grievance-handling-officer", icon: "ShieldAlert", description: "Nodal officer for customer concerns" },
-          { id: 232, label: "Compliance Officer", labelNp: "अनुपालन अधिकृत", href: "/compliance-officer", icon: "FileCheck", description: "Regulatory compliance officer" },
-          { id: 233, label: "Company Secretary", labelNp: "कम्पनी सचिव", href: "/company-secretary", icon: "FileText", description: "Secretarial compliance" },
-          { id: 234, label: "Information Officer", labelNp: "सूचना अधिकृत", href: "/information-officer", icon: "HelpCircle", description: "Right to Information contact" },
-          { id: 235, label: "Sustainable Banking", labelNp: "दिगो बैंकिङ", href: "/sustainable-banking", icon: "Leaf", description: "E&S risk management & green initiatives" },
-          { id: 236, label: "CSR Initiatives", labelNp: "CSR पहलहरू", href: "/csr", icon: "Heart", description: "Social responsibility projects" },
-        ],
-      },
+      { id: 21, label: "Who We Are", labelNp: "हामी को हौं", href: "/about/introduction", icon: "Building2", description: "Our legacy, vision & core values" },
+      { id: 22, label: "Board of Directors", labelNp: "संचालक समिति", href: "/team/board-of-directors", icon: "Users", description: "Board leadership & guidance" },
+      { id: 23, label: "Management Team", labelNp: "व्यवस्थापन टोली", href: "/team/management-team", icon: "UserCheck", description: "Executive leadership team" },
+      { id: 24, label: "Department Heads", labelNp: "विभाग प्रमुखहरू", href: "/team/head-of-department", icon: "Users", description: "Departmental managers" },
     ],
   },
   {
@@ -60,9 +24,9 @@ export const fallbackCMSNav: CMSNavItem[] = [
     children: [
       {
         id: 31,
-        label: "Savings & Fixed Deposits",
-        labelNp: "बचत र मुद्दती",
-        groupTitle: "Deposit Schemes",
+        label: "Deposits",
+        labelNp: "निक्षेप",
+        groupTitle: "Deposits",
         children: [
           { id: 311, label: "Savings Accounts Overview", labelNp: "बचत खाताहरूको अवलोकन", href: "/products/savings", icon: "Wallet", badgeText: "Overview", badgeColor: "primary" },
           { id: 312, label: "Everest Saving Account", labelNp: "एभरेस्ट बचत खाता", href: "/products/savings/everest-saving-account", icon: "Sparkles", badgeText: "5.50% p.a.", badgeColor: "secondary" },
@@ -75,9 +39,9 @@ export const fallbackCMSNav: CMSNavItem[] = [
       },
       {
         id: 32,
-        label: "Loans & Credit Schemes",
-        labelNp: "ऋण र कर्जा योजना",
-        groupTitle: "Credit Solutions",
+        label: "Loans",
+        labelNp: "ऋण",
+        groupTitle: "Loans",
         children: [
           { id: 321, label: "Loans Overview", labelNp: "ऋण सेवाहरूको अवलोकन", href: "/products/loans", icon: "Briefcase", badgeText: "Overview" },
           { id: 322, label: "Home & Land Loan", labelNp: "गृह तथा जग्गा ऋण", href: "/products/loans/home-loan", icon: "Home", badgeText: "Low Interest", badgeColor: "secondary" },

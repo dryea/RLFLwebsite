@@ -12,7 +12,7 @@ export default function EMIPieChart({ principal, interest }: { principal: number
           <circle cx="50" cy="50" r="42" fill="none" stroke="#f3e8ff" strokeWidth="8" />
           <circle
             cx="50" cy="50" r="42"
-            fill="none" stroke="#702B86" strokeWidth="8"
+            fill="none" stroke="#8E44AD" strokeWidth="8"
             strokeDasharray={`${pct * 2.64} ${pctInterest * 2.64}`}
             transform="rotate(-90 50 50)"
             strokeLinecap="round"

@@ -178,4 +178,15 @@ export const cmsResources: Record<string, ResourceConfig> = {
       { key: "duration", label: "Duration" },
     ],
   },
+  "quick-actions": {
+    title: "Quick Actions", newLabel: "New Quick Action", basePath: "/cms/quick-actions", apiName: "QuickActions", displayField: "label",
+    columns: [
+      { key: "label", label: "Label", truncate: 30 },
+      { key: "labelNp", label: "Label (NP)", truncate: 30 },
+      { key: "href", label: "Link", truncate: 40 },
+      { key: "icon", label: "Icon" },
+      { key: "isHighlight", label: "Highlight", type: "boolean" },
+      { key: "isActive", label: "Active", type: "boolean" },
+    ],
+  },
 };

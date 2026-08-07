@@ -17,6 +17,7 @@ import {
   contactSubmissions, loanEnquiries, newsletterSubscribers,
   auctionNotices, merchantOffers, siteSettings, calendarEvents,
   heroSlides, offeringCards, offeringLinks, siteStats, appBanner, csrActivities,
+  quickActions,
   reviews, appointments, trainings,
   navigation, navigationItems,
   seoSettings, seoAnalysis, rankTracker, seoRedirects, schemaMarkup,
@@ -231,12 +232,14 @@ app.get("/api/homepage/full", async (c) => {
     statsResult,
     bannerResult,
     csrResult,
+    quickActionsResult,
   ] = await Promise.all([
     db.select().from(heroSlides).where(eq(heroSlides.isActive, true)).orderBy(heroSlides.sortOrder).all(),
     db.select().from(offeringCards).where(eq(offeringCards.isActive, true)).orderBy(offeringCards.sortOrder).all(),
     db.select().from(siteStats).where(eq(siteStats.isActive, true)).orderBy(siteStats.sortOrder).all(),
     db.select().from(appBanner).where(eq(appBanner.isActive, true)).limit(1).all(),
     db.select().from(csrActivities).where(eq(csrActivities.isActive, true)).orderBy(csrActivities.sortOrder).limit(6).all(),
+    db.select().from(quickActions).where(eq(quickActions.isActive, true)).orderBy(quickActions.sortOrder).all(),
   ]);
 
   // Fetch offering links for each card
@@ -252,6 +255,7 @@ app.get("/api/homepage/full", async (c) => {
     stats: statsResult,
     appBanner: bannerResult[0] || null,
     csrActivities: csrResult,
+    quickActions: quickActionsResult,
   });
 });
 
@@ -1036,6 +1040,7 @@ crud(offeringLinks, "offering-links");
 crud(siteStats, "site-stats");
 crud(appBanner, "app-banner");
 crud(csrActivities, "csr-activities");
+crud(quickActions, "quick-actions");
 crud(reviews, "reviews");
 crud(appointments, "appointments");
 crud(trainings, "trainings");

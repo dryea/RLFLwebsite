@@ -30,7 +30,7 @@ const resources = [
   "branches", "rates", "news", "events", "notices", "reports",
   "albums", "faq", "faq-categories", "careers", "auctions", "merchants", "settings",
   "contact-submissions", "loan-enquiries", "newsletter", "reviews", "appointments",
-  "trainings",
+  "trainings", "quick-actions",
 ];
 
 function resourceMethods(resource: string) {

@@ -33,6 +33,7 @@ interface HomepageData {
   stats: any[];
   csrActivities: any[];
   appBanner: any | null;
+  quickActions?: any[];
   aboutImageUrl?: string;
 }
 
@@ -56,7 +57,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
       <div className="relative z-20 -mt-4 pb-6">
         <div className="container-page">
           <div className="grid items-end gap-4 lg:grid-cols-[1fr_280px]">
-            <HeroQuickActions lang={lang} />
+            <HeroQuickActions lang={lang} actions={data.quickActions} />
             <div className="hidden lg:block">
               <HeroRatesWidget lang={lang} />
             </div>

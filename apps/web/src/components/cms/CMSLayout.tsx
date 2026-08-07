@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { FileText, Package, Newspaper, Image, Users, Settings, LogOut, LayoutDashboard, MapPin, HelpCircle, Briefcase, Download, ImageIcon, MessageSquare, Shield, UserCog, GraduationCap, Menu, SearchCheck, SlidersHorizontal, TrendingUp, ArrowRightLeft, LineChart, UserPlus, BarChart3 } from "lucide-react";
+import { FileText, Package, Newspaper, Image, Users, Settings, LogOut, LayoutDashboard, MapPin, HelpCircle, Briefcase, Download, ImageIcon, MessageSquare, Shield, UserCog, GraduationCap, Menu, SearchCheck, SlidersHorizontal, TrendingUp, ArrowRightLeft, LineChart, UserPlus, BarChart3, MousePointerClick } from "lucide-react";
 import { getCmsUser, cmsLogout, type CmsUser } from "@/lib/cms-auth";
 import OnboardingCoachMarks from "./OnboardingCoachMarks";
 
@@ -23,6 +23,7 @@ const navItems = [
   { label: "Downloads", icon: FileText, href: "/cms/downloads" },
   { label: "FAQ", icon: FileText, href: "/cms/faq" },
   { label: "Careers", icon: FileText, href: "/cms/careers" },
+  { label: "Quick Actions", icon: MousePointerClick, href: "/cms/quick-actions" },
   { label: "Trainings", icon: GraduationCap, href: "/cms/trainings" },
   { label: "Navigation", icon: Menu, href: "/cms/navigation" },
   { label: "SEO", icon: SearchCheck, href: "/cms/seo" },

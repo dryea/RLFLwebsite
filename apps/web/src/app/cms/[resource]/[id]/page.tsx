@@ -122,6 +122,86 @@ export default function CmsResourceEditPage({ params }: { params: Promise<{ reso
                 className="w-full rounded-lg border px-4 py-2 outline-none focus:border-primary-500" />
             </div>
           )}
+          {resource === "quick-actions" && (
+            <>
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">Label (EN)</label>
+                <input
+                  value={data.label || ""}
+                  onChange={(e) => setData({ ...data, label: e.target.value })}
+                  className="w-full rounded-lg border px-4 py-2 outline-none focus:border-primary-500"
+                />
+              </div>
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">Label (नेपाली)</label>
+                <input
+                  value={data.labelNp || ""}
+                  onChange={(e) => setData({ ...data, labelNp: e.target.value })}
+                  className="w-full rounded-lg border px-4 py-2 outline-none focus:border-primary-500"
+                />
+              </div>
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">Description (EN)</label>
+                <input
+                  value={data.description || ""}
+                  onChange={(e) => setData({ ...data, description: e.target.value })}
+                  className="w-full rounded-lg border px-4 py-2 outline-none focus:border-primary-500"
+                />
+              </div>
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">Description (नेपाली)</label>
+                <input
+                  value={data.descriptionNp || ""}
+                  onChange={(e) => setData({ ...data, descriptionNp: e.target.value })}
+                  className="w-full rounded-lg border px-4 py-2 outline-none focus:border-primary-500"
+                />
+              </div>
+              <div className="md:col-span-2">
+                <label className="mb-1 block text-sm font-medium text-gray-700">Link (href)</label>
+                <input
+                  value={data.href || ""}
+                  onChange={(e) => setData({ ...data, href: e.target.value })}
+                  placeholder="/open-account"
+                  className="w-full rounded-lg border px-4 py-2 outline-none focus:border-primary-500"
+                />
+              </div>
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">Icon</label>
+                <select
+                  value={data.icon || "user-plus"}
+                  onChange={(e) => setData({ ...data, icon: e.target.value })}
+                  className="w-full rounded-lg border px-4 py-2 outline-none focus:border-primary-500"
+                >
+                  <option value="user-plus">User Plus (Open Account)</option>
+                  <option value="calculator">Calculator (EMI)</option>
+                  <option value="trending-up">Trending Up (Rates)</option>
+                  <option value="map-pin">Map Pin (Branch)</option>
+                  <option value="phone-call">Phone Call (Loan Enquiry)</option>
+                  <option value="arrow">Arrow</option>
+                </select>
+              </div>
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">Sort Order</label>
+                <input type="number" value={data.sortOrder || 0}
+                  onChange={(e) => setData({ ...data, sortOrder: parseInt(e.target.value) || 0 })}
+                  className="w-full rounded-lg border px-4 py-2 outline-none focus:border-primary-500" />
+              </div>
+              <div className="flex items-center gap-6">
+                <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                  <input type="checkbox" checked={!!data.isHighlight}
+                    onChange={(e) => setData({ ...data, isHighlight: e.target.checked })}
+                    className="h-4 w-4 rounded border-gray-300 text-primary-600" />
+                  Highlight (accent card)
+                </label>
+                <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                  <input type="checkbox" checked={data.isActive !== false}
+                    onChange={(e) => setData({ ...data, isActive: e.target.checked })}
+                    className="h-4 w-4 rounded border-gray-300 text-primary-600" />
+                  Active
+                </label>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </CMSLayout>

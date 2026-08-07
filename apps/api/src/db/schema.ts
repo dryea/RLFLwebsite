@@ -588,6 +588,21 @@ export const offeringLinks = sqliteTable("offering_links", {
   sortOrder: int("sort_order").default(0),
 });
 
+// ── Homepage: Quick Actions (hero shortcut strip) ──
+export const quickActions = sqliteTable("quick_actions", {
+  id: int("id").primaryKey({ autoIncrement: true }),
+  label: text("label").notNull(),
+  labelNp: text("label_np"),
+  description: text("description"),
+  descriptionNp: text("description_np"),
+  href: text("href").notNull(),
+  icon: text("icon").default("user-plus"),
+  isHighlight: int("is_highlight", { mode: "boolean" }).default(false),
+  sortOrder: int("sort_order").default(0),
+  isActive: int("is_active", { mode: "boolean" }).default(true),
+  createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`),
+});
+
 // ── Homepage: Site Statistics ──
 export const siteStats = sqliteTable("site_stats", {
   id: int("id").primaryKey({ autoIncrement: true }),

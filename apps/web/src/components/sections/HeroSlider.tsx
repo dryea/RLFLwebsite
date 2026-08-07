@@ -225,8 +225,8 @@ export default function HeroSlider({ slides, lang }: { slides: Slide[]; lang: st
         </div>
       </AnimatePresence>
 
-      {/* Progress bar (auto-advance indicator) */}
-      <div className="absolute bottom-0 left-0 right-0 z-30 h-0.5 bg-white/10">
+      {/* Progress bar (auto-advance indicator) — rendered below the floating quick-action/rates cards */}
+      <div className="absolute bottom-0 left-0 right-0 z-10 h-0.5 bg-white/10">
         <motion.div
           key={progressKey}
           className="h-full bg-secondary-500"

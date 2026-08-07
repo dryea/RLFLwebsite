@@ -70,7 +70,7 @@ export default function HeroRatesWidget({ lang }: { lang: string }) {
       <div className="mb-3 flex items-center justify-between">
         <span className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-gray-700">
           <TrendingUp className="h-3.5 w-3.5 text-primary-600" />
-          {isNp ? "हालका दरहरू" : "Live Rates"}
+          {isNp ? "दरहरू" : "Rates"}
         </span>
         <Link
           href={`/${lang}/rates`}

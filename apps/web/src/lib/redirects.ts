@@ -15,6 +15,15 @@ export const redirects: Record<string, string> = {
   "/privacy": "/en/privacy-policy",
   "/privacy-policy": "/en/about/privacy-policy",
 
+  "/en/about/mission-goals": "/en/about/introduction",
+  "/np/about/mission-goals": "/np/about/introduction",
+  "/en/about/strategic-framework": "/en/about/introduction",
+  "/np/about/strategic-framework": "/np/about/introduction",
+  "/en/about/milestones": "/en/about/introduction",
+  "/np/about/milestones": "/np/about/introduction",
+  "/en/about/capital-structure": "/en/about/introduction",
+  "/np/about/capital-structure": "/np/about/introduction",
+
   "/deposit/normal-saving-account": "/en/products/savings/normal-saving-account",
   "/deposit/investor-saving-account": "/en/products/savings/investor-saving-account",
   "/deposit/special-saving-account": "/en/products/savings/special-saving-account",

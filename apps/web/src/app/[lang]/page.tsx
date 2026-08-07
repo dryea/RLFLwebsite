@@ -53,7 +53,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
       <HeroSlider slides={data.slides} lang={lang} />
 
       {/* 2. Quick Actions + Live Rates — below hero */}
-      <div className="relative z-20 -mt-16 pb-6">
+      <div className="relative z-20 -mt-4 pb-6">
         <div className="container-page">
           <div className="grid items-end gap-4 lg:grid-cols-[1fr_280px]">
             <HeroQuickActions lang={lang} />

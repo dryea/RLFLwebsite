@@ -6,6 +6,7 @@ import Link from "next/link";
 import { CheckCircle, FileText } from "lucide-react";
 import { useLang } from "@/contexts/LanguageContext";
 import { getServices } from "@/lib/public-api";
+import DynamicIcon from "@/components/ui/DynamicIcon";
 
 export default function ServiceDetailClient() {
   const lang = useLang();
@@ -70,7 +71,9 @@ export default function ServiceDetailClient() {
               <li className="font-medium text-white" aria-current="page">{service.title}</li>
             </ol>
           </nav>
-          <div className="mb-3 text-4xl">{service.icon || "📱"}</div>
+          <div className="mb-3">
+            <DynamicIcon name={service.icon} className="h-11 w-11 text-white" />
+          </div>
           <h1 className="text-3xl font-bold md:text-4xl">{service.title}</h1>
           {service.summary && <p className="mt-3 max-w-2xl text-lg text-primary-100">{service.summary}</p>}
         </div>

@@ -75,14 +75,11 @@ const defaultSlides: Slide[] = [
 
 const SLIDE_DURATION = 6000;
 
-// Build a Cloudflare-resized URL for hero backgrounds (WebP/AVIF, width-scaled)
+// Serve hero backgrounds directly (local assets or remote URL).
+// Cloudflare image resizing is not available on the workers.dev origin,
+// so we avoid the cdn-cgi proxy that previously 404'd every slide image.
 function optimizedBg(src: string): string {
-  if (!src) return src;
-  if (src.startsWith("http")) {
-    return `https://rfil-web.sudeepdhakal.workers.dev/cdn-cgi/image/width=1920,quality=75,format=auto/${encodeURIComponent(src)}`;
-  }
-  const base = `https://rfil-web.sudeepdhakal.workers.dev${src}`;
-  return `https://rfil-web.sudeepdhakal.workers.dev/cdn-cgi/image/width=1920,quality=75,format=auto/${encodeURIComponent(base)}`;
+  return src || src;
 }
 
 export default function HeroSlider({ slides, lang }: { slides: Slide[]; lang: string }) {
@@ -119,7 +116,7 @@ export default function HeroSlider({ slides, lang }: { slides: Slide[]; lang: st
     <section
       ref={sectionRef}
       className="hero-slider relative overflow-hidden bg-gray-950"
-      style={{ minHeight: "clamp(540px, 75vh, 820px)" }}
+      style={{ minHeight: "clamp(520px, 72vh, 800px)" }}
       aria-label="Featured highlights"
     >
       {/* Preload the first slide's background image for faster LCP */}
@@ -159,10 +156,10 @@ export default function HeroSlider({ slides, lang }: { slides: Slide[]; lang: st
       <AnimatePresence mode="wait">
         <div
           key={current}
-          className="relative z-10 flex h-full items-center"
-          style={{ minHeight: "clamp(540px, 75vh, 820px)" }}
+          className="relative z-10 flex h-full items-end"
+          style={{ minHeight: "clamp(520px, 72vh, 800px)" }}
         >
-          <div className="container-page w-full pb-20">
+          <div className="container-page w-full pb-28">
             <div className="max-w-[640px]">
               <motion.div
                 initial={{ opacity: 0, y: 6 }}
@@ -229,7 +226,7 @@ export default function HeroSlider({ slides, lang }: { slides: Slide[]; lang: st
       </AnimatePresence>
 
       {/* Progress bar (auto-advance indicator) */}
-      <div className="absolute bottom-0 left-0 right-0 z-20 h-0.5 bg-white/10">
+      <div className="absolute bottom-0 left-0 right-0 z-30 h-0.5 bg-white/10">
         <motion.div
           key={progressKey}
           className="h-full bg-secondary-500"
@@ -240,7 +237,7 @@ export default function HeroSlider({ slides, lang }: { slides: Slide[]; lang: st
       </div>
 
       {/* Navigation controls */}
-      <div className="absolute bottom-8 right-6 z-20 flex items-center gap-3">
+      <div className="absolute bottom-8 right-6 z-30 flex items-center gap-3">
         <button
           onClick={prev}
           className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur transition-all hover:bg-secondary-500 hover:text-gray-900"
@@ -258,7 +255,7 @@ export default function HeroSlider({ slides, lang }: { slides: Slide[]; lang: st
       </div>
 
       {/* Dot indicators */}
-      <div className="absolute bottom-10 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2">
+      <div className="absolute bottom-10 left-1/2 z-30 flex -translate-x-1/2 items-center gap-2">
         {allSlides.map((_, i) => (
           <button
             key={i}

@@ -5,7 +5,9 @@ import { getBranches } from "@/lib/public-api";
 import BranchList from "@/components/shared/BranchList";
 import JsonLdScript from "@/components/shared/JsonLdScript";
 import { useLang } from "@/contexts/LanguageContext";
-import { Building2 } from "lucide-react";
+import PageWrapper from "@/components/layout/PageWrapper";
+import Section from "@/components/ui/Section";
+import Container from "@/components/ui/Container";
 
 const sampleBranches = [
   {
@@ -383,50 +385,42 @@ export default function LangBranchesClient() {
   }, []);
 
   return (
-    <>
+    <PageWrapper
+      title={isNp ? "शाखाहरू र एटीएम सञ्जाल" : "Branches & ATM Network"}
+      description={isNp ? "नेपालका प्रमुख शहरहरूमा सञ्चालित रिलायन्स फाइनान्सका २१ वटा शाखाहरू र एटीएम सेवाहरू।" : "Locate Reliance Finance's 21 branch offices, managers, and ATM points across Nepal."}
+      breadcrumbs={[{ label: isNp ? "शाखाहरू" : "Branches" }]}
+    >
       {branches.length > 0 && (
-        <JsonLdScript data={{
-          "@context": "https://schema.org",
-          "@type": "FinancialService",
-          name: "Reliance Finance Limited",
-          url: "https://reliancenepal.com.np/branches",
-          brand: { "@type": "Brand", name: "Reliance Finance Limited" },
-          location: branches.map((b) => ({
-            "@type": "Place",
-            name: b.name,
-            address: {
-              "@type": "PostalAddress",
-              streetAddress: b.address,
-              addressLocality: b.district,
-              addressRegion: b.province,
-              addressCountry: "NP",
-            },
-            ...(b.latitude && b.longitude ? { geo: { "@type": "GeoCoordinates", latitude: b.latitude, longitude: b.longitude } } : {}),
-            ...(b.phone ? { telephone: b.phone } : {}),
-            ...(b.email ? { email: b.email } : {}),
-            ...(b.bankingHours ? { openingHours: b.bankingHours } : {}),
-          })),
-        }} />
+        <JsonLdScript
+          data={{
+            "@context": "https://schema.org",
+            "@type": "FinancialService",
+            name: "Reliance Finance Limited",
+            url: "https://reliancenepal.com.np/branches",
+            brand: { "@type": "Brand", name: "Reliance Finance Limited" },
+            location: branches.map((b) => ({
+              "@type": "Place",
+              name: b.name,
+              address: {
+                "@type": "PostalAddress",
+                streetAddress: b.address,
+                addressLocality: b.district,
+                addressRegion: b.province,
+                addressCountry: "NP",
+              },
+              ...(b.latitude && b.longitude ? { geo: { "@type": "GeoCoordinates", latitude: b.latitude, longitude: b.longitude } } : {}),
+              ...(b.phone ? { telephone: b.phone } : {}),
+              ...(b.email ? { email: b.email } : {}),
+              ...(b.bankingHours ? { openingHours: b.bankingHours } : {}),
+            })),
+          }}
+        />
       )}
-      <section className="bg-gradient-to-br from-primary-900 via-primary-800 to-primary-950 py-14 text-white">
-        <div className="container-page">
-          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-secondary-400 mb-2">
-            <Building2 className="h-4 w-4 text-secondary-400" />
-            <span>{isNp ? "देशभरको शाखा सञ्जाल" : "Nationwide Branch Network"}</span>
-          </div>
-          <h1 className="text-3xl font-bold md:text-4xl">{isNp ? "शाखाहरू र एटीएम" : "Branches & ATM Locations"}</h1>
-          <p className="mt-2 text-sm leading-relaxed text-white/80 max-w-2xl">
-            {isNp
-              ? "नेपालका प्रमुख शहरहरूमा सञ्चालित रिलायन्स फाइनान्सका २१ वटा शाखाहरू र एटीएम सेवाहरू पत्ता लगाउनुहोस्।"
-              : "Discover Reliance Finance's 21 modern branch offices and ATM locations across Nepal."}
-          </p>
-        </div>
-      </section>
-      <section className="py-12">
-        <div className="container-page">
+      <Section variant="light" className="py-12">
+        <Container>
           <BranchList branches={branches} lang={lang} />
-        </div>
-      </section>
-    </>
+        </Container>
+      </Section>
+    </PageWrapper>
   );
 }

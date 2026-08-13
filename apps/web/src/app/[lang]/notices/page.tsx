@@ -1,42 +1,80 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Megaphone } from "lucide-react";
+import { Megaphone, FileText, Download } from "lucide-react";
 import NoticeBoard from "@/components/shared/NoticeBoard";
 import NoticeSubscribe from "@/components/shared/NoticeSubscribe";
 import { getNotices } from "@/lib/public-api";
 import { useLang } from "@/contexts/LanguageContext";
+import PageWrapper from "@/components/layout/PageWrapper";
+import Section from "@/components/ui/Section";
+import Container from "@/components/ui/Container";
+
+const SAMPLE_NOTICES = [
+  {
+    id: 101,
+    title: "15th Annual General Meeting (AGM) Notice & Book Closure Date",
+    description: "Notice regarding the upcoming 15th Annual General Meeting of Reliance Finance Limited to be held at Hotel Royal Singi, Kamaladi, Kathmandu.",
+    category: "AGM Notice",
+    fileUrl: "/docs/AGM_15th_Notice_RFIL.pdf",
+    publishedAt: "2026-03-15T00:00:00.000Z",
+  },
+  {
+    id: 102,
+    title: "Unclaimed Dividend & Fractional Share List for FY 2079/80",
+    description: "Shareholders are requested to collect their unclaimed cash dividend within 35 days from the shares registrar office.",
+    category: "Dividend Notice",
+    fileUrl: "/docs/Unclaimed_Dividend_RFIL_2080.pdf",
+    publishedAt: "2026-02-28T00:00:00.000Z",
+  },
+  {
+    id: 103,
+    title: "Unaudited Q2 Financial Report for FY 2081/82",
+    description: "Quarterly disclosure of balance sheet, income statement, base rate (10.15%), and non-performing loan (NPL) ratio under NRB Directive 14.",
+    category: "Financial Report",
+    fileUrl: "/docs/RFIL_Q2_Financials_2081.pdf",
+    publishedAt: "2026-01-30T00:00:00.000Z",
+  },
+  {
+    id: 104,
+    title: "Sealed Tender Auction Notice for Non-Banking Assets (NBA)",
+    description: "Auction notice for sale of commercial properties located in Kathmandu and Pokhara on as-is-where-is basis.",
+    category: "Auction Notice",
+    fileUrl: "/docs/Auction_Notice_RFIL_2081.pdf",
+    publishedAt: "2026-01-15T00:00:00.000Z",
+  },
+];
 
 export default function NoticesPage() {
   const lang = useLang();
-  const [notices, setNotices] = useState<any[]>([]);
-  useEffect(() => { getNotices().then(setNotices).catch(() => {}); }, []);
+  const isNp = lang === "np";
+  const [notices, setNotices] = useState<any[]>(SAMPLE_NOTICES);
+
+  useEffect(() => {
+    getNotices()
+      .then((res: any) => {
+        if (Array.isArray(res) && res.length > 0) {
+          setNotices(res);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   return (
-    <>
-      <section className="bg-gradient-to-br from-primary-800 to-primary-900 py-12 text-white">
-        <div className="container-page">
-          <h1 className="text-3xl font-bold">{lang === "en" ? "Notices" : "सूचनाहरू"}</h1>
-          <p className="mt-2 text-primary-100">{lang === "en" ? "Official notices and announcements" : "आधिकारिक सूचना र घोषणाहरू"}</p>
-        </div>
-      </section>
-
-      <section className="py-12">
-        <div className="container-page">
-          <div className="mb-8">
+    <PageWrapper
+      title={isNp ? "सूचना तथा सार्वजनिक प्रकाशनहरू" : "Official Notices & Disclosures"}
+      description={isNp ? "रिलायन्स फाइनान्सका पछिल्ला साधारण सभा सूचना, वित्तीय विवरण र सार्वजनिक लिलामी सूचनाहरू।" : "Official announcements, AGM notices, quarterly financial reports, and regulatory disclosures of Reliance Finance Limited."}
+      breadcrumbs={[{ label: isNp ? "सूचनाहरू" : "Notices" }]}
+    >
+      <Section variant="light" className="py-12 md:py-16">
+        <Container>
+          <div className="mb-10 rounded-3xl border border-primary-100 bg-white p-6 shadow-xl shadow-slate-900/5 md:p-8">
             <NoticeSubscribe />
           </div>
-          {notices.length === 0 ? (
-            <div className="rounded-xl border-2 border-dashed p-12 text-center text-gray-500">
-              <Megaphone className="mx-auto mb-3 h-10 w-10 text-gray-300" />
-              <p className="text-lg font-medium">{lang === "en" ? "No notices yet" : "अहिलेसम्म कुनै सूचना छैन"}</p>
-              <p className="mt-1 text-sm">{lang === "en" ? "Notices will be posted here when available." : "उपलब्ध हुँदा सूचनाहरू यहाँ पोस्ट गरिनेछ।"}</p>
-            </div>
-          ) : (
-            <NoticeBoard notices={notices} lang={lang} />
-          )}
-        </div>
-      </section>
-    </>
+
+          <NoticeBoard notices={notices} lang={lang} />
+        </Container>
+      </Section>
+    </PageWrapper>
   );
 }

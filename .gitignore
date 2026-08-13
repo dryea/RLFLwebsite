@@ -1,3 +1,24 @@
-(docs/UI_UX_ENHANCEMENT_PLAN.md) is a source file, so it should not be ignored. No build artifacts, dependencies, or temporary files detected in the changes.
+# Dependencies
+node_modules/
+.pnpm-store/
 
-Output: (nothing)
+# Next.js & OpenNext build artifacts
+.next/
+.open-next/
+.turbo/
+.wrangler/
+out/
+build/
+dist/
+
+# Environment files
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db

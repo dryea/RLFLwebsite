@@ -15,6 +15,7 @@ interface CrumbItem {
 interface PageWrapperProps {
   title?: string;
   subtitle?: string;
+  description?: string;
   badge?: string;
   breadcrumbs?: CrumbItem[];
   variant?: "default" | "brand" | "minimal";
@@ -23,18 +24,20 @@ interface PageWrapperProps {
 }
 
 /**
- * Standardized Page Wrapper layout primitive (Step 6) supplying responsive hero headers,
+ * Standardized Page Wrapper layout primitive supplying responsive hero headers,
  * automatic breadcrumb navigation, and Framer Motion transitions.
  */
 export default function PageWrapper({
   title,
   subtitle,
+  description,
   badge,
   breadcrumbs,
   variant = "default",
   children,
   className,
 }: PageWrapperProps) {
+  const sub = subtitle || description;
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -71,7 +74,7 @@ export default function PageWrapper({
               >
                 {title}
               </Heading>
-              {subtitle && (
+              {sub && (
                 <Text
                   variant="subtitle"
                   className={cn(
@@ -79,7 +82,7 @@ export default function PageWrapper({
                     variant === "brand" ? "text-slate-300" : "text-text-secondary"
                   )}
                 >
-                  {subtitle}
+                  {sub}
                 </Text>
               )}
             </div>

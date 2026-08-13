@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import Container from "./Container";
 
 interface SectionProps extends React.HTMLAttributes<HTMLElement> {
-  variant?: "surface" | "alt" | "primary" | "dark" | "glass";
+  variant?: "surface" | "alt" | "primary" | "dark" | "glass" | "light";
   padding?: "none" | "sm" | "default" | "lg";
   containerSize?: "sm" | "default" | "lg" | "full" | "tight";
   badge?: string;
@@ -31,6 +31,7 @@ export default function Section({
   const variantClasses = {
     surface: "bg-surface text-text-primary",
     alt: "bg-surface-alt text-text-primary",
+    light: "bg-slate-50 text-slate-900",
     primary: "bg-gradient-to-br from-primary-900 via-primary-800 to-primary-950 text-white",
     dark: "bg-slate-950 text-white",
     glass: "glass-white border-y border-slate-200/60",

@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, ImageIcon, Flame, Star, X, Eye, Scale } from "lucide-react";
+import { ArrowRight, ImageIcon, Flame, Star, X, Eye, Scale, CheckCircle2, UserPlus } from "lucide-react";
 import { getProductsByType } from "@/lib/public-api";
 import StaggerChildren, { StaggerItem } from "@/components/motion/StaggerChildren";
 import OptimizedImage from "@/components/ui/OptimizedImage";
+import { localize } from "@/lib/localize";
 
 export default function ProductGrid({
   type,
@@ -30,14 +31,11 @@ export default function ProductGrid({
       .finally(() => setLoading(false));
   }, [type]);
 
-  // Filter by category type when given multiple types
-  const isLoan = type === "loan";
-
   if (loading) {
     return (
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {[1, 2, 3, 4, 5, 6].map((i) => (
-          <div key={i} className="h-72 animate-pulse rounded-xl bg-gray-100" />
+          <div key={i} className="h-80 animate-pulse rounded-2xl bg-slate-100" />
         ))}
       </div>
     );
@@ -47,117 +45,127 @@ export default function ProductGrid({
     <>
       <div className="mb-6 flex justify-end">
         <Link
-          href={`/${lang}/products/compare`}
-          className="inline-flex items-center gap-2 rounded-lg border border-primary-200 px-4 py-2 text-sm font-medium text-primary-700 transition-colors hover:bg-primary-50"
+          href={localize("/products/compare", lang)}
+          className="inline-flex items-center gap-2 rounded-xl border border-primary-200 bg-white px-4 py-2 text-xs font-bold text-primary-700 shadow-sm transition-all hover:bg-primary-50 hover:shadow-md"
         >
-          <Scale className="h-4 w-4" /> {isNp ? "उत्पादन तुलना" : "Compare Products"}
+          <Scale className="h-4 w-4" /> {isNp ? "उत्पादन तुलना गर्नुहोस्" : "Compare Products"}
         </Link>
       </div>
 
       <StaggerChildren className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {products.map((p: any) => (
           <StaggerItem key={p.id} className="h-full">
-          <div className="group relative flex h-full flex-col overflow-hidden rounded-xl border bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-            {p.isPopular && (
-              <span className="absolute left-3 top-3 z-10 inline-flex items-center gap-1 rounded-full bg-orange-500 px-2.5 py-1 text-[11px] font-semibold text-white shadow">
-                <Flame className="h-3 w-3" /> {isNp ? "लोकप्रिय" : "Most Popular"}
-              </span>
-            )}
-            {p.isFeatured && !p.isPopular && (
-              <span className="absolute left-3 top-3 z-10 inline-flex items-center gap-1 rounded-full bg-amber-500 px-2.5 py-1 text-[11px] font-semibold text-white shadow">
-                <Star className="h-3 w-3" /> {isNp ? "विशेष" : "Featured"}
-              </span>
-            )}
-
-            <Link href={`/${lang}${basePath}/${p.slug}`} className="block overflow-hidden bg-gray-50">
-              {p.bannerImage ? (
-                <OptimizedImage
-                  src={p.bannerImage}
-                  alt={isNp && p.titleNp ? `${p.titleNp} — Reliance Finance Limited` : `${p.title} — Reliance Finance Limited`}
-                  width={600}
-                  height={250}
-                  loading="lazy"
-                  className="h-40 w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                />
-              ) : (
-                <div className="flex h-40 w-full items-center justify-center bg-gradient-to-br from-primary-50 to-gray-100">
-                  <ImageIcon className="h-10 w-10 text-primary-200" />
-                </div>
+            <div className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-primary-950/10 hover:border-primary-300">
+              {p.isPopular && (
+                <span className="absolute left-3 top-3 z-10 inline-flex items-center gap-1 rounded-full bg-secondary-500 px-3 py-1 text-[10px] font-extrabold text-slate-950 shadow-md">
+                  <Flame className="h-3 w-3" /> {isNp ? "लोकप्रिय" : "Most Popular"}
+                </span>
               )}
-            </Link>
-
-            <div className="flex flex-1 flex-col p-5">
-              <h3 className="mb-2 text-lg font-bold text-gray-900">
-                <Link href={`/${lang}${basePath}/${p.slug}`} className="hover:text-primary-700">
-                  {isNp && p.titleNp ? p.titleNp : p.title}
-                </Link>
-              </h3>
-              <p className="mb-3 text-sm font-semibold text-primary-700">{p.interestRateInfo || (p.details?.interestStructure) || ""}</p>
-              {Array.isArray(p.features) && p.features.length > 0 && (
-                <ul className="mb-5 space-y-1.5">
-                  {p.features.slice(0, 4).map((f: string, i: number) => (
-                    <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
-                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary-500" />
-                      {f.replace(/^(Interest Rate|Minimum Balance|Rate of Interest)[^:]*:\s*/i, "")}
-                    </li>
-                  ))}
-                </ul>
+              {p.isFeatured && !p.isPopular && (
+                <span className="absolute left-3 top-3 z-10 inline-flex items-center gap-1 rounded-full bg-primary-600 px-3 py-1 text-[10px] font-extrabold text-white shadow-md">
+                  <Star className="h-3 w-3" /> {isNp ? "विशेष" : "Featured"}
+                </span>
               )}
-              <div className="mt-auto flex gap-2 pt-2">
-                <button onClick={() => setQuickView(p)} className="btn btn-outline flex-1 items-center justify-center py-2 text-xs">
-                  <Eye className="mr-1 inline h-3.5 w-3.5" /> {isNp ? "द्रुत हेर्ने" : "Quick View"}
-                </button>
-                {showEmi ? (
-                  <Link href={`/${lang}/emi-calculator`} className="btn btn-primary flex-1 py-2 text-xs">
-                    {isNp ? "EMI गणना गर्नुहोस्" : "Calculate EMI"} <ArrowRight className="ml-1 inline h-3 w-3" />
-                  </Link>
+
+              <Link href={localize(`${basePath}/${p.slug}`, lang)} className="block overflow-hidden bg-slate-100">
+                {p.bannerImage ? (
+                  <OptimizedImage
+                    src={p.bannerImage}
+                    alt={isNp && p.titleNp ? `${p.titleNp} — Reliance Finance Limited` : `${p.title} — Reliance Finance Limited`}
+                    width={600}
+                    height={250}
+                    loading="lazy"
+                    className="h-44 w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
                 ) : (
-                  <Link href={`/${lang}${basePath}/${p.slug}`} className="btn btn-primary flex-1 py-2 text-xs">
-                    {isNp ? "विवरण" : "Details"}
-                  </Link>
+                  <div className="flex h-44 w-full items-center justify-center bg-gradient-to-br from-primary-900 via-primary-800 to-primary-950">
+                    <ImageIcon className="h-10 w-10 text-slate-400" />
+                  </div>
                 )}
+              </Link>
+
+              <div className="flex flex-1 flex-col p-6">
+                <h3 className="mb-2 font-heading text-lg font-bold text-primary-950">
+                  <Link href={localize(`${basePath}/${p.slug}`, lang)} className="hover:text-primary-600 transition-colors">
+                    {isNp && p.titleNp ? p.titleNp : p.title}
+                  </Link>
+                </h3>
+                <p className="mb-3 text-xs font-extrabold text-secondary-600">
+                  {p.interestRateInfo || (p.details?.interestStructure) || ""}
+                </p>
+                {Array.isArray(p.features) && p.features.length > 0 && (
+                  <ul className="mb-6 space-y-2 text-xs text-slate-600">
+                    {p.features.slice(0, 3).map((f: string, i: number) => (
+                      <li key={i} className="flex items-start gap-2">
+                        <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-600" />
+                        <span>{f.replace(/^(Interest Rate|Minimum Balance|Rate of Interest)[^:]*:\s*/i, "")}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                <div className="mt-auto flex gap-2 pt-2">
+                  <button
+                    onClick={() => setQuickView(p)}
+                    className="btn btn-outline flex-1 items-center justify-center py-2 text-xs"
+                  >
+                    <Eye className="mr-1 inline h-3.5 w-3.5" /> {isNp ? "द्रुत हेर्ने" : "Quick View"}
+                  </button>
+                  {type === "loan" ? (
+                    <Link
+                      href={localize("/loan-enquiry", lang)}
+                      className="btn btn-secondary flex-1 py-2 text-xs shadow-sm"
+                    >
+                      <UserPlus className="mr-1 inline h-3.5 w-3.5" /> {isNp ? "आवेदन दिनुहोस्" : "Apply Now"}
+                    </Link>
+                  ) : (
+                    <Link
+                      href={localize("/open-account", lang)}
+                      className="btn btn-secondary flex-1 py-2 text-xs shadow-sm"
+                    >
+                      <UserPlus className="mr-1 inline h-3.5 w-3.5" /> {isNp ? "खाता खोल्नुहोस्" : "Apply Now"}
+                    </Link>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
           </StaggerItem>
         ))}
       </StaggerChildren>
 
+      {/* Quick View Modal */}
       {quickView && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setQuickView(null)}>
-          <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white shadow-2xl" onClick={(e) => e.stopPropagation()}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={() => setQuickView(null)}>
+          <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-3xl bg-white shadow-2xl" onClick={(e) => e.stopPropagation()}>
             <div className="relative">
               {quickView.bannerImage ? (
-                <img src={quickView.bannerImage} alt={quickView.title} className="h-44 w-full object-cover" />
+                <img src={quickView.bannerImage} alt={quickView.title} className="h-48 w-full object-cover" />
               ) : (
-                <div className="flex h-44 w-full items-center justify-center bg-primary-50"><ImageIcon className="h-10 w-10 text-primary-200" /></div>
+                <div className="flex h-48 w-full items-center justify-center bg-primary-900"><ImageIcon className="h-10 w-10 text-slate-400" /></div>
               )}
-              <button onClick={() => setQuickView(null)} className="absolute right-3 top-3 rounded-full bg-white/90 p-1.5 text-gray-600 shadow hover:bg-white">
+              <button onClick={() => setQuickView(null)} className="absolute right-3 top-3 rounded-full bg-white/90 p-2 text-slate-600 shadow hover:bg-white">
                 <X className="h-4 w-4" />
               </button>
             </div>
             <div className="p-6">
-              <h3 className="text-xl font-bold text-gray-900">{isNp && quickView.titleNp ? quickView.titleNp : quickView.title}</h3>
-              {quickView.interestRateInfo && <p className="mt-1 text-sm font-semibold text-primary-700">{quickView.interestRateInfo}</p>}
-              {quickView.summary && <p className="mt-3 text-sm leading-relaxed text-gray-600">{quickView.summary}</p>}
+              <h3 className="font-heading text-xl font-bold text-primary-950">{isNp && quickView.titleNp ? quickView.titleNp : quickView.title}</h3>
+              {quickView.interestRateInfo && <p className="mt-1 text-xs font-bold text-secondary-600">{quickView.interestRateInfo}</p>}
+              {quickView.summary && <p className="mt-3 text-xs leading-relaxed text-slate-600">{quickView.summary}</p>}
               {Array.isArray(quickView.features) && quickView.features.length > 0 && (
-                <ul className="mt-4 space-y-1.5">
+                <ul className="mt-4 space-y-2 text-xs text-slate-600">
                   {quickView.features.map((f: string, i: number) => (
-                    <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
-                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary-500" /> {f}
+                    <li key={i} className="flex items-start gap-2">
+                      <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-600" /> {f}
                     </li>
                   ))}
                 </ul>
               )}
               <div className="mt-6 flex gap-3">
-                <Link href={`/${lang}${basePath}/${quickView.slug}`} className="btn btn-primary flex-1 text-center">
+                <Link href={localize(`${basePath}/${quickView.slug}`, lang)} className="btn btn-primary flex-1 text-center text-xs">
                   {isNp ? "पूर्ण विवरण हेर्नुहोस्" : "View Full Details"}
                 </Link>
-                {showEmi && (
-                  <Link href={`/${lang}/emi-calculator`} className="btn btn-outline flex-1 text-center">
-                    {isNp ? "EMI गणना" : "Calculate EMI"}
-                  </Link>
-                )}
+                <Link href={localize("/open-account", lang)} className="btn btn-secondary flex-1 text-center text-xs">
+                  {isNp ? "आवेदन दिनुहोस्" : "Apply Now"}
+                </Link>
               </div>
             </div>
           </div>
